@@ -18,6 +18,11 @@ This project requires the following packages:
 
 ## Command
 
+Thêm path này vào enviroment:
+```bash
+%USERPROFILE%\.dotnet\tools
+```
+
 Scaffold command:
 
 ```bash

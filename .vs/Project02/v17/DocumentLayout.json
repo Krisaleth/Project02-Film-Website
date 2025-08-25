@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "D:\\Lesson-and-Project\\ASP\\Project02\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{BCA45BAB-1027-4E33-87FE-4521DB0A1798}|Project02.csproj|d:\\lesson-and-project\\asp\\project02\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{BCA45BAB-1027-4E33-87FE-4521DB0A1798}|Project02.csproj|solutionrelative:readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCA45BAB-1027-4E33-87FE-4521DB0A1798}|Project02.csproj|d:\\lesson-and-project\\asp\\project02\\project02.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{BCA45BAB-1027-4E33-87FE-4521DB0A1798}|Project02.csproj|solutionrelative:project02.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BCA45BAB-1027-4E33-87FE-4521DB0A1798}|Project02.csproj|d:\\lesson-and-project\\asp\\project02\\views\\admin\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{BCA45BAB-1027-4E33-87FE-4521DB0A1798}|Project02.csproj|solutionrelative:views\\admin\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -38,11 +46,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
+              "Title": "README.md",
+              "DocumentMoniker": "D:\\Lesson-and-Project\\ASP\\Project02\\README.md",
+              "RelativeDocumentMoniker": "README.md",
+              "ToolTip": "D:\\Lesson-and-Project\\ASP\\Project02\\README.md",
+              "RelativeToolTip": "README.md",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABcAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-08-25T04:49:12.086Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Project02",
+              "DocumentMoniker": "D:\\Lesson-and-Project\\ASP\\Project02\\Project02.csproj",
+              "RelativeDocumentMoniker": "Project02.csproj",
+              "ToolTip": "D:\\Lesson-and-Project\\ASP\\Project02\\Project02.csproj",
+              "RelativeToolTip": "Project02.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-25T04:46:57.582Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\Lesson-and-Project\\ASP\\Project02\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
@@ -50,12 +84,11 @@
               "RelativeToolTip": "Views\\Home\\Index.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-24T17:52:53.797Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-24T17:52:53.797Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "D:\\Lesson-and-Project\\ASP\\Project02\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
@@ -63,12 +96,11 @@
               "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
               "ViewState": "AgIAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-24T17:48:41.357Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-24T17:48:41.357Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "AdminController.cs",
               "DocumentMoniker": "D:\\Lesson-and-Project\\ASP\\Project02\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
@@ -76,12 +108,11 @@
               "RelativeToolTip": "Controllers\\AdminController.cs",
               "ViewState": "AgIAAFEAAAAAAAAAAAAnwFwAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-24T09:17:35.954Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-24T09:17:35.954Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Login.cshtml",
               "DocumentMoniker": "D:\\Lesson-and-Project\\ASP\\Project02\\Views\\Admin\\Login.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\Login.cshtml",
@@ -94,7 +125,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\Lesson-and-Project\\ASP\\Project02\\Views\\Admin\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\Index.cshtml",
@@ -102,12 +133,11 @@
               "RelativeToolTip": "Views\\Admin\\Index.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-23T14:50:26.741Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-23T14:50:26.741Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "_ViewImports.cshtml",
               "DocumentMoniker": "D:\\Lesson-and-Project\\ASP\\Project02\\Views\\_ViewImports.cshtml",
               "RelativeDocumentMoniker": "Views\\_ViewImports.cshtml",
@@ -115,12 +145,11 @@
               "RelativeToolTip": "Views\\_ViewImports.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-23T14:51:29.115Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-23T14:51:29.115Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "PasswordHasher.cs",
               "DocumentMoniker": "D:\\Lesson-and-Project\\ASP\\Project02\\Security\\PasswordHasher.cs",
               "RelativeDocumentMoniker": "Security\\PasswordHasher.cs",
