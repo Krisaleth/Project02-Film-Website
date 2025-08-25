@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "_AdminLayout";
-    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Title"] = "Dashboard";
     ViewData["Username"] = ViewBag.Username;
 }
 <main class="app-main">
@@ -10,7 +10,7 @@
     <div class="container-fluid">
     <!--begin::Row-->
     <div class="row">
-        <div class="col-sm-12"><h3 class="mb-0">Dashboard</h3></div>
+        <div class="col-sm-12"><h3 class="mb-0">@ViewData["Title"]</h3></div>
     </div>
     <!--end::Row-->
     </div>
