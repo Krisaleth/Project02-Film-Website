@@ -32,10 +32,33 @@ dotnet tool install --global dotnet-ef
 dotnet ef --version
 ```
 
-Scaffold command:
+- Scaffold command:
 
 ```bash
 dotnet ef dbcontext scaffold "Server=localhost\SQLEXPRESS;Database=project2;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer --context AppDbContext --context-dir Data -o Models --data-annotations --use-database-names --no-onconfiguring --force
+```
+
+- Thêm dòng này sau build trong Program.cs
+```bash
+    using (var scope = app.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            if (!db.Accounts.Any(a => a.UserName == "admin"))
+            {
+                var (hash, salt) = PasswordHasher.HashPassword("123456");
+                db.Accounts.Add(new Account {
+                    UserName = "admin",
+                    Password_Hash = hash,
+                    Password_Salt = salt,
+                    Password_Algo = "PBKDF2",
+                    Password_Iterations = 100000,
+                    Role = "Admin",
+                    Status = true,
+                    Create_At = DateTime.UtcNow
+                });
+                db.SaveChanges();
+            }
+        }
 ```
 
 ## Advise
