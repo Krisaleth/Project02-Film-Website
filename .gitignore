@@ -1,0 +1,63 @@
+# =========================
+# Visual Studio
+# =========================
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# =========================
+# Build results
+# =========================
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+[Aa]rtifacts/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+
+# =========================
+# ASP.NET Core
+# =========================
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# =========================
+# NuGet
+# =========================
+*.nupkg
+*.snupkg
+*.nuspec
+*.nuget.props
+*.nuget.targets
+packages/
+.nuget/
+
+# =========================
+# Rider / VS Code
+# =========================
+.idea/
+*.iml
+.vscode/
+
+# =========================
+# Others
+# =========================
+*.db
+*.mdf
+*.ldf
+*.jfm
+*.bak
+*.db-shm
+*.db-wal

@@ -7,6 +7,7 @@ using System.Security.Claims;
 using Project02.Data;
 using Project02.ViewModels;
 using Project02.Security;
+using System.Threading.Tasks;
 
 namespace Project02.Controllers
 {
@@ -98,6 +99,12 @@ namespace Project02.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity()); // làm rỗng user hiện tại
             return Redirect("/admin/login");
+        }
+
+        [HttpGet("/admin/movies")]
+        public async Task<IActionResult> Movie()
+        {
+            return View(await _db.Films.ToListAsync());
         }
     }
 }

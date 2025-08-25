@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Project02.Models.Film>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Film_Slug)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Film_Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Film_Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Film_Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Film_Duration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Film_Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Film_Created_At)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Film_Update_At)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Film_Slug)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Film_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Film_Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Film_Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Film_Duration)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Film_Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Film_Created_At)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Film_Update_At)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Film_ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Film_ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Film_ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
