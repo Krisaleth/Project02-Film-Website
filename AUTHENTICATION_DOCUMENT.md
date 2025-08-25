@@ -41,7 +41,8 @@ Luòng chính:
 - Pipeline: Là chuỗi middleware chạy theo thứ tự bạn đăng ký trong Program.cs.
 
 - Route: bản đồ ánh xạ URL → Controller/Action (hoặc Endpoint).
-	
+
+- Async / Await: từ khóa trong C# để làm việc với bất đồng bộ (asynchronous programming).
 	
 ## 3. Các thành phần cần thiết:
 
