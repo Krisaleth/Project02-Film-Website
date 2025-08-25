@@ -18,11 +18,7 @@ This project requires the following packages:
 
 ## Command
 
-- Thêm path này vào enviroment:
-```bash
-%USERPROFILE%\.dotnet\tools
-```
-- Cài dotnet-ef
+- Cài dotnet-ef:
 ```bash
 dotnet tool install --global dotnet-ef
 ```
@@ -38,27 +34,24 @@ dotnet ef --version
 dotnet ef dbcontext scaffold "Server=localhost\SQLEXPRESS;Database=project2;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer --context AppDbContext --context-dir Data -o Models --data-annotations --use-database-names --no-onconfiguring --force
 ```
 
-- Thêm dòng này sau build trong Program.cs
+## Hướng dẫn restore dotnet sau khi clone project về
+
+- Đầu tiên, chúng ta cần clone project về máy trước:
 ```bash
-    using (var scope = app.Services.CreateScope())
-        {
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            if (!db.Accounts.Any(a => a.UserName == "admin"))
-            {
-                var (hash, salt) = PasswordHasher.HashPassword("123456");
-                db.Accounts.Add(new Account {
-                    UserName = "admin",
-                    Password_Hash = hash,
-                    Password_Salt = salt,
-                    Password_Algo = "PBKDF2",
-                    Password_Iterations = 100000,
-                    Role = "Admin",
-                    Status = true,
-                    Create_At = DateTime.UtcNow
-                });
-                db.SaveChanges();
-            }
-        }
+git clone https://github.com/Krisaleth/Project02-Film-Website
+```
+
+- Sau khi clone về, hãy mở SQL Server Management Studio và chạy file Project02.sql để có cho mình DB
+
+- Vào folder chứa project sau khi chạy file SQL, mở Command Prompt ở đây và chạy lệnh sau
+```bash
+dotnet restore Project02.sln
+```
+
+- Nếu build và run tự động chạy thì bạn có thể dừng, nếu không thì chạy thêm 2 lệnh sau:
+```bash
+dotnet build
+dotnet run
 ```
 
 ## Advise
