@@ -18,9 +18,18 @@ This project requires the following packages:
 
 ## Command
 
-Thêm path này vào enviroment:
+- Thêm path này vào enviroment:
 ```bash
 %USERPROFILE%\.dotnet\tools
+```
+- Cài dotnet-ef
+```bash
+dotnet tool install --global dotnet-ef
+```
+
+- Check dotnet-ef
+```bash
+dotnet ef --version
 ```
 
 Scaffold command:
