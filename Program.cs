@@ -23,6 +23,27 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    if (!db.Accounts.Any(a => a.UserName == "admin"))
+    {
+        var (hash, salt) = PasswordHasher.HashPassword("123456");
+        db.Accounts.Add(new Account
+        {
+            UserName = "admin",
+            Password_Hash = hash,
+            Password_Salt = salt,
+            Password_Algo = "PBKDF2",
+            Password_Iterations = 100000,
+            Role = "Admin",
+            Status = true,
+            Create_At = DateTime.UtcNow
+        });
+        db.SaveChanges();
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
