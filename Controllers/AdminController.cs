@@ -101,10 +101,5 @@ namespace Project02.Controllers
             return Redirect("/admin/login");
         }
 
-        [HttpGet("/admin/movies")]
-        public async Task<IActionResult> Movie()
-        {
-            return View(await _db.Films.ToListAsync());
-        }
     }
 }
