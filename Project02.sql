@@ -83,7 +83,6 @@ CREATE TABLE dbo.Film
     Film_ID           BIGINT IDENTITY(1,1) PRIMARY KEY,
     Film_Slug         NVARCHAR(255) NOT NULL,
     Film_Name         NVARCHAR(255) NOT NULL,
-    Film_Type         NVARCHAR(100) NOT NULL,
     Film_Description  NVARCHAR(MAX) NOT NULL,
     Film_Duration     SMALLINT      NOT NULL,
     Film_Status       NVARCHAR(30)  NOT NULL CONSTRAINT DF_Film_Status DEFAULT (N'Publish'),
@@ -214,28 +213,28 @@ VALUES
 (N'Horror', 'horror'),
 (N'Sci-Fi', 'sci-fi');
 
-INSERT INTO dbo.Film (Film_Slug, Film_Name, Film_Type, Film_Description, Film_Duration, Film_Status)
+INSERT INTO dbo.Film (Film_Slug, Film_Name, Film_Description, Film_Duration, Film_Status)
 VALUES
-('inception-2010', N'Inception', 'Movie', N'Dream within a dream thriller.', 148, 'Publish'),
-('interstellar-2014', N'Interstellar', 'Movie', N'Space travel through wormholes.', 169, 'Publish'),
-('matrix-1999', N'The Matrix', 'Movie', N'Virtual reality and human freedom.', 136, 'Publish'),
-('avengers-2012', N'The Avengers', 'Movie', N'Marvel heroes unite.', 143, 'Publish'),
-('darkknight-2008', N'The Dark Knight', 'Movie', N'Batman faces Joker in Gotham.', 152, 'Publish'),
-('parasite-2019', N'Parasite', 'Movie', N'South Korean social thriller.', 132, 'Publish'),
-('joker-2019', N'Joker', 'Movie', N'The rise of Arthur Fleck.', 122, 'Publish'),
-('titanic-1997', N'Titanic', 'Movie', N'Romance on doomed ship.', 195, 'Publish'),
-('avatar-2009', N'Avatar', 'Movie', N'Human vs Na''vi in Pandora.', 162, 'Publish'),
-('terminator2-1991', N'Terminator 2', 'Movie', N'Robot fights for future.', 137, 'Publish'),
-('godfather-1972', N'The Godfather', 'Movie', N'Mafia family crime drama.', 175, 'Publish'),
-('shawshank-1994', N'The Shawshank Redemption', 'Movie', N'Hope inside prison.', 142, 'Publish'),
-('lotr-fellowship-2001', N'LOTR: The Fellowship of the Ring', 'Movie', N'Journey to destroy the One Ring.', 178, 'Publish'),
-('lotr-return-2003', N'LOTR: The Return of the King', 'Movie', N'Epic finale to the Ring war.', 201, 'Publish'),
-('harrypotter-2001', N'Harry Potter and the Sorcerer''s Stone', 'Movie', N'Boy wizard begins adventure.', 152, 'Publish'),
-('harrypotter-2004', N'Harry Potter and the Prisoner of Azkaban', 'Movie', N'Harry discovers Sirius Black.', 142, 'Publish'),
-('spiderman-2002', N'Spider-Man', 'Movie', N'Peter Parker becomes Spider-Man.', 121, 'Publish'),
-('blackpanther-2018', N'Black Panther', 'Movie', N'T''Challa defends Wakanda.', 134, 'Publish'),
-('frozen-2013', N'Frozen', 'Animation', N'Sisters Elsa and Anna.', 102, 'Publish'),
-('toy-story-1995', N'Toy Story', 'Animation', N'Pixar toys come alive.', 81, 'Publish');
+('inception-2010', N'Inception', N'Dream within a dream thriller.', 148, 'Publish'),
+('interstellar-2014', N'Interstellar', N'Space travel through wormholes.', 169, 'Publish'),
+('matrix-1999', N'The Matrix', N'Virtual reality and human freedom.', 136, 'Publish'),
+('avengers-2012', N'The Avengers', N'Marvel heroes unite.', 143, 'Publish'),
+('darkknight-2008', N'The Dark Knight', N'Batman faces Joker in Gotham.', 152, 'Publish'),
+('parasite-2019', N'Parasite', N'South Korean social thriller.', 132, 'Publish'),
+('joker-2019', N'Joker', N'The rise of Arthur Fleck.', 122, 'Publish'),
+('titanic-1997', N'Titanic', N'Romance on doomed ship.', 195, 'Publish'),
+('avatar-2009', N'Avatar', N'Human vs Na''vi in Pandora.', 162, 'Publish'),
+('terminator2-1991', N'Terminator 2', N'Robot fights for future.', 137, 'Publish'),
+('godfather-1972', N'The Godfather', N'Mafia family crime drama.', 175, 'Publish'),
+('shawshank-1994', N'The Shawshank Redemption', N'Hope inside prison.', 142, 'Publish'),
+('lotr-fellowship-2001', N'LOTR: The Fellowship of the Ring', N'Journey to destroy the One Ring.', 178, 'Publish'),
+('lotr-return-2003', N'LOTR: The Return of the King', N'Epic finale to the Ring war.', 201, 'Publish'),
+('harrypotter-2001', N'Harry Potter and the Sorcerer''s Stone', N'Boy wizard begins adventure.', 152, 'Publish'),
+('harrypotter-2004', N'Harry Potter and the Prisoner of Azkaban', N'Harry discovers Sirius Black.', 142, 'Publish'),
+('spiderman-2002', N'Spider-Man', N'Peter Parker becomes Spider-Man.', 121, 'Publish'),
+('blackpanther-2018', N'Black Panther', N'T''Challa defends Wakanda.', 134, 'Publish'),
+('frozen-2013', N'Frozen', N'Sisters Elsa and Anna.', 102, 'Publish'),
+('toy-story-1995', N'Toy Story', N'Pixar toys come alive.', 81, 'Publish');
 
 
 -- 1:Action, 2:Comedy, 3:Drama, 4:Horror, 5:Sci-Fi
@@ -248,6 +247,3 @@ INSERT INTO dbo.FilmGenres (Film_ID, Genres_ID) VALUES
 (15,5),(16,5),
 (17,1),(18,1),
 (19,2),(20,2);
-
-
-use project2

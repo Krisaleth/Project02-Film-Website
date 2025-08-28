@@ -5,9 +5,6 @@
     Layout = "_AdminLayout";
     ViewData["Title"] = "Movie";
 }
-<p>
-    
-</p>
 <div class="card">
     <div class="card-header">
         <a asp-action="Create" class="btn btn-outline-success"><i class="bi bi-plus-square"></i></a>
@@ -17,13 +14,25 @@
             <div class="row"><div class="col-sm-12 col-md-6"></div><div class="col-sm-12 col-md-6"></div></div><div class="row">
                 <div class="col-sm-12">
                     <table id="example2" class="table table-bordered table-hover dataTable dtr-inline" aria-describedby="example2_info">
+                        <colgroup>
+                            <col style="width:14%">  <!-- Slug -->
+                            <col style="width:20%">  <!-- Name -->
+                            <col style="width:34%">  <!-- Description -->
+                            <col style="width:6%">   <!-- Duration -->
+                            <col style="width:8%">   <!-- Status -->
+                            <col style="width:8%">   <!-- Created -->
+                            <col style="width:8%">   <!-- Updated -->
+                            <col style="width:12%">  <!-- Control -->
+                        </colgroup>
+
+
                         <thead>
                             <tr>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Movie Slug</th>
-                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Movie Name</th>
-                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Movie Type</th>
-                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Description</th>
+                                <th class="sorting text-start" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Movie Name</th>
+                                <th class="sorting text-start" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Description</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Duration</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Status</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Created At</th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1">Updated At</th>
                                 <th>Control</th>
@@ -35,12 +44,11 @@
                                 <tr>
                                     <td>@item.Film_Slug</td>
                                     <td>@item.Film_Name</td>
-                                    <td>@item.Film_Type</td>
                                     <td>@item.Film_Description</td>
-                                    <td>@item.Film_Duration</td>
+                                    <td>@item.Film_Duration mins</td>
                                     <td>@item.Film_Status</td>
-                                    <td>@item.Film_Created_At</td>
-                                    <td>@item.Film_Update_At</td>
+                                    <td>@item.Film_Created_At.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.Film_Update_At.ToString("dd/MM/yyyy")</td>
                                     <td>
                                         <!-- Edit -->
                                         <a asp-action="Edit" asp-route-id="@item.Film_ID" class="btn btn-sm btn-outline-primary" title="Edit">

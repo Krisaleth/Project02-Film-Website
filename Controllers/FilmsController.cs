@@ -65,7 +65,7 @@ namespace Project02.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            var username = User.FindFirst(ClaimTypes.Name).Value;
+            var username = User.FindFirstValue(ClaimTypes.Name);
             ViewBag.Username = username;
             return View();
         }
@@ -75,7 +75,7 @@ namespace Project02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Film_ID,Film_Slug,Film_Name,Film_Type,Film_Description,Film_Duration,Film_Status,Film_Created_At,Film_Update_At")] Film film)
+        public async Task<IActionResult> Create([Bind("Film_ID,Film_Slug,Film_Name,Film_Description,Film_Duration,Film_Status,Film_Created_At,Film_Update_At")] Film film)
         {
             if (ModelState.IsValid)
             {
@@ -107,7 +107,7 @@ namespace Project02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Film_ID,Film_Slug,Film_Name,Film_Type,Film_Description,Film_Duration,Film_Status,Film_Created_At,Film_Update_At")] Film film)
+        public async Task<IActionResult> Edit(long id, [Bind("Film_ID,Film_Slug,Film_Name,Film_Description,Film_Duration,Film_Status,Film_Created_At,Film_Update_At")] Film film)
         {
             if (id != film.Film_ID)
             {

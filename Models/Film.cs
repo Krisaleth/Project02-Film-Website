@@ -21,9 +21,6 @@ public partial class Film
     [StringLength(255)]
     public string Film_Name { get; set; } = null!;
 
-    [StringLength(100)]
-    public string Film_Type { get; set; } = null!;
-
     public string Film_Description { get; set; } = null!;
 
     public short Film_Duration { get; set; }
