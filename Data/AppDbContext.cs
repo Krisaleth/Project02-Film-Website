@@ -30,7 +30,7 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C9535795F0");
+            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C99BD9FD69");
 
             entity.Property(e => e.Create_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Password_Algo).HasDefaultValue("PBKDF2");
@@ -40,7 +40,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Admin>(entity =>
         {
-            entity.HasKey(e => e.Admin_ID).HasName("PK__Admin__4A300117C0E69D9D");
+            entity.HasKey(e => e.Admin_ID).HasName("PK__Admin__4A300117542D0F63");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Admins)
                 .OnDelete(DeleteBehavior.SetNull)
@@ -49,7 +49,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143BCC15F6B4");
+            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143B9014C192");
 
             entity.Property(e => e.Created_At).HasDefaultValueSql("(sysutcdatetime())");
 
@@ -69,7 +69,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Film>(entity =>
         {
-            entity.HasKey(e => e.Film_ID).HasName("PK__Film__CE6092FC768822CF");
+            entity.HasKey(e => e.Film_ID).HasName("PK__Film__CE6092FCF6EE4EF1");
 
             entity.Property(e => e.Film_Created_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Film_Status).HasDefaultValue("Publish");
@@ -93,12 +93,12 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.Genres_ID).HasName("PK__Genres__2232D7A6CC875AFF");
+            entity.HasKey(e => e.Genres_ID).HasName("PK__Genres__2232D7A6B537066A");
         });
 
         modelBuilder.Entity<Person>(entity =>
         {
-            entity.HasKey(e => e.Person_ID).HasName("PK__Person__7EABD08B5A9B6571");
+            entity.HasKey(e => e.Person_ID).HasName("PK__Person__7EABD08B5D112512");
 
             entity.HasOne(d => d.Account).WithMany(p => p.People)
                 .OnDelete(DeleteBehavior.SetNull)

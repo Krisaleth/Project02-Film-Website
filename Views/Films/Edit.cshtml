@@ -4,66 +4,62 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<div class="container mt-4">
+    <div class="card shadow-lg rounded-3 border-0">
+        <div class="card-body p-4">
+            <h2 class="mb-4 text-warning fw-bold">
+                <i class="bi bi-pencil-square"></i> Edit Film
+            </h2>
+            <hr />
 
-<h4>Film</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Film_ID" />
-            <div class="form-group">
-                <label asp-for="Film_Slug" class="control-label"></label>
-                <input asp-for="Film_Slug" class="form-control" />
-                <span asp-validation-for="Film_Slug" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Film_Name" class="control-label"></label>
-                <input asp-for="Film_Name" class="form-control" />
-                <span asp-validation-for="Film_Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Film_Type" class="control-label"></label>
-                <input asp-for="Film_Type" class="form-control" />
-                <span asp-validation-for="Film_Type" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Film_Description" class="control-label"></label>
-                <input asp-for="Film_Description" class="form-control" />
-                <span asp-validation-for="Film_Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Film_Duration" class="control-label"></label>
-                <input asp-for="Film_Duration" class="form-control" />
-                <span asp-validation-for="Film_Duration" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Film_Status" class="control-label"></label>
-                <input asp-for="Film_Status" class="form-control" />
-                <span asp-validation-for="Film_Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Film_Created_At" class="control-label"></label>
-                <input asp-for="Film_Created_At" class="form-control" />
-                <span asp-validation-for="Film_Created_At" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Film_Update_At" class="control-label"></label>
-                <input asp-for="Film_Update_At" class="form-control" />
-                <span asp-validation-for="Film_Update_At" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+            <form asp-action="Edit">
+                <input type="hidden" asp-for="Film_ID" />
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Movie Slug</label>
+                    <input asp-for="Film_Slug" class="form-control" placeholder="Enter movie slug" />
+                    <span asp-validation-for="Film_Slug" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Movie Name</label>
+                    <input asp-for="Film_Name" class="form-control" placeholder="Enter movie name" />
+                    <span asp-validation-for="Film_Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Movie Type</label>
+                    <input asp-for="Film_Type" class="form-control" placeholder="Enter movie type" />
+                    <span asp-validation-for="Film_Type" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Description</label>
+                    <textarea asp-for="Film_Description" rows="3" class="form-control" placeholder="Enter description"></textarea>
+                    <span asp-validation-for="Film_Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Duration</label>
+                    <input asp-for="Film_Duration" class="form-control" placeholder="Enter duration (minutes)" />
+                    <span asp-validation-for="Film_Duration" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-warning px-4">
+                        <i class="bi bi-save"></i> Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

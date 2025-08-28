@@ -4,63 +4,57 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h2 class="mb-4">Film Details</h2>
 
-<div>
-    <h4>Film</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Slug)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Slug)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Duration)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Duration)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Created_At)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Created_At)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Update_At)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Update_At)
-        </dd>
-    </dl>
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Movie Slug</label>
+            <input type="text" class="form-control" value="@Model.Film_Slug" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Movie Name</label>
+            <input type="text" class="form-control" value="@Model.Film_Name" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Movie Type</label>
+            <input type="text" class="form-control" value="@Model.Film_Type" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea class="form-control" rows="3" readonly>@Model.Film_Description</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Duration</label>
+            <input type="text" class="form-control" value="@Model.Film_Duration" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Status</label>
+            <input type="text" class="form-control" value="@Model.Film_Status" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Created At</label>
+            <input type="text" class="form-control" value="@Model.Film_Created_At" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Updated At</label>
+            <input type="text" class="form-control" value="@Model.Film_Update_At" readonly />
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Film_ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="mt-4">
+    <a asp-action="Edit" asp-route-id="@Model?.Film_ID" class="btn btn-primary me-2">
+        <i class="bi bi-pencil-square"></i> Edit
+    </a>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back to List
+    </a>
 </div>
