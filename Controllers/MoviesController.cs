@@ -1,48 +1,45 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
-using Project02.Extension;
 using Project02.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Project02.Extension;
 
 namespace Project02.Controllers
 {
-    public class FilmsController : Controller
+    public class MoviesController : Controller
     {
         private readonly AppDbContext _context;
 
-        public FilmsController(AppDbContext context)
+        public MoviesController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Films
-        [HttpGet("/admin/movie")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index([FromQuery]int page = 1, [FromQuery] int pageSize = 6, [FromQuery] string? q = null)
+        // GET: Movies
+        [HttpGet("admin/movie")]
+        public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 10)
         {
-            var query = _context.Films.AsNoTracking();
+            var username = User.FindFirst(ClaimTypes.Name).Value;
+            var query = _context.Movies.AsNoTracking();
+            if(!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(m => m.Movie_Name.Contains(search)); 
+            }
 
-            if (!string.IsNullOrWhiteSpace(q))
-                query = query.Where(f => f.Film_Name.Contains(q));
+            query = query.OrderBy(m => m.Movie_Name);
 
-            query = query.OrderByDescending(f => f.Film_Created_At);
-
-            var result = await query.ToPagedResultAsync(page, pageSize);
-
-            var username = User.FindFirstValue(ClaimTypes.Name) ?? User.Identity?.Name ?? "admin";
+            var model = await query.ToPagedResultAsync(page, pageSize);
             ViewBag.Username = username;
-            ViewBag.q = q;
-            return View(result);
+            return View(model);
         }
 
-        // GET: Films/Details/5
+        // GET: Movies/Details/5
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -50,43 +47,39 @@ namespace Project02.Controllers
                 return NotFound();
             }
 
-            var film = await _context.Films
-                .FirstOrDefaultAsync(m => m.Film_ID == id);
-            if (film == null)
+            var movie = await _context.Movies
+                .FirstOrDefaultAsync(m => m.Movie_ID == id);
+            if (movie == null)
             {
                 return NotFound();
             }
 
-            return View(film);
+            return View(movie);
         }
 
-        // GET: Films/Create
-        [HttpGet("/admin/create")]
-        [Authorize(Roles = "Admin")]
+        // GET: Movies/Create
         public IActionResult Create()
         {
-            var username = User.FindFirstValue(ClaimTypes.Name);
-            ViewBag.Username = username;
             return View();
         }
 
-        // POST: Films/Create
+        // POST: Movies/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Film_ID,Film_Slug,Film_Name,Film_Description,Film_Duration,Film_Status,Film_Created_At,Film_Update_At")] Film film)
+        public async Task<IActionResult> Create([Bind("Movie_ID,Movie_Slug,Movie_Name,Movie_Description,Movie_Duration,Movie_Status,Movie_Created_At,Movie_Update_At")] Movie movie)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(film);
+                _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(film);
+            return View(movie);
         }
 
-        // GET: Films/Edit/5
+        // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -94,22 +87,22 @@ namespace Project02.Controllers
                 return NotFound();
             }
 
-            var film = await _context.Films.FindAsync(id);
-            if (film == null)
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie == null)
             {
                 return NotFound();
             }
-            return View(film);
+            return View(movie);
         }
 
-        // POST: Films/Edit/5
+        // POST: Movies/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Film_ID,Film_Slug,Film_Name,Film_Description,Film_Duration,Film_Status,Film_Created_At,Film_Update_At")] Film film)
+        public async Task<IActionResult> Edit(long id, [Bind("Movie_ID,Movie_Slug,Movie_Name,Movie_Description,Movie_Duration,Movie_Status,Movie_Created_At,Movie_Update_At")] Movie movie)
         {
-            if (id != film.Film_ID)
+            if (id != movie.Movie_ID)
             {
                 return NotFound();
             }
@@ -118,12 +111,12 @@ namespace Project02.Controllers
             {
                 try
                 {
-                    _context.Update(film);
+                    _context.Update(movie);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FilmExists(film.Film_ID))
+                    if (!MovieExists(movie.Movie_ID))
                     {
                         return NotFound();
                     }
@@ -134,10 +127,10 @@ namespace Project02.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(film);
+            return View(movie);
         }
 
-        // GET: Films/Delete/5
+        // GET: Movies/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -145,34 +138,34 @@ namespace Project02.Controllers
                 return NotFound();
             }
 
-            var film = await _context.Films
-                .FirstOrDefaultAsync(m => m.Film_ID == id);
-            if (film == null)
+            var movie = await _context.Movies
+                .FirstOrDefaultAsync(m => m.Movie_ID == id);
+            if (movie == null)
             {
                 return NotFound();
             }
 
-            return View(film);
+            return View(movie);
         }
 
-        // POST: Films/Delete/5
+        // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var film = await _context.Films.FindAsync(id);
-            if (film != null)
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie != null)
             {
-                _context.Films.Remove(film);
+                _context.Movies.Remove(movie);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool FilmExists(long id)
+        private bool MovieExists(long id)
         {
-            return _context.Films.Any(e => e.Film_ID == id);
+            return _context.Movies.Any(e => e.Movie_ID == id);
         }
     }
 }

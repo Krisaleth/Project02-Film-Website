@@ -14,23 +14,21 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Account> Accounts { get; set; }
 
-    public virtual DbSet<Admin> Admins { get; set; }
-
     public virtual DbSet<Comment> Comments { get; set; }
 
     public virtual DbSet<Favorite> Favorites { get; set; }
 
-    public virtual DbSet<Film> Films { get; set; }
-
     public virtual DbSet<Genre> Genres { get; set; }
 
-    public virtual DbSet<Person> People { get; set; }
+    public virtual DbSet<Movie> Movies { get; set; }
+
+    public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C99BD9FD69");
+            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C9336E82CF");
 
             entity.Property(e => e.Create_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Password_Algo).HasDefaultValue("PBKDF2");
@@ -38,71 +36,62 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Status).HasDefaultValue(true);
         });
 
-        modelBuilder.Entity<Admin>(entity =>
-        {
-            entity.HasKey(e => e.Admin_ID).HasName("PK__Admin__4A300117542D0F63");
-
-            entity.HasOne(d => d.Account).WithMany(p => p.Admins)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("FK_Admin_Account");
-        });
-
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143B9014C192");
+            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143B18FFA8C5");
 
             entity.Property(e => e.Created_At).HasDefaultValueSql("(sysutcdatetime())");
 
-            entity.HasOne(d => d.Film).WithMany(p => p.Comments).HasConstraintName("FK_Comments_Film");
+            entity.HasOne(d => d.Movie).WithMany(p => p.Comments).HasConstraintName("FK_Comments_Movie");
 
-            entity.HasOne(d => d.Person).WithMany(p => p.Comments).HasConstraintName("FK_Comments_Person");
+            entity.HasOne(d => d.Users).WithMany(p => p.Comments).HasConstraintName("FK_Comments_Users");
         });
 
         modelBuilder.Entity<Favorite>(entity =>
         {
             entity.Property(e => e.Created_At).HasDefaultValueSql("(sysutcdatetime())");
 
-            entity.HasOne(d => d.Film).WithMany(p => p.Favorites).HasConstraintName("FK_Favorites_Film");
+            entity.HasOne(d => d.Movie).WithMany(p => p.Favorites).HasConstraintName("FK_Favorites_Movie");
 
-            entity.HasOne(d => d.Person).WithMany(p => p.Favorites).HasConstraintName("FK_Favorites_Person");
-        });
-
-        modelBuilder.Entity<Film>(entity =>
-        {
-            entity.HasKey(e => e.Film_ID).HasName("PK__Film__CE6092FCF6EE4EF1");
-
-            entity.Property(e => e.Film_Created_At).HasDefaultValueSql("(sysutcdatetime())");
-            entity.Property(e => e.Film_Status).HasDefaultValue("Publish");
-            entity.Property(e => e.Film_Update_At).HasDefaultValueSql("(sysutcdatetime())");
-
-            entity.HasMany(d => d.Genres).WithMany(p => p.Films)
-                .UsingEntity<Dictionary<string, object>>(
-                    "FilmGenre",
-                    r => r.HasOne<Genre>().WithMany()
-                        .HasForeignKey("Genres_ID")
-                        .HasConstraintName("FK_FilmGenres_Genres"),
-                    l => l.HasOne<Film>().WithMany()
-                        .HasForeignKey("Film_ID")
-                        .HasConstraintName("FK_FilmGenres_Film"),
-                    j =>
-                    {
-                        j.HasKey("Film_ID", "Genres_ID");
-                        j.ToTable("FilmGenres");
-                    });
+            entity.HasOne(d => d.Users).WithMany(p => p.Favorites).HasConstraintName("FK_Favorites_Users");
         });
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.Genres_ID).HasName("PK__Genres__2232D7A6B537066A");
+            entity.HasKey(e => e.Genres_ID).HasName("PK__Genres__2232D7A64F02941E");
         });
 
-        modelBuilder.Entity<Person>(entity =>
+        modelBuilder.Entity<Movie>(entity =>
         {
-            entity.HasKey(e => e.Person_ID).HasName("PK__Person__7EABD08B5D112512");
+            entity.HasKey(e => e.Movie_ID).HasName("PK__Movie__7A8804050BBE30EA");
 
-            entity.HasOne(d => d.Account).WithMany(p => p.People)
+            entity.Property(e => e.Movie_Created_At).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.Movie_Status).HasDefaultValue("Publish");
+            entity.Property(e => e.Movie_Update_At).HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.HasMany(d => d.Genres).WithMany(p => p.Movies)
+                .UsingEntity<Dictionary<string, object>>(
+                    "MovieGenre",
+                    r => r.HasOne<Genre>().WithMany()
+                        .HasForeignKey("Genres_ID")
+                        .HasConstraintName("FK_MovieGenres_Genres"),
+                    l => l.HasOne<Movie>().WithMany()
+                        .HasForeignKey("Movie_ID")
+                        .HasConstraintName("FK_MovieGenres_Movie"),
+                    j =>
+                    {
+                        j.HasKey("Movie_ID", "Genres_ID");
+                        j.ToTable("MovieGenres");
+                    });
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Users_ID).HasName("PK__Users__EB68290DDD1BEFF7");
+
+            entity.HasOne(d => d.Account).WithMany(p => p.Users)
                 .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("FK_Person_Account");
+                .HasConstraintName("FK_Users_Account");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -1,4 +1,4 @@
-﻿@model Project02.Models.Film
+﻿@model Project02.Models.Movie
 
 @{
     ViewData["Title"] = "Delete";
@@ -8,55 +8,55 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Film</h4>
+    <h4>Movie</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Slug)
+            @Html.DisplayNameFor(model => model.Movie_Slug)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Slug)
+            @Html.DisplayFor(model => model.Movie_Slug)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Name)
+            @Html.DisplayNameFor(model => model.Movie_Name)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Name)
+            @Html.DisplayFor(model => model.Movie_Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Description)
+            @Html.DisplayNameFor(model => model.Movie_Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Description)
+            @Html.DisplayFor(model => model.Movie_Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Duration)
+            @Html.DisplayNameFor(model => model.Movie_Duration)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Duration)
+            @Html.DisplayFor(model => model.Movie_Duration)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Status)
+            @Html.DisplayNameFor(model => model.Movie_Status)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Status)
+            @Html.DisplayFor(model => model.Movie_Status)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Created_At)
+            @Html.DisplayNameFor(model => model.Movie_Created_At)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Created_At)
+            @Html.DisplayFor(model => model.Movie_Created_At)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Film_Update_At)
+            @Html.DisplayNameFor(model => model.Movie_Update_At)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Film_Update_At)
+            @Html.DisplayFor(model => model.Movie_Update_At)
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="Film_ID" />
+        <input type="hidden" asp-for="Movie_ID" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>

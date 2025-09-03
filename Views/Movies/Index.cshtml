@@ -1,0 +1,125 @@
+﻿@model Project02.Models.PagedResult<Project02.Models.Movie>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Movies";
+
+    var start = (Model.PageIndex - 1) * Model.PageSize + 1;
+    var end = Math.Min(Model.TotalItems, Model.PageIndex * Model.PageSize);
+    if (Model.TotalItems == 0) { start = 0; end = 0; }
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <!-- Tiêu đề bên trái -->
+                    <h3 class="card-title mb-0">Movies table with minimum features</h3>
+
+                    <!-- Form + Add Movie bên phải -->
+                    <div class="d-flex ms-auto">
+                        <!-- Form search -->
+                        <form asp-action="Index" method="get" class="d-flex me-2">
+                            <input type="text" name="search" value="@ViewBag.Search"
+                                   class="form-control form-control-sm me-2"
+                                   placeholder="Search by name..." />
+                            <input type="hidden" name="pageSize" value="@Model.PageSize" />
+                            <button type="submit" class="btn btn-sm btn-secondary d-flex align-items-center">
+                                <i class="fa-solid fa-magnifying-glass me-1"></i>
+                                Search
+                            </button>
+
+                        </form>
+
+                        <!-- Button thêm mới -->
+                        <a asp-action="Create" class="btn btn-sm btn-primary">
+                            <i class="fa-solid fa-plus"></i> Add Movie
+                        </a>
+                    </div>
+                </div>
+
+
+
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Slug</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th class="text-center">Control</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Items.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted">No movies found</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td>@item.Movie_Slug</td>
+                                        <td>@item.Movie_Name</td>
+                                        <td class="text-truncate" style="max-width: 420px;">@item.Movie_Description</td>
+                                        <td class="text-center">@item.Movie_Duration mins</td>
+                                        <td>@item.Movie_Status</td>
+                                        <td>
+                                            <a asp-action="Edit" class="btn btn-outline-primary" asp-route-id="@item.Movie_ID"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a asp-action="Details" class="btn btn-outline-info" asp-route-id="@item.Movie_ID"><i class="fas fa-info-circle"></i> </a>
+                                            <a asp-action="Delete" class="btn btn-outline-danger" asp-route-id="@item.Movie_ID"><i class="fa-solid fa-trash"></i>  </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            Showing @start to @end of @Model.TotalItems entries
+                        </div>
+                        <nav>
+                            <ul class="pagination mb-0">
+                                <li class="page-item mx-1 @(Model.HasPrevious ? "" : "disabled")">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-search="@ViewBag.Search"
+                                       asp-route-page="@(Model.PageIndex - 1)"
+                                       asp-route-pageSize="@(Model.PageSize)">Previous</a>
+                                </li>
+
+                                @for (int p = 1; p <= Model.TotalPages; p++)
+                                {
+                                    <li class="page-item mx-1 @(p == Model.PageIndex ? "active" : "")">
+                                        <a class="page-link"
+                                           asp-action="Index"
+                                           asp-route-search="@ViewBag.Search"
+                                           asp-route-page="@p"
+                                           asp-route-pageSize="@(Model.PageSize)">@p</a>
+                                    </li>
+                                }
+
+                                <li class="page-item mx-1 @(Model.HasNext ? "" : "disabled")">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-search="@ViewBag.Search"
+                                       asp-route-page="@(Model.PageIndex + 1)"
+                                       asp-route-pageSize="@(Model.PageSize)">Next</a>
+                                </li>
+                            </ul>
+
+                        </nav>
+                    </div>
+
+                </div> <!-- /.card-body -->
+            </div>
+        </div>
+    </div>
+</div>

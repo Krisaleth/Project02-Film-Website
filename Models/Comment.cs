@@ -11,19 +11,19 @@ public partial class Comment
     [Key]
     public long Comment_ID { get; set; }
 
-    public long Person_ID { get; set; }
+    public long Users_ID { get; set; }
 
-    public long Film_ID { get; set; }
+    public long Movie_ID { get; set; }
 
     public string Content { get; set; } = null!;
 
     public DateTime Created_At { get; set; }
 
-    [ForeignKey("Film_ID")]
+    [ForeignKey("Movie_ID")]
     [InverseProperty("Comments")]
-    public virtual Film Film { get; set; } = null!;
+    public virtual Movie Movie { get; set; } = null!;
 
-    [ForeignKey("Person_ID")]
+    [ForeignKey("Users_ID")]
     [InverseProperty("Comments")]
-    public virtual Person Person { get; set; } = null!;
+    public virtual User Users { get; set; } = null!;
 }

@@ -45,7 +45,7 @@ namespace Project02.Controllers
             var user = await _db.Accounts.AsNoTracking().FirstOrDefaultAsync(a => a.UserName == vm.UserName);
 
             // Check user + status
-            if(user is null || !user.Status)
+            if (user is null || !user.Status)
             {
                 ModelState.AddModelError("", "Tài khoản và mật khẩu không đúng!!");
                 return View(vm);
@@ -83,7 +83,7 @@ namespace Project02.Controllers
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProps);
 
-            if(!string.IsNullOrEmpty(vm.ReturnUrl) && Url.IsLocalUrl(vm.ReturnUrl))
+            if (!string.IsNullOrEmpty(vm.ReturnUrl) && Url.IsLocalUrl(vm.ReturnUrl))
             {
                 return Redirect(vm.ReturnUrl);
             }

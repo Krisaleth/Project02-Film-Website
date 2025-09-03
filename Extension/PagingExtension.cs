@@ -1,11 +1,12 @@
 ﻿using Project02.Models;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Project02.Extension
 {
     public static class PagingExtension
     {
-        public static async Task<PagedResult<T>> ToPagedResultAsync<T> (
+        public static async Task<PagedResult<T>> ToPagedResultAsync<T>(
             this IQueryable<T> query, int page, int pageSize)
         {
             if (page < 1) page = 1;
@@ -13,11 +14,11 @@ namespace Project02.Extension
 
             var total = await query.CountAsync();
 
-            var lastPage = Math.Max(1, (int)Math.Ceiling((double)total/pageSize));
+            var lastPage = Math.Max(1, (int)Math.Ceiling((double)total / pageSize));
             if (page > lastPage) page = lastPage;
 
             var items = await query
-                .Skip((page - 1)*pageSize)
+                .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
