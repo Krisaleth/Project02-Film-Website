@@ -20,8 +20,6 @@ namespace Project02.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            ViewBag.Username = username;
             return View();
         }
         [HttpGet("/admin/login")]

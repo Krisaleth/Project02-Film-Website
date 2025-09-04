@@ -70,7 +70,8 @@ CREATE TABLE dbo.Movie
     Movie_Created_At   DATETIME2(7)  NOT NULL CONSTRAINT DF_Movie_Created_At DEFAULT (SYSUTCDATETIME()),
     Movie_Update_At    DATETIME2(7)  NOT NULL CONSTRAINT DF_Movie_Updated_At DEFAULT (SYSUTCDATETIME()),
     CONSTRAINT UQ_Movie_Name UNIQUE (Movie_Name),
-    CONSTRAINT UQ_Movie_Slug UNIQUE (Movie_Slug)
+    CONSTRAINT UQ_Movie_Slug UNIQUE (Movie_Slug),
+    CONSTRAINT CK_Movie_Status CHECK (Movie_Status IN (N'Publish', N'Unpublish'))
 );
 GO
 

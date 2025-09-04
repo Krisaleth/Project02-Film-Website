@@ -14,12 +14,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <!-- Tiêu đề bên trái -->
                     <h3 class="card-title mb-0">Movies table with minimum features</h3>
 
-                    <!-- Form + Add Movie bên phải -->
                     <div class="d-flex ms-auto">
-                        <!-- Form search -->
                         <form asp-action="Index" method="get" class="d-flex me-2">
                             <input type="text" name="search" value="@ViewBag.Search"
                                    class="form-control form-control-sm me-2"
@@ -32,14 +29,11 @@
 
                         </form>
 
-                        <!-- Button thêm mới -->
                         <a asp-action="Create" class="btn btn-sm btn-primary">
                             <i class="fa-solid fa-plus"></i> Add Movie
                         </a>
                     </div>
                 </div>
-
-
 
                 <div class="card-body">
                     <table class="table table-bordered table-hover">
@@ -57,7 +51,7 @@
                             @if (Model.Items.Count == 0)
                             {
                                 <tr>
-                                    <td colspan="8" class="text-center text-muted">No movies found</td>
+                                    <td colspan="6" class="text-center text-muted">No movies found</td>
                                 </tr>
                             }
                             else
@@ -69,7 +63,20 @@
                                         <td>@item.Movie_Name</td>
                                         <td class="text-truncate" style="max-width: 420px;">@item.Movie_Description</td>
                                         <td class="text-center">@item.Movie_Duration mins</td>
-                                        <td>@item.Movie_Status</td>
+                                        <td>
+                                            @if (item.Movie_Status == "Publish")
+                                            {
+                                                <span class="badge bg-success"><i class="fa-solid fa-eye"></i> Publish</span>
+                                            }
+                                            else if (item.Movie_Status == "Unpublish")
+                                            {
+                                                <span class="badge bg-secondary"><i class="fa-solid fa-eye-slash"></i> Unpublish</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning text-dark">Unknown</span>
+                                            }
+                                        </td>
                                         <td>
                                             <a asp-action="Edit" class="btn btn-outline-primary" asp-route-id="@item.Movie_ID"><i class="fa-solid fa-pen-to-square"></i></a>
                                             <a asp-action="Details" class="btn btn-outline-info" asp-route-id="@item.Movie_ID"><i class="fas fa-info-circle"></i> </a>
@@ -80,6 +87,9 @@
                             }
                         </tbody>
                     </table>
+                    <div class="row my-1">
+                        <div class="col-12"></div>
+                    </div>
 
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -87,17 +97,17 @@
                         </div>
                         <nav>
                             <ul class="pagination mb-0">
-                                <li class="page-item mx-1 @(Model.HasPrevious ? "" : "disabled")">
+                                <li class="page-item me-1 @(Model.HasPrevious ? "" : "disabled")">
                                     <a class="page-link"
                                        asp-action="Index"
                                        asp-route-search="@ViewBag.Search"
                                        asp-route-page="@(Model.PageIndex - 1)"
-                                       asp-route-pageSize="@(Model.PageSize)">Previous</a>
+                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-left"></i></a>
                                 </li>
 
                                 @for (int p = 1; p <= Model.TotalPages; p++)
                                 {
-                                    <li class="page-item mx-1 @(p == Model.PageIndex ? "active" : "")">
+                                    <li class="page-item me-1 @(p == Model.PageIndex ? "active" : "")">
                                         <a class="page-link"
                                            asp-action="Index"
                                            asp-route-search="@ViewBag.Search"
@@ -106,19 +116,19 @@
                                     </li>
                                 }
 
-                                <li class="page-item mx-1 @(Model.HasNext ? "" : "disabled")">
+                                <li class="page-item me-1 @(Model.HasNext ? "" : "disabled")">
                                     <a class="page-link"
                                        asp-action="Index"
                                        asp-route-search="@ViewBag.Search"
                                        asp-route-page="@(Model.PageIndex + 1)"
-                                       asp-route-pageSize="@(Model.PageSize)">Next</a>
+                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-right"></i></a>
                                 </li>
                             </ul>
 
                         </nav>
                     </div>
 
-                </div> <!-- /.card-body -->
+                </div>
             </div>
         </div>
     </div>

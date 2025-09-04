@@ -1,46 +1,55 @@
 ﻿@model Project02.Models.Movie
 
 @{
-    ViewData["Title"] = "Create";
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Create New Movie";
 }
+<div class="container">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <form asp-action="Create">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            A Form to add new movies
+                        </h3>
+                    </div>
 
-<h1>Create</h1>
+                    <div class="card-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label class="control-label mb-1"><strong>Slug</strong></label>
+                            <input asp-for="Movie_Slug" class="form-control" />
+                            <span asp-validation-for="Movie_Slug" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label my-1"><strong>Name</strong></label>
+                            <input asp-for="Movie_Name" class="form-control" />
+                            <span asp-validation-for="Movie_Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label my-1"><strong>Description</strong></label>
+                            <textarea asp-for="Movie_Description" class="form-control" rows="5" cols="40"></textarea>
+                            <span asp-validation-for="Movie_Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label my-1"><strong>Duration</strong></label>
+                            <input asp-for="Movie_Duration" class="form-control" />
+                            <span asp-validation-for="Movie_Duration" class="text-danger"></span>
+                        </div>
 
-<h4>Movie</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Movie_Slug" class="control-label"></label>
-                <input asp-for="Movie_Slug" class="form-control" />
-                <span asp-validation-for="Movie_Slug" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Movie_Name" class="control-label"></label>
-                <input asp-for="Movie_Name" class="form-control" />
-                <span asp-validation-for="Movie_Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Movie_Description" class="control-label"></label>
-                <input asp-for="Movie_Description" class="form-control" />
-                <span asp-validation-for="Movie_Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Movie_Duration" class="control-label"></label>
-                <input asp-for="Movie_Duration" class="form-control" />
-                <span asp-validation-for="Movie_Duration" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                            <a asp-action="Index" class="btn btn-outline-secondary float-end">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

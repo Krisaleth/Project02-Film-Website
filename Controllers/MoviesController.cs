@@ -25,7 +25,6 @@ namespace Project02.Controllers
         [HttpGet("admin/movie")]
         public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 10)
         {
-            var username = User.FindFirst(ClaimTypes.Name).Value;
             var query = _context.Movies.AsNoTracking();
             if(!string.IsNullOrWhiteSpace(search))
             {
@@ -35,7 +34,6 @@ namespace Project02.Controllers
             query = query.OrderBy(m => m.Movie_Name);
 
             var model = await query.ToPagedResultAsync(page, pageSize);
-            ViewBag.Username = username;
             return View(model);
         }
 
@@ -58,6 +56,7 @@ namespace Project02.Controllers
         }
 
         // GET: Movies/Create
+        [HttpGet("/admin/movie/create")]
         public IActionResult Create()
         {
             return View();
@@ -80,6 +79,7 @@ namespace Project02.Controllers
         }
 
         // GET: Movies/Edit/5
+        [HttpGet("admin/movie/edit/{id}")]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)

@@ -1,7 +1,8 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     ViewData["Font"] = "https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3/index.css";
     ViewData["PopperJS"] = "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js";
-    ViewData["Username"] = ViewBag.Username;
+    ViewData["Username"] = User.FindFirst(ClaimTypes.Name)?.Value;
 }
 
 <!doctype html>
@@ -196,6 +197,7 @@
                 </div>
                 <div class="app-content">
                     @RenderBody()
+                    @RenderSection("Scripts", required: false)
                 </div>
                 <!--end::App Content-->
       </main>
@@ -207,7 +209,7 @@
         <!--end::To the end-->
         <!--begin::Copyright-->
         <strong>
-          Copyright &copy; 2014-2025&nbsp;
+          Copyright &copy; 2024-2025&nbsp;
         </strong>
         All rights reserved.
         <!--end::Copyright-->
