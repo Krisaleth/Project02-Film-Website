@@ -1,52 +1,65 @@
 ﻿@{
-    Layout = "_AdminLayout"; // đổi nếu cần
+    Layout = "_Layout"; // layout dành cho user
     ViewData["Title"] = "Movies";
 }
 
-<div class="container-fluid py-4">
-    <h2 class="mb-3">🎬 Poster (sườn tối giản)</h2>
+<div class="container py-5">
+    <h2 class="mb-4 fw-bold text-center">🎬 Khám Phá Phim</h2>
 
     <style>
-        /* Sườn & viền tối giản */
-        .poster-card {
-            border: 1px solid #e5e7eb; /* viền xám nhạt */
-            border-radius: 12px; /* bo góc nhẹ */
+        /* Card phim */
+        .film-card {
+            border-radius: 12px;
             overflow: hidden;
-            background: #ffffff;
+            background: #fff;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
         }
 
-        .poster-img {
+            .film-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, .1);
+            }
+
+        .film-poster {
             width: 100%;
-            aspect-ratio: 2 / 3; /* tỉ lệ ảnh poster */
+            aspect-ratio: 2/3;
+            background: #f3f4f6;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #f3f4f6; /* nền xám nhạt */
-            color: #9ca3af; /* chữ xám */
+            color: #9ca3af;
             font-size: 14px;
-            user-select: none;
         }
 
-        .poster-footer {
-            border-top: 1px solid #e5e7eb; /* viền ngăn cách */
-            padding: .5rem .75rem;
+        .film-info {
+            padding: .75rem;
             text-align: center;
+        }
+
+        .film-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 0;
+        }
+
+        .film-year {
             font-size: .875rem;
             color: #6b7280;
         }
-        /* Tùy chọn: hover nhẹ (nếu muốn) */
-        .poster-card:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,.06);
-        }
     </style>
 
-    <div class="row g-3">
+    <div class="row g-4">
         @for (int i = 0; i < 8; i++)
         {
             <div class="col-6 col-md-4 col-lg-3">
-                <div class="poster-card">
-                    <div class="poster-img">Poster</div>
-                    <div class="poster-footer">Tên phim</div>
+                <div class="film-card">
+                    <div class="film-poster">Poster</div>
+                    <div class="film-info">
+                        <p class="film-title">Tên phim</p>
+                        <p class="film-year">2025</p>
+                    </div>
                 </div>
             </div>
         }
