@@ -21,9 +21,14 @@ public partial class Movie
     [StringLength(255)]
     public string Movie_Name { get; set; } = null!;
 
+    [StringLength(500)]
+    public string Movie_Poster { get; set; } = null!;
+
     public string Movie_Description { get; set; } = null!;
 
     public short Movie_Duration { get; set; }
+
+    public byte[] RowsVersion { get; set; } = null!;
 
     [StringLength(30)]
     public string Movie_Status { get; set; } = null!;

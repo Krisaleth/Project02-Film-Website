@@ -23,6 +23,8 @@ public partial class User
     [Unicode(false)]
     public string Users_Phone { get; set; } = null!;
 
+    public byte[] RowsVersion { get; set; } = null!;
+
     public long? Account_ID { get; set; }
 
     [ForeignKey("Account_ID")]

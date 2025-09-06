@@ -31,7 +31,7 @@ dotnet ef --version
 - Scaffold command:
 
 ```bash
-dotnet ef dbcontext scaffold "Server=localhost\SQLEXPRESS;Database=project2;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer --context AppDbContext --context-dir Data -o Models --data-annotations --use-database-names --no-onconfiguring --force
+dotnet ef dbcontext scaffold "Server=.\SQLEXPRESS;Database=db_movie;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer --context AppDbContext --context-dir Data -o Models --data-annotations --use-database-names --no-onconfiguring --force
 ```
 
 ## Hướng dẫn restore dotnet sau khi clone project về

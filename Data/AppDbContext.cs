@@ -28,7 +28,7 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C9336E82CF");
+            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C9CE46C016");
 
             entity.Property(e => e.Create_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Password_Algo).HasDefaultValue("PBKDF2");
@@ -38,7 +38,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143B18FFA8C5");
+            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143BB80FE3E2");
 
             entity.Property(e => e.Created_At).HasDefaultValueSql("(sysutcdatetime())");
 
@@ -58,36 +58,43 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.Genres_ID).HasName("PK__Genres__2232D7A64F02941E");
+            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A2006F88FC7ED");
         });
 
         modelBuilder.Entity<Movie>(entity =>
         {
-            entity.HasKey(e => e.Movie_ID).HasName("PK__Movie__7A8804050BBE30EA");
+            entity.HasKey(e => e.Movie_ID).HasName("PK__Movie__7A880405016B7ECC");
 
             entity.Property(e => e.Movie_Created_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Movie_Status).HasDefaultValue("Publish");
             entity.Property(e => e.Movie_Update_At).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.RowsVersion)
+                .IsRowVersion()
+                .IsConcurrencyToken();
 
             entity.HasMany(d => d.Genres).WithMany(p => p.Movies)
                 .UsingEntity<Dictionary<string, object>>(
                     "MovieGenre",
                     r => r.HasOne<Genre>().WithMany()
-                        .HasForeignKey("Genres_ID")
-                        .HasConstraintName("FK_MovieGenres_Genres"),
+                        .HasForeignKey("Genre_ID")
+                        .HasConstraintName("FK_MovieGenre_Genre"),
                     l => l.HasOne<Movie>().WithMany()
                         .HasForeignKey("Movie_ID")
-                        .HasConstraintName("FK_MovieGenres_Movie"),
+                        .HasConstraintName("FK_MovieGenre_Movie"),
                     j =>
                     {
-                        j.HasKey("Movie_ID", "Genres_ID");
+                        j.HasKey("Movie_ID", "Genre_ID").HasName("PK_MovieGenre");
                         j.ToTable("MovieGenres");
                     });
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Users_ID).HasName("PK__Users__EB68290DDD1BEFF7");
+            entity.HasKey(e => e.Users_ID).HasName("PK__Users__EB68290D2A4C6460");
+
+            entity.Property(e => e.RowsVersion)
+                .IsRowVersion()
+                .IsConcurrencyToken();
 
             entity.HasOne(d => d.Account).WithMany(p => p.Users)
                 .OnDelete(DeleteBehavior.SetNull)

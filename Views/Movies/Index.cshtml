@@ -1,12 +1,9 @@
-﻿@model Project02.Models.PagedResult<Project02.Models.Movie>
+﻿@using Project02.ViewModels
+@model MovieIndexVm
 
 @{
     Layout = "_AdminLayout";
     ViewData["Title"] = "Movies";
-
-    var start = (Model.PageIndex - 1) * Model.PageSize + 1;
-    var end = Math.Min(Model.TotalItems, Model.PageIndex * Model.PageSize);
-    if (Model.TotalItems == 0) { start = 0; end = 0; }
 }
 
 <div class="container-fluid">
@@ -18,7 +15,7 @@
 
                     <div class="d-flex ms-auto">
                         <form asp-action="Index" method="get" class="d-flex me-2">
-                            <input type="text" name="search" value="@ViewBag.Search"
+                            <input type="text" name="q" value="@Model.Q"
                                    class="form-control form-control-sm me-2"
                                    placeholder="Search by name..." />
                             <input type="hidden" name="pageSize" value="@Model.PageSize" />
@@ -41,6 +38,7 @@
                             <tr>
                                 <th>Slug</th>
                                 <th>Name</th>
+                                <th>Poster</th>
                                 <th>Description</th>
                                 <th>Duration</th>
                                 <th>Status</th>
@@ -61,6 +59,10 @@
                                     <tr>
                                         <td>@item.Movie_Slug</td>
                                         <td>@item.Movie_Name</td>
+                                        <td>
+                                            <img src="@item.Movie_Poster" alt="Poster @item.Movie_Name"
+                                                 style="width:80px;height:auto;object-fit:cover;" />
+                                        </td>
                                         <td class="text-truncate" style="max-width: 420px;">@item.Movie_Description</td>
                                         <td class="text-center">@item.Movie_Duration mins</td>
                                         <td>
@@ -93,21 +95,21 @@
 
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            Showing @start to @end of @Model.TotalItems entries
+                            Showing @Model.Start to @Model.End of @Model.TotalItems entries
                         </div>
                         <nav>
                             <ul class="pagination mb-0">
-                                <li class="page-item me-1 @(Model.HasPrevious ? "" : "disabled")">
+                                <li class="page-item me-1 @(Model.Page == 1 ? "disabled" : "")">
                                     <a class="page-link"
                                        asp-action="Index"
                                        asp-route-search="@ViewBag.Search"
-                                       asp-route-page="@(Model.PageIndex - 1)"
+                                       asp-route-page="@(Model.Page - 1)"
                                        asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-left"></i></a>
                                 </li>
 
-                                @for (int p = 1; p <= Model.TotalPages; p++)
+                                @for (int p = 1; p <= Model.TotalPage; p++)
                                 {
-                                    <li class="page-item me-1 @(p == Model.PageIndex ? "active" : "")">
+                                    <li class="page-item me-1 @(p == Model.Page ? "active" : "")">
                                         <a class="page-link"
                                            asp-action="Index"
                                            asp-route-search="@ViewBag.Search"
@@ -116,11 +118,11 @@
                                     </li>
                                 }
 
-                                <li class="page-item me-1 @(Model.HasNext ? "" : "disabled")">
+                                <li class="page-item me-1 @(Model.Page == Model.TotalPage ? "disabled" : "")">
                                     <a class="page-link"
                                        asp-action="Index"
                                        asp-route-search="@ViewBag.Search"
-                                       asp-route-page="@(Model.PageIndex + 1)"
+                                       asp-route-page="@(Model.Page + 1)"
                                        asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-right"></i></a>
                                 </li>
                             </ul>
