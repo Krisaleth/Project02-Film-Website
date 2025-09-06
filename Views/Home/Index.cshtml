@@ -1,8 +1,54 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = "_AdminLayout"; // đổi nếu cần
+    ViewData["Title"] = "Movies";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid py-4">
+    <h2 class="mb-3">🎬 Poster (sườn tối giản)</h2>
+
+    <style>
+        /* Sườn & viền tối giản */
+        .poster-card {
+            border: 1px solid #e5e7eb; /* viền xám nhạt */
+            border-radius: 12px; /* bo góc nhẹ */
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .poster-img {
+            width: 100%;
+            aspect-ratio: 2 / 3; /* tỉ lệ ảnh poster */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6; /* nền xám nhạt */
+            color: #9ca3af; /* chữ xám */
+            font-size: 14px;
+            user-select: none;
+        }
+
+        .poster-footer {
+            border-top: 1px solid #e5e7eb; /* viền ngăn cách */
+            padding: .5rem .75rem;
+            text-align: center;
+            font-size: .875rem;
+            color: #6b7280;
+        }
+        /* Tùy chọn: hover nhẹ (nếu muốn) */
+        .poster-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,.06);
+        }
+    </style>
+
+    <div class="row g-3">
+        @for (int i = 0; i < 8; i++)
+        {
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="poster-card">
+                    <div class="poster-img">Poster</div>
+                    <div class="poster-footer">Tên phim</div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
