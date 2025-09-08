@@ -1,4 +1,4 @@
-﻿@model Project02.Models.Movie
+﻿@model Project02.ViewModels.MovieEditVm
 
 @{
     Layout = "_AdminLayout";
@@ -10,7 +10,8 @@
     <div class="row">
         <div class="col-1"></div>
         <div class="col-10">
-            <form asp-action="Edit">
+            <form asp-action="Edit" asp-route-id="@(Model.Movie_Slug ?? ViewContext.RouteData.Values["id"]?.ToString())" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">
@@ -20,11 +21,8 @@
                     <div class="card-body">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="Movie_ID" />
-                        <div class="form-group">
-                            <label class="control-label mb-1"><strong>Slug</strong></label>
-                            <input asp-for="Movie_Slug" class="form-control" />
-                            <span asp-validation-for="Movie_Slug" class="text-danger"></span>
-                        </div>
+                        <input type="hidden" asp-for="Movie_Slug" />
+                        <input type="hidden" asp-for="RowsVersion" />
                         <div class="form-group">
                             <label class="control-label my-1"><strong>Name</strong></label>
                             <input asp-for="Movie_Name" class="form-control" />
@@ -32,7 +30,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label my-1"><strong>Description</strong></label>
-                            <textarea class="form-control" asp-for="Movie_Description" name="Film_Description" rows="5" cols="40"></textarea>
+                            <textarea class="form-control" asp-for="Movie_Description" rows="5" cols="40"></textarea>
                             <span asp-validation-for="Movie_Description" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -41,10 +39,15 @@
                             <span asp-validation-for="Movie_Duration" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label for="Film_Status">Status</label>
-                            <select id="Film_Status" name="Film_Status" class="form-select">
-                                <option value="Publish" selected="@(Model.Movie_Status == "Publish" ? "selected" : null)">Publish</option>
-                                <option value="Unpublish" selected="@(Model.Movie_Status == "Unpublish" ? "selected" : null)">Unpublish</option>
+                            <label class="control-label my-1"><strong>Poster</strong></label>
+                            <input type="file" asp-for="Movie_Poster" class="form-control" />
+                            <span asp-validation-for="Movie_Poster" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="Movie_Status">Status</label>
+                            <select id="Movie_Status" asp-for="Movie_Status" class="form-select">
+                                <option value="Publish">Publish</option>
+                                <option value="Unpublish">Unpublish</option>
                             </select>
                             <span asp-validation-for="Movie_Status" class="text-danger"></span>
                         </div>

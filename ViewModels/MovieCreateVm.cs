@@ -5,8 +5,6 @@ namespace Project02.ViewModels
     public class MovieCreateVm
     {
         [Required]
-        public string Movie_Slug { get; set; } = default!;
-        [Required]
         public string Movie_Name { get; set; } = default!;
         [Required]
         public string Movie_Description { get; set; } = default!;

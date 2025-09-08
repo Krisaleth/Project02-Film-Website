@@ -5,6 +5,8 @@
     Layout = "_AdminLayout";
     ViewData["Title"] = "Movies";
 }
+
+<form id="antiForgeryForm" method="post">@Html.AntiForgeryToken()</form>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -55,6 +57,8 @@
                             {
                                 foreach (var item in Model.Items)
                                 {
+                                    var rv = "";
+                                    
                                     <tr>
                                         <td>@item.Movie_Slug</td>
                                         <td>@item.Movie_Name</td>
@@ -79,9 +83,9 @@
                                             }
                                         </td>
                                         <td>
-                                            <a asp-action="Edit" class="btn btn-outline-primary" asp-route-id="@item.Movie_ID"><i class="fa-solid fa-pen-to-square"></i></a>
-                                            <a asp-action="Details" class="btn btn-outline-info" asp-route-id="@item.Movie_ID"><i class="fas fa-info-circle"></i> </a>
-                                            <a asp-action="Delete" class="btn btn-outline-danger" asp-route-id="@item.Movie_ID"><i class="fa-solid fa-trash"></i>  </a>
+                                            <a asp-action="Edit" class="btn btn-sm btn-outline-primary" asp-route-id="@item.Movie_Slug"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a asp-action="Details" class="btn btn-sm btn-outline-info" asp-route-id="@item.Movie_Slug"><i class="fas fa-info-circle"></i> </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete" data-id="@item.Movie_Slug" data-rowid="@item.Movie_ID" data-name="@item.Movie_Name" data-rv="@rv"><i class="fa-solid fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -134,3 +138,69 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest(".btn-delete");
+
+        if (!btn) return;
+
+        const slug = btn.dataset.id;
+        const id = btn.dataset.rowId;
+        const name = btn.dataset.name;
+        const rv = btn.dataset.rv || '';
+
+        const ok = await Swal.fire ({
+            title: "Xác nhận xoá",
+            text: `Bạn có chắc muốn xoá "${name}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xoá',
+            cancelButtonText: 'Huỷ'
+        }).then(r => r.isConfirmed);
+
+        if (!ok) {
+            return;
+        }
+
+        const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
+        const url = `/admin/movie/delete/${encodeURIComponent(slug)}`;
+
+        const res = await fetch(url, {
+            method: 'post',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset="utf-8" '},
+            credentials: 'same-origin',
+            body: new URLSearchParams({
+                '__RequestVerificationToken': token,
+                'rowVersionBase64': rv
+            })
+        });
+
+        const raw = await res.text();
+        let json;
+        try {
+            json = raw && res.headers.get('content-type')?.includes('application/json')
+            ? JSON.parse(raw)
+            : null;
+        } catch {
+            json = null;
+        }
+
+        if (!json) {
+            console.error('Non-JSON response', res.status, raw);
+            Swal.fire({ icon:'error', title:`HTTP ${res.status}`, text:'Máy chủ trả về non-JSON.' });
+            return;
+        }
+
+
+        if (json.ok) {
+            const row = document.getElementById(`row-${id}`);
+            row?.remove();
+            Swal.fire ({ icon:'success', title:'Đã xoá', timer: 1200, showConfirmButton:false });
+            location.reload();
+        } else {
+            Swal.fire ({ icon:'error', title:'Lỗi', text: json.message || "Không xoá được" });
+        }
+    });
+</script>

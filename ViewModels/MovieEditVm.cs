@@ -5,17 +5,19 @@ namespace Project02.ViewModels
     public class MovieEditVm
     {
         public long Movie_ID { get; set; }
-        [Required]
+        public string Movie_Slug { get; set; } = default!;
+        [Required, StringLength(255)]
         public string Movie_Name { get; set; } = default!;
         [Required]
         public string Movie_Description { get; set; } = default!;
 
-        [Required]
+        [Range(1, short.MaxValue, ErrorMessage = "Duration phải > 0")]
         public short Movie_Duration { get; set; }
-        [Required]
+        [Required, RegularExpression("^(Publish|Unpublish)$", ErrorMessage = "Status phải là Publish hoặc Unpublish")]
         public string Movie_Status { get; set; } = default!;
         public IFormFile? Movie_Poster { get; set; }
-        public string ExistingPoster { get; set; } = default!;
-        public byte[]? RowVersion { get; set; }
+        public string? ExistingPoster { get; set; } = default!;
+        [Required(ErrorMessage = "Thiếu RowsVersion, vui lỏng tải lại trang")]
+        public byte[]? RowsVersion { get; set; }
     }
 }

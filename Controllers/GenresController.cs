@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,13 +21,16 @@ namespace Project02.Controllers
         }
 
         // GET: Genres
+        [HttpGet("admin/genre")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Genres.ToListAsync());
         }
 
         // GET: Genres/Details/5
-        public async Task<IActionResult> Details(long? id)
+        [HttpGet("/{id}")]
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
@@ -34,7 +38,7 @@ namespace Project02.Controllers
             }
 
             var genre = await _context.Genres
-                .FirstOrDefaultAsync(m => m.Genre_ID == id);
+                .FirstOrDefaultAsync(m => m.Genre_Slug == id);
             if (genre == null)
             {
                 return NotFound();
@@ -44,6 +48,8 @@ namespace Project02.Controllers
         }
 
         // GET: Genres/Create
+        [HttpGet("/admin/genre/create")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
