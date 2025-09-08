@@ -70,22 +70,28 @@ namespace Project02.Controllers
             
         }
 
-        // GET: Movies/Details/5
-        public async Task<IActionResult> Details(long? id)
+        
+        [HttpGet("movie/{id}")]
+        public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
+            var vm = await _ctx.Movies.Where(m => m.Movie_Slug == id)
+                .AsNoTracking()
+                .Select(m => new MovieDetailVm
+                {
+                    Movie_Slug = m.Movie_Slug,
+                    Movie_Name = m.Movie_Name,
+                    Movie_Description = m.Movie_Description,
+                    Movie_Poster = m.Movie_Poster,
+                    DurationFormatted = (m.Movie_Duration / 60) + "h" + (m.Movie_Duration % 60) + "m",
+                    Genres = m.Genres.Select(g => g.Genre_Name).ToList(),
+                }).FirstOrDefaultAsync();
+
+            if (vm == null)
             {
                 return NotFound();
             }
 
-            var movie = await _ctx.Movies
-                .FirstOrDefaultAsync(m => m.Movie_ID == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(movie);
+            return View(vm);
         }
 
         // GET: Movies/Create

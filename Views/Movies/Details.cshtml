@@ -1,4 +1,4 @@
-﻿@model Project02.Models.Movie
+﻿@model Project02.ViewModels.MovieDetailVm;
 
 @{
     ViewData["Title"] = "Details";
@@ -11,50 +11,32 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Movie_Slug)
+            Slug
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Movie_Slug)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Movie_Name)
+            Name
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Movie_Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Movie_Description)
+            Description
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Movie_Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Movie_Duration)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Movie_Duration)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Movie_Status)
+            Status
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Movie_Status)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Movie_Created_At)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Movie_Created_At)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Movie_Update_At)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Movie_Update_At)
-        </dd>
+
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Movie_ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a href="">Back to List</a>
 </div>
