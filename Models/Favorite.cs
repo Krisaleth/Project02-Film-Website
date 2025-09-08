@@ -6,22 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Project02.Models;
 
-[PrimaryKey("Person_ID", "Film_ID")]
+[PrimaryKey("Users_ID", "Movie_ID")]
 public partial class Favorite
 {
     [Key]
-    public long Person_ID { get; set; }
+    public long Users_ID { get; set; }
 
     [Key]
-    public long Film_ID { get; set; }
+    public long Movie_ID { get; set; }
 
     public DateTime Created_At { get; set; }
 
-    [ForeignKey("Film_ID")]
+    [ForeignKey("Movie_ID")]
     [InverseProperty("Favorites")]
-    public virtual Film Film { get; set; } = null!;
+    public virtual Movie Movie { get; set; } = null!;
 
-    [ForeignKey("Person_ID")]
+    [ForeignKey("Users_ID")]
     [InverseProperty("Favorites")]
-    public virtual Person Person { get; set; } = null!;
+    public virtual User Users { get; set; } = null!;
 }

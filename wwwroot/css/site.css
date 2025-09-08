@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -19,4 +19,35 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+.table {
+    width: 100%;
+    table-layout: fixed; /* giúp các cột chia đều */
+    border-collapse: collapse;
+    text-align: center; /* căn giữa toàn bộ text */
+    vertical-align: middle; /* căn giữa theo chiều dọc */
+}
+
+.table th, .table td {
+padding: 10px;
+word-wrap: break-word; /* tránh text bị tràn */
+}
+
+/* căn riêng cho một số cột */
+.table th:nth-child(2),
+.table td:nth-child(2) {
+    text-align: left; /* Movie Name canh trái */
+}
+
+.table th:nth-child(4),
+.table td:nth-child(4) {
+    text-align: left; /* Description canh trái */
+    width: 25%; /* chiếm nhiều không gian hơn */
+}
+
+.table th:last-child,
+.table td:last-child {
+    text-align: center; /* Control nút bấm căn giữa */
+    width: 15%;
 }

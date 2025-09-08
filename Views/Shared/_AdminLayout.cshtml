@@ -1,6 +1,8 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     ViewData["Font"] = "https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3/index.css";
     ViewData["PopperJS"] = "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js";
+    ViewData["Username"] = User.FindFirst(ClaimTypes.Name)?.Value;
 }
 
 <!doctype html>
@@ -21,10 +23,12 @@
     <!--begin::Accessibility Features-->
     <!-- Skip links will be dynamically added by accessibility.js -->
     <meta name="supported-color-schemes" content="light dark" />
-    <link rel="preload" href="./css/adminlte.css" as="style" />
+    <link rel="icon" type="iamge/x-icon" href="~/admin/admin.png"/>
+    <link rel="preload" href="~/css/adminlte.css" as="style" />
     <!--end::Accessibility Features-->
     <!--begin::Fonts-->
     <link rel="stylesheet" href="@ViewData["Font"]">
+    <link rel="css" href="~/css/table.css"/>
 
     <!--end::Fonts-->
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
@@ -34,15 +38,17 @@
       crossorigin="anonymous"
     />
     <!--end::Third Party Plugin(OverlayScrollbars)-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <!--begin::Third Party Plugin(Bootstrap Icons)-->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="./css/adminlte.css" />
+    <link rel="stylesheet" href="~/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link
@@ -116,9 +122,9 @@
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
           <a href="/admin" class="brand-link">
-                    <img src="image/Adminicon.png" alt="TKT Films" class="brand-image img-circle elevation-3" style="opacity: .8" />
+                    <img src="~/image/Adminicon.png" alt="TKT Films" class="brand-image img-circle elevation-3" style="opacity: .8" />
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light">Admin</span>
+            <span class="brand-text fw-light">TKT Team</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
@@ -145,10 +151,10 @@
                 </a>
               </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="/admin/movie" class="nav-link">
                         <i class="nav-icon bi bi-film"></i>
                         <p>
-                            Film
+                            Movie
                         </p>
                     </a>
                 </li>
@@ -177,7 +183,23 @@
       <!--end::Sidebar-->
       <!--begin::App Main-->
       <main class="app-main">
-        @RenderBody()
+                <!--begin::App Content Header-->
+                <div class="app-content-header">
+                    <!--begin::Container-->
+                    <div class="container-fluid">
+                        <!--begin::Row-->
+                        <div class="row">
+                            <div class="col-sm-12"><h3 class="mb-0">@ViewData["Title"]</h3></div>
+                        </div>
+                        <!--end::Row-->
+                    </div>
+                    <!--end::Container-->
+                </div>
+                <div class="app-content">
+                    @RenderBody()
+                    @RenderSection("Scripts", required: false)
+                </div>
+                <!--end::App Content-->
       </main>
       <!--end::App Main-->
       <!--begin::Footer-->
@@ -187,7 +209,7 @@
         <!--end::To the end-->
         <!--begin::Copyright-->
         <strong>
-          Copyright &copy; 2014-2025&nbsp;
+          Copyright &copy; 2024-2025&nbsp;
         </strong>
         All rights reserved.
         <!--end::Copyright-->
@@ -212,7 +234,7 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="./js/adminlte.js"></script>
+    <script src="~/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';

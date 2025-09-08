@@ -1,17 +1,17 @@
 ﻿-- =========================================
 --  Database & Schema (PBKDF2-ready)
 -- =========================================
-IF DB_ID(N'project2') IS NULL
+IF DB_ID(N'db_movie') IS NULL
 BEGIN
-    CREATE DATABASE project2;
+    CREATE DATABASE db_movie;
 END
 GO
 
-USE project2;
+USE db_movie;
 GO
 
 -- Drop tables if needed (SAFE ORDER) - optional in dev
--- DROP TABLE IF EXISTS Comments, Favorites, FilmGenres, Genres, Film, Admin, Person, Account;
+-- DROP TABLE IF EXISTS Comments, Favorites, MovieGenres, Genres, Movie, Admin, Users, Account;
 
 -- =========================================
 --  Account (PBKDF2)
@@ -36,61 +36,45 @@ CREATE TABLE dbo.Account
 GO
 
 -- =========================================
---  Person
+--  Users
 -- =========================================
-IF OBJECT_ID(N'dbo.Person', N'U') IS NOT NULL DROP TABLE dbo.Person;
+IF OBJECT_ID(N'dbo.Users', N'U') IS NOT NULL DROP TABLE dbo.Users;
 GO
-CREATE TABLE dbo.Person
+CREATE TABLE dbo.Users
 (
-    Person_ID       BIGINT IDENTITY(1,1) PRIMARY KEY,
-    Person_FullName NVARCHAR(255) NOT NULL,
-    Person_Email    NVARCHAR(255) NOT NULL,
-    Person_Phone    VARCHAR(15)   NOT NULL,
+    Users_ID       BIGINT IDENTITY(1,1) PRIMARY KEY,
+    Users_FullName NVARCHAR(255) NOT NULL,
+    Users_Email    NVARCHAR(255) NOT NULL,
+    Users_Phone    VARCHAR(15)   NOT NULL,
+    RowsVersion    ROWVERSION    NOT NULL,
     Account_ID      BIGINT        NULL,
-    CONSTRAINT UQ_Person_FullName UNIQUE (Person_FullName),
-    CONSTRAINT UQ_Person_Email    UNIQUE (Person_Email),
-    CONSTRAINT FK_Person_Account  FOREIGN KEY(Account_ID) REFERENCES dbo.Account(Account_ID)
+    CONSTRAINT UQ_Users_FullName UNIQUE (Users_FullName),
+    CONSTRAINT UQ_Users_Email    UNIQUE (Users_Email),
+    CONSTRAINT FK_Users_Account  FOREIGN KEY(Account_ID) REFERENCES dbo.Account(Account_ID)
         ON UPDATE NO ACTION ON DELETE SET NULL
 );
 GO
 
 -- =========================================
---  Admin
+--  Movie
 -- =========================================
-IF OBJECT_ID(N'dbo.Admin', N'U') IS NOT NULL DROP TABLE dbo.Admin;
+IF OBJECT_ID(N'dbo.Movie', N'U') IS NOT NULL DROP TABLE dbo.Movie;
 GO
-CREATE TABLE dbo.Admin
+CREATE TABLE dbo.Movie
 (
-    Admin_ID       BIGINT IDENTITY(1,1) PRIMARY KEY,
-    Admin_FullName NVARCHAR(255) NOT NULL,
-    Admin_Email    NVARCHAR(255) NOT NULL,
-    Admin_Phone    VARCHAR(15)   NOT NULL,
-    Account_ID     BIGINT        NULL,
-    CONSTRAINT UQ_Admin_FullName UNIQUE (Admin_FullName),
-    CONSTRAINT UQ_Admin_Email    UNIQUE (Admin_Email),
-    CONSTRAINT FK_Admin_Account  FOREIGN KEY(Account_ID) REFERENCES dbo.Account(Account_ID)
-        ON UPDATE NO ACTION ON DELETE SET NULL
-);
-GO
-
--- =========================================
---  Film
--- =========================================
-IF OBJECT_ID(N'dbo.Film', N'U') IS NOT NULL DROP TABLE dbo.Film;
-GO
-CREATE TABLE dbo.Film
-(
-    Film_ID           BIGINT IDENTITY(1,1) PRIMARY KEY,
-    Film_Slug         NVARCHAR(255) NOT NULL,
-    Film_Name         NVARCHAR(255) NOT NULL,
-    Film_Type         NVARCHAR(100) NOT NULL,
-    Film_Description  NVARCHAR(MAX) NOT NULL,
-    Film_Duration     SMALLINT      NOT NULL,
-    Film_Status       NVARCHAR(30)  NOT NULL CONSTRAINT DF_Film_Status DEFAULT (N'Publish'),
-    Film_Created_At   DATETIME2(7)  NOT NULL CONSTRAINT DF_Film_Created_At DEFAULT (SYSUTCDATETIME()),
-    Film_Update_At    DATETIME2(7)  NOT NULL CONSTRAINT DF_Film_Updated_At DEFAULT (SYSUTCDATETIME()),
-    CONSTRAINT UQ_Film_Name UNIQUE (Film_Name),
-    CONSTRAINT UQ_Film_Slug UNIQUE (Film_Slug)
+    Movie_ID           BIGINT IDENTITY(1,1) PRIMARY KEY,
+    Movie_Slug         NVARCHAR(255) NOT NULL,
+    Movie_Name         NVARCHAR(255) NOT NULL,
+    Movie_Poster       NVARCHAR(500) NOT NULL,
+    Movie_Description  NVARCHAR(MAX) NOT NULL,
+    Movie_Duration     SMALLINT      NOT NULL,
+    RowsVersion        ROWVERSION    NOT NULL,
+    Movie_Status       NVARCHAR(30)  NOT NULL CONSTRAINT DF_Movie_Status DEFAULT (N'Publish'),
+    Movie_Created_At   DATETIME2(7)  NOT NULL CONSTRAINT DF_Movie_Created_At DEFAULT (SYSUTCDATETIME()),
+    Movie_Update_At    DATETIME2(7)  NOT NULL CONSTRAINT DF_Movie_Updated_At DEFAULT (SYSUTCDATETIME()),
+    CONSTRAINT UQ_Movie_Name UNIQUE (Movie_Name),
+    CONSTRAINT UQ_Movie_Slug UNIQUE (Movie_Slug),
+    CONSTRAINT CK_Movie_Status CHECK (Movie_Status IN (N'Publish', N'Unpublish'))
 );
 GO
 
@@ -101,26 +85,26 @@ IF OBJECT_ID(N'dbo.Genres', N'U') IS NOT NULL DROP TABLE dbo.Genres;
 GO
 CREATE TABLE dbo.Genres
 (
-    Genres_ID   BIGINT IDENTITY(1,1) PRIMARY KEY,
-    Genres_Name NVARCHAR(100) NOT NULL,
-    Genres_Slug NVARCHAR(100) NOT NULL,
-    CONSTRAINT UQ_Genres_Slug UNIQUE (Genres_Slug)
+    Genre_ID   BIGINT IDENTITY(1,1) PRIMARY KEY,
+    Genre_Name NVARCHAR(100) NOT NULL,
+    Genre_Slug NVARCHAR(100) NOT NULL,
+    CONSTRAINT UQ_Genre_Slug UNIQUE (Genre_Slug)
 );
 GO
 
 -- =========================================
---  FilmGenres (many-to-many)
+--  MovieGenres (many-to-many)
 -- =========================================
-IF OBJECT_ID(N'dbo.FilmGenres', N'U') IS NOT NULL DROP TABLE dbo.FilmGenres;
+IF OBJECT_ID(N'dbo.MovieGenres', N'U') IS NOT NULL DROP TABLE dbo.MovieGenres;
 GO
-CREATE TABLE dbo.FilmGenres
+CREATE TABLE dbo.MovieGenres
 (
-    Film_ID   BIGINT NOT NULL,
-    Genres_ID BIGINT NOT NULL,
-    CONSTRAINT PK_FilmGenres PRIMARY KEY (Film_ID, Genres_ID),
-    CONSTRAINT FK_FilmGenres_Film   FOREIGN KEY (Film_ID)   REFERENCES dbo.Film(Film_ID)
+    Movie_ID   BIGINT NOT NULL,
+    Genre_ID BIGINT NOT NULL,
+    CONSTRAINT PK_MovieGenre PRIMARY KEY (Movie_ID, Genre_ID),
+    CONSTRAINT FK_MovieGenre_Movie   FOREIGN KEY (Movie_ID)   REFERENCES dbo.Movie(Movie_ID)
         ON UPDATE NO ACTION ON DELETE CASCADE,
-    CONSTRAINT FK_FilmGenres_Genres FOREIGN KEY (Genres_ID) REFERENCES dbo.Genres(Genres_ID)
+    CONSTRAINT FK_MovieGenre_Genre FOREIGN KEY (Genre_ID) REFERENCES dbo.Genres(Genre_ID)
         ON UPDATE NO ACTION ON DELETE CASCADE
 );
 GO
@@ -132,13 +116,13 @@ IF OBJECT_ID(N'dbo.Favorites', N'U') IS NOT NULL DROP TABLE dbo.Favorites;
 GO
 CREATE TABLE dbo.Favorites
 (
-    Person_ID  BIGINT       NOT NULL,
-    Film_ID    BIGINT       NOT NULL,
+    Users_ID  BIGINT       NOT NULL,
+    Movie_ID    BIGINT       NOT NULL,
     Created_At DATETIME2(7) NOT NULL CONSTRAINT DF_Favorites_Created_At DEFAULT (SYSUTCDATETIME()),
-    CONSTRAINT PK_Favorites PRIMARY KEY (Person_ID, Film_ID),
-    CONSTRAINT FK_Favorites_Person FOREIGN KEY (Person_ID) REFERENCES dbo.Person(Person_ID)
+    CONSTRAINT PK_Favorites PRIMARY KEY (Users_ID, Movie_ID),
+    CONSTRAINT FK_Favorites_Users FOREIGN KEY (Users_ID) REFERENCES dbo.Users(Users_ID)
         ON UPDATE NO ACTION ON DELETE CASCADE,
-    CONSTRAINT FK_Favorites_Film   FOREIGN KEY (Film_ID)   REFERENCES dbo.Film(Film_ID)
+    CONSTRAINT FK_Favorites_Movie   FOREIGN KEY (Movie_ID)   REFERENCES dbo.Movie(Movie_ID)
         ON UPDATE NO ACTION ON DELETE CASCADE
 );
 GO
@@ -151,57 +135,81 @@ GO
 CREATE TABLE dbo.Comments
 (
     Comment_ID BIGINT IDENTITY(1,1) PRIMARY KEY,
-    Person_ID  BIGINT       NOT NULL,
-    Film_ID    BIGINT       NOT NULL,
+    Users_ID  BIGINT       NOT NULL,
+    Movie_ID    BIGINT       NOT NULL,
     Content    NVARCHAR(MAX) NOT NULL,
     Created_At DATETIME2(7) NOT NULL CONSTRAINT DF_Comments_Created_At DEFAULT (SYSUTCDATETIME()),
-    CONSTRAINT FK_Comments_Person FOREIGN KEY (Person_ID) REFERENCES dbo.Person(Person_ID)
+    CONSTRAINT FK_Comments_Users FOREIGN KEY (Users_ID) REFERENCES dbo.Users(Users_ID)
         ON UPDATE NO ACTION ON DELETE CASCADE,
-    CONSTRAINT FK_Comments_Film   FOREIGN KEY (Film_ID)   REFERENCES dbo.Film(Film_ID)
+    CONSTRAINT FK_Comments_Movie   FOREIGN KEY (Movie_ID)   REFERENCES dbo.Movie(Movie_ID)
         ON UPDATE NO ACTION ON DELETE CASCADE
 );
 GO
 
--- =========================================
---  SP: Tạo account Admin bằng PBKDF2 (app sẽ gửi sẵn hash/salt/iters)
--- =========================================
-IF OBJECT_ID(N'dbo.usp_CreateAdminAccountPBKDF2', N'P') IS NOT NULL
-    DROP PROCEDURE dbo.usp_CreateAdminAccountPBKDF2;
-GO
-CREATE PROCEDURE dbo.usp_CreateAdminAccountPBKDF2
-(
-    @UserName            NVARCHAR(255),
-    @Password_Hash       VARBINARY(512),
-    @Password_Salt       VARBINARY(128),
-    @Password_Iterations INT
-)
-AS
-BEGIN
-    SET NOCOUNT ON;
+CREATE INDEX IX_Movie_Slug ON dbo.Movie(Movie_Slug);
+CREATE INDEX IX_Genres_Slug ON dbo.Genres(Genre_Slug);
 
-    IF EXISTS (SELECT 1 FROM dbo.Account WHERE UserName = @UserName)
-    BEGIN
-        RAISERROR(N'UserName đã tồn tại', 16, 1);
-        RETURN;
-    END
+INSERT INTO dbo.Genres (Genre_Name, Genre_Slug)
+VALUES
+(N'Action', 'action'),
+(N'Comedy', 'comedy'),
+(N'Drama', 'drama'),
+(N'Horror', 'horror'),
+(N'Sci-Fi', 'sci-fi'),
+(N'Animation', 'animation'),
+(N'Romance','romance'),
+(N'Thriller', 'thriller'),
+(N'Fantasy','fantasy'),
+(N'Adventure','adventure'),
+(N'Crime','crime');
 
-    INSERT INTO dbo.Account
-    (
-        UserName, Password_Hash, Password_Salt,
-        Password_Algo, Password_Iterations,
-        Role, Status, Create_At
-    )
-    VALUES
-    (
-        @UserName, @Password_Hash, @Password_Salt,
-        N'PBKDF2', @Password_Iterations,
-        N'Admin', 1, SYSUTCDATETIME()
-    );
-END
-GO
 
--- =========================================
---  (Tuỳ chọn) Index gợi ý thêm
--- =========================================
-CREATE INDEX IX_Film_Slug ON dbo.Film(Film_Slug);
-CREATE INDEX IX_Genres_Slug ON dbo.Genres(Genres_Slug);
+INSERT INTO dbo.Movie
+    (Movie_Slug, Movie_Name, Movie_Description, Movie_Duration, Movie_Status, Movie_Poster)
+VALUES
+-- 1
+('interstellar-2014', N'Interstellar',
+ N'A team of explorers travel through a wormhole in space to ensure humanity''s survival.',
+ 169, N'Publish', N'/uploads/posters/interstellar-2014.jpg'),
+
+-- 2
+('inception-2010', N'Inception',
+ N'A skilled thief leads a team into the subconscious world of dreams.',
+ 148, N'Publish', N'/uploads/posters/inception-2010.jpg'),
+
+-- 3
+('tenet-2020', N'Tenet',
+ N'A secret agent manipulates time to prevent World War III.',
+ 150, N'Unpublish', N'/uploads/posters/tenet-2020.jpg'),
+
+-- 4
+('avengers-endgame-2019', N'Avengers: Endgame',
+ N'The Avengers assemble once more to reverse the damage caused by Thanos.',
+ 181, N'Publish', N'/uploads/posters/avengers-endgame-2019.jpg'),
+
+-- 5
+('joker-2019', N'Joker',
+ N'An origin story of the infamous DC villain Arthur Fleck.',
+ 122, N'Unpublish', N'/uploads/posters/joker-2019.jpg');
+
+
+
+-- Interstellar: Sci-Fi, Adventure, Drama
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
+(1, 1), (1, 8), (1, 5);
+
+-- Inception: Sci-Fi, Action, Thriller
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
+(2, 1), (2, 2), (2, 6);
+
+-- Tenet: Sci-Fi, Action, Thriller
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
+(3, 1), (3, 2), (3, 6);
+
+-- Avengers Endgame: Action, Adventure, Sci-Fi
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
+(4, 2), (4, 8), (4, 1);
+
+-- Joker: Drama, Crime, Thriller
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
+(5, 5), (5, 9), (5, 6);

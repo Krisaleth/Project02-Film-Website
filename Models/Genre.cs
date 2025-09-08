@@ -6,20 +6,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Project02.Models;
 
-[Index("Genres_Slug", Name = "IX_Genres_Slug")]
-[Index("Genres_Slug", Name = "UQ_Genres_Slug", IsUnique = true)]
+[Index("Genre_Slug", Name = "IX_Genres_Slug")]
+[Index("Genre_Slug", Name = "UQ_Genre_Slug", IsUnique = true)]
 public partial class Genre
 {
     [Key]
-    public long Genres_ID { get; set; }
+    public long Genre_ID { get; set; }
 
     [StringLength(100)]
-    public string Genres_Name { get; set; } = null!;
+    public string Genre_Name { get; set; } = null!;
 
     [StringLength(100)]
-    public string Genres_Slug { get; set; } = null!;
+    public string Genre_Slug { get; set; } = null!;
 
-    [ForeignKey("Genres_ID")]
     [InverseProperty("Genres")]
-    public virtual ICollection<Film> Films { get; set; } = new List<Film>();
+    public virtual ICollection<Movie> Movies { get; set; } = new List<Movie>();
 }

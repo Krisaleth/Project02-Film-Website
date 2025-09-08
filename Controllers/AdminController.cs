@@ -20,8 +20,6 @@ namespace Project02.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
-            var username = User.FindFirst(ClaimTypes.Name).Value;
-            ViewBag.Username = username;
             return View();
         }
         [HttpGet("/admin/login")]
@@ -45,7 +43,7 @@ namespace Project02.Controllers
             var user = await _db.Accounts.AsNoTracking().FirstOrDefaultAsync(a => a.UserName == vm.UserName);
 
             // Check user + status
-            if(user is null || !user.Status)
+            if (user is null || !user.Status)
             {
                 ModelState.AddModelError("", "Tài khoản và mật khẩu không đúng!!");
                 return View(vm);
@@ -83,7 +81,7 @@ namespace Project02.Controllers
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProps);
 
-            if(!string.IsNullOrEmpty(vm.ReturnUrl) && Url.IsLocalUrl(vm.ReturnUrl))
+            if (!string.IsNullOrEmpty(vm.ReturnUrl) && Url.IsLocalUrl(vm.ReturnUrl))
             {
                 return Redirect(vm.ReturnUrl);
             }
@@ -101,10 +99,5 @@ namespace Project02.Controllers
             return Redirect("/admin/login");
         }
 
-        [HttpGet("/admin/movies")]
-        public async Task<IActionResult> Movie()
-        {
-            return View(await _db.Films.ToListAsync());
-        }
     }
 }

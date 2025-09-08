@@ -35,8 +35,5 @@ public partial class Account
     public DateTime Create_At { get; set; }
 
     [InverseProperty("Account")]
-    public virtual ICollection<Admin> Admins { get; set; } = new List<Admin>();
-
-    [InverseProperty("Account")]
-    public virtual ICollection<Person> People { get; set; } = new List<Person>();
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

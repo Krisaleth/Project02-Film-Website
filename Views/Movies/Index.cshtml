@@ -1,0 +1,136 @@
+﻿@using Project02.ViewModels
+@model MovieIndexVm
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Movies";
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <h3 class="card-title mb-0">Movies table with minimum features</h3>
+
+                    <div class="d-flex ms-auto">
+                        <form asp-action="Index" method="get" class="d-flex me-2">
+                            <input type="text" name="q" value="@Model.Q"
+                                   class="form-control form-control-sm me-2"
+                                   placeholder="Search by name..." />
+                            <input type="hidden" name="pageSize" value="@Model.PageSize" />
+                            <button type="submit" class="btn btn-sm btn-secondary d-flex align-items-center">
+                                <i class="fa-solid fa-magnifying-glass me-1"></i>
+                                Search
+                            </button>
+
+                        </form>
+
+                        <a asp-action="Create" class="btn btn-sm btn-primary">
+                            <i class="fa-solid fa-plus"></i> Add Movie
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Slug</th>
+                                <th>Name</th>
+                                <th>Poster</th>
+                                <th>Description</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th class="text-center">Control</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Items.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">No movies found</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td>@item.Movie_Slug</td>
+                                        <td>@item.Movie_Name</td>
+                                        <td>
+                                            <img src="@item.Movie_Poster" alt="Poster @item.Movie_Name"
+                                                 style="width:80px;height:auto;object-fit:cover;" />
+                                        </td>
+                                        <td class="text-truncate" style="max-width: 420px;">@item.Movie_Description</td>
+                                        <td class="text-center">@item.Movie_Duration mins</td>
+                                        <td>
+                                            @if (item.Movie_Status == "Publish")
+                                            {
+                                                <span class="badge bg-success"><i class="fa-solid fa-eye"></i> Publish</span>
+                                            }
+                                            else if (item.Movie_Status == "Unpublish")
+                                            {
+                                                <span class="badge bg-secondary"><i class="fa-solid fa-eye-slash"></i> Unpublish</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning text-dark">Unknown</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a asp-action="Edit" class="btn btn-outline-primary" asp-route-id="@item.Movie_ID"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a asp-action="Details" class="btn btn-outline-info" asp-route-id="@item.Movie_ID"><i class="fas fa-info-circle"></i> </a>
+                                            <a asp-action="Delete" class="btn btn-outline-danger" asp-route-id="@item.Movie_ID"><i class="fa-solid fa-trash"></i>  </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <div class="row my-1">
+                        <div class="col-12"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            Showing @Model.Start to @Model.End of @Model.TotalItems entries
+                        </div>
+                        <nav>
+                            <ul class="pagination mb-0">
+                                <li class="page-item me-1 @(Model.Page == 1 ? "disabled" : "")">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-search="@ViewBag.Search"
+                                       asp-route-page="@(Model.Page - 1)"
+                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-left"></i></a>
+                                </li>
+
+                                @for (int p = 1; p <= Model.TotalPage; p++)
+                                {
+                                    <li class="page-item me-1 @(p == Model.Page ? "active" : "")">
+                                        <a class="page-link"
+                                           asp-action="Index"
+                                           asp-route-search="@ViewBag.Search"
+                                           asp-route-page="@p"
+                                           asp-route-pageSize="@(Model.PageSize)">@p</a>
+                                    </li>
+                                }
+
+                                <li class="page-item me-1 @(Model.Page == Model.TotalPage ? "disabled" : "")">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-search="@ViewBag.Search"
+                                       asp-route-page="@(Model.Page + 1)"
+                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-right"></i></a>
+                                </li>
+                            </ul>
+
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

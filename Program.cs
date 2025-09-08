@@ -4,6 +4,7 @@ using Project02.Data;
 using Project02.Middleware;
 using Project02.Models;
 using Project02.Security;
+using Project02.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.SlidingExpiration = true;
 });
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<IFileStorage, FileStorage>();
+
 
 var app = builder.Build();
 
