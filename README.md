@@ -56,12 +56,13 @@ dotnet run
 
 ## Advise
 
-- Làm ơn viết ra branch khác giúp tôi r để tôi check lại
+- Hãy viết ra branch khác khi làm thêm chức năng.
+- Viết xong lúc nào post luôn lúc đấy, tránh bỏ dở không post xong người khác post lên là bị conflict, kiểm code rất mệt.
 - Default admin account: 
 
-username: admin
+- username: admin
 
-password: 123456
+- password: 123456
 
 
 ## Code Editor and Database
