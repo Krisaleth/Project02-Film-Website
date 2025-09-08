@@ -1,0 +1,138 @@
+﻿@model Project02.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="login-container">
+    <h2>Login</h2>
+    <p class="sub-text">
+        Welcome back! Please login to your account.
+    </p>
+
+    <form asp-action="Login" method="post">
+        <div class="form-group">
+            <input asp-for="Email" type="email" placeholder="Email" required />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="Password" type="password" placeholder="Password" required />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn">Login</button>
+        <div class="login-link">
+            Don't have an account? <a asp-action="Register">Register</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #8E0E00;
+        background: -webkit-linear-gradient(to right, #1F1C18, #8E0E00);
+        background: linear-gradient(to right, #1F1C18, #8E0E00);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        color: #333;
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 400px;
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-container h2 {
+        margin-bottom: 15px;
+        font-size: 24px;
+        color: #333;
+        text-align: center;
+    }
+
+    .login-container p.sub-text {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+            .form-group input:focus {
+                border-color: #6a11cb;
+                outline: none;
+            }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        background: #6a11cb;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+        .btn:hover {
+            background: #8E0E00;
+        }
+
+    .login-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+        .login-link a {
+            color: #6a11cb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .login-link a:hover {
+                text-decoration: underline;
+            }
+
+    .text-danger {
+        color: #e74c3c;
+        font-size: 12px;
+    }
+</style>
