@@ -43,6 +43,7 @@ public partial class Movie
     [InverseProperty("Movie")]
     public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 
+    [ForeignKey("Movie_ID")]
     [InverseProperty("Movies")]
     public virtual ICollection<Genre> Genres { get; set; } = new List<Genre>();
 }

@@ -7,6 +7,7 @@ using Project02.Helper;
 using Project02.Models;
 using Project02.Services;
 using Project02.ViewModels;
+using Project02.ViewModels.Movie;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -33,7 +34,7 @@ namespace Project02.Controllers
             if (page < 1) page = 1;
             if (pageSize <= 0) pageSize = 10;
 
-            IQueryable<Movie> query = _ctx.Movie.AsNoTracking();
+            IQueryable<Movie> query = _ctx.Movies.AsNoTracking();
 
             // Search
             if (!string.IsNullOrEmpty(q))
@@ -76,7 +77,7 @@ namespace Project02.Controllers
         [HttpGet("/movie/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            var vm = await _ctx.Movie.Where(m => m.Movie_Slug == id)
+            var vm = await _ctx.Movies.Where(m => m.Movie_Slug == id)
                 .AsNoTracking()
                 .Select(m => new MovieDetailVm
                 {
@@ -126,7 +127,7 @@ namespace Project02.Controllers
                 Movie_Poster = posterPath
             };
 
-            _ctx.Movie.Add(movie);
+            _ctx.Movies.Add(movie);
             await _ctx.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -141,7 +142,7 @@ namespace Project02.Controllers
                 return NotFound();
             }
 
-            var vm = await _ctx.Movie.Where(m => m.Movie_Slug == id)
+            var vm = await _ctx.Movies.Where(m => m.Movie_Slug == id)
                 .AsNoTracking()
                 .Select(m => new MovieEditVm
                 {
@@ -173,7 +174,7 @@ namespace Project02.Controllers
                 return View(vm);
             }
 
-            var movie = await _ctx.Movie.FirstOrDefaultAsync(m => m.Movie_Slug == id);
+            var movie = await _ctx.Movies.FirstOrDefaultAsync(m => m.Movie_Slug == id);
             if (movie == null) return NotFound();
 
             movie.Movie_Name = vm.Movie_Name;
@@ -209,7 +210,7 @@ namespace Project02.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(string id, string? rowVersionBase64)
         {
-            var movie = await _ctx.Movie.FirstOrDefaultAsync(m => m.Movie_Slug == id);
+            var movie = await _ctx.Movies.FirstOrDefaultAsync(m => m.Movie_Slug == id);
             if (movie == null) return Json(new { ok = false, message = "Not Found" });
 
             if (!string.IsNullOrEmpty(rowVersionBase64))
@@ -217,7 +218,7 @@ namespace Project02.Controllers
                 _ctx.Entry(movie).Property(x => x.RowsVersion).OriginalValue = Convert.FromBase64String(rowVersionBase64);
             }
 
-            _ctx.Movie.Remove(movie);
+            _ctx.Movies.Remove(movie);
 
             try
             {
@@ -232,7 +233,7 @@ namespace Project02.Controllers
 
         private bool MovieExists(string id)
         {
-            return _ctx.Movie.Any(e => e.Movie_Slug == id);
+            return _ctx.Movies.Any(e => e.Movie_Slug == id);
         }
     }
 }

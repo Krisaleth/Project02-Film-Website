@@ -40,7 +40,7 @@ using (var scope = app.Services.CreateScope())
             Password_Algo = "PBKDF2",
             Password_Iterations = 100000,
             Role = "Admin",
-            Status = true,
+            Status = "Active",
             Create_At = DateTime.UtcNow
         });
         db.SaveChanges();

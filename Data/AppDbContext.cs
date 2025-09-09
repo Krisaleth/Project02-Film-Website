@@ -20,7 +20,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Genre> Genres { get; set; }
 
-    public virtual DbSet<Movie> Movie { get; set; }
+    public virtual DbSet<Movie> Movies { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -28,17 +28,17 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C9CE46C016");
+            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C917B43223");
 
             entity.Property(e => e.Create_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Password_Algo).HasDefaultValue("PBKDF2");
             entity.Property(e => e.Password_Iterations).HasDefaultValue(100000);
-            entity.Property(e => e.Status).HasDefaultValue(true);
+            entity.Property(e => e.Status).HasDefaultValue("Active");
         });
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143BB80FE3E2");
+            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143B2DF3DAC5");
 
             entity.Property(e => e.Created_At).HasDefaultValueSql("(sysutcdatetime())");
 
@@ -58,12 +58,12 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A2006F88FC7ED");
+            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A200633AA1E13");
         });
 
         modelBuilder.Entity<Movie>(entity =>
         {
-            entity.HasKey(e => e.Movie_ID).HasName("PK__Movie__7A880405016B7ECC");
+            entity.HasKey(e => e.Movie_ID).HasName("PK__Movie__7A880405BB7A926E");
 
             entity.Property(e => e.Movie_Created_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Movie_Status).HasDefaultValue("Publish");
@@ -90,7 +90,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Users_ID).HasName("PK__Users__EB68290D2A4C6460");
+            entity.HasKey(e => e.Users_ID).HasName("PK__Users__EB68290D82C419B6");
 
             entity.Property(e => e.RowsVersion)
                 .IsRowVersion()

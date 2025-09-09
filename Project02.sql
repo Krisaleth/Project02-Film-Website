@@ -27,10 +27,11 @@ CREATE TABLE dbo.Account
     Password_Algo        NVARCHAR(20)   NOT NULL CONSTRAINT DF_Account_Algo DEFAULT(N'PBKDF2'),
     Password_Iterations  INT            NOT NULL CONSTRAINT DF_Account_Iters DEFAULT(100000),
     Role                 NVARCHAR(10)   NOT NULL,
-    Status               BIT            NOT NULL CONSTRAINT DF_Account_Status DEFAULT(1),
+    Status               NVARCHAR(10)   NOT NULL CONSTRAINT DF_Account_Status DEFAULT(N'Active'),
     Create_At            DATETIME2(7)   NOT NULL CONSTRAINT DF_Account_CreateAt DEFAULT (SYSUTCDATETIME()),
     CONSTRAINT UQ_Account_UserName UNIQUE (UserName),
     CONSTRAINT CK_Account_Role CHECK (Role IN (N'Admin', N'User')),
+    CONSTRAINT CK_Account_Status CHECK (Status IN (N'Active', N'Banned')),
     CONSTRAINT CK_Account_Iters CHECK (Password_Iterations >= 10000)
 );
 GO

@@ -1,0 +1,89 @@
+﻿@using Project02.ViewModels.User
+@model UserIndexVm
+
+@{
+    ViewData["Title"] = "User";
+    Layout = "_AdminLayout";
+}
+
+<form id="antiForgeryForm" method="post">@Html.AntiForgeryToken()</form>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <h3 class="card-title mb-0">User table to see and edit some value like status and more thing like that</h3>
+                    <div class="d-flex ms-auto">
+                        <form asp-action="Index" method="get" class="d-flex me-2">
+                            <input type="text" name="search" value="@Model.search" class="form-control form-control-sm me-2" placeholder="Search by name..."/>
+                            <input type="hidden" name="pageSize" value="@Model.PageSize" />
+                            <button class="btn btn-sm btn-secondary d-flex align-items-center" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    User Name
+                                </th>
+                                <th>
+                                    Full Name
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Phone
+                                </th>
+                                <th>Status</th>
+                                <th>
+                                    Control
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items) {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Username)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Users_FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Users_Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Users_Phone)
+                                </td>
+                                    @if (item.Account_Status == "Active")
+                                    {
+                                        <span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> Active</span>
+                                    }
+                                    else if (item.Account_Status == "Banned")
+                                    {
+                                        <span class="badge bg-warning"><i class="fa-solid fa-ban"></i> Banned</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Unknown</span>
+                                    }
+                                <td class="text-center">
+                                    <a asp-action="Edit" asp-route-id="@item.Users_ID"
+                                        class="btn btn-sm btn-outline-primary">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

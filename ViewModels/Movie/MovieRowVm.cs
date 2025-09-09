@@ -1,4 +1,4 @@
-﻿namespace Project02.ViewModels
+﻿namespace Project02.ViewModels.Movie
 {
     public class MovieRowVm
     {
@@ -19,7 +19,7 @@
         public int TotalItems { get; set; }
         public string? Q { get; set; }
         public int TotalPage => (int)Math.Ceiling((double)TotalItems / PageSize);
-        public int Start => (TotalItems == 0) ? 0 : (Page - 1) * PageSize + 1;
+        public int Start => TotalItems == 0 ? 0 : (Page - 1) * PageSize + 1;
         public int End => Math.Min(Page *  PageSize, TotalItems);
     }
 }

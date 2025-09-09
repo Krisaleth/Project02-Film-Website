@@ -1,0 +1,49 @@
+﻿@model Project02.Models.User
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>User</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Users_ID" />
+            <div class="form-group">
+                <label asp-for="Users_FullName" class="control-label"></label>
+                <input asp-for="Users_FullName" class="form-control" />
+                <span asp-validation-for="Users_FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Users_Email" class="control-label"></label>
+                <input asp-for="Users_Email" class="form-control" />
+                <span asp-validation-for="Users_Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Users_Phone" class="control-label"></label>
+                <input asp-for="Users_Phone" class="form-control" />
+                <span asp-validation-for="Users_Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Account_ID" class="control-label"></label>
+                <select asp-for="Account_ID" class="form-control" asp-items="ViewBag.Account_ID"></select>
+                <span asp-validation-for="Account_ID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

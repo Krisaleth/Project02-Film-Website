@@ -1,4 +1,4 @@
-﻿namespace Project02.ViewModels
+﻿namespace Project02.ViewModels.Movie
 {
     public class MovieDetailVm
     {
