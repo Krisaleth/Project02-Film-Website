@@ -172,7 +172,7 @@ namespace Project02.Controllers
                 movie.Movie_Poster = await _files.SaveAsync(vm.Movie_Poster, "uploads/posters");
             }
 
-            _ctx.Entry(movie).Property("RowVersion").OriginalValue = vm.RowVersion;
+            _ctx.Entry(movie).Property("RowsVersion").OriginalValue = vm.RowsVersion;
 
             try
             {

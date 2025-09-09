@@ -16,6 +16,6 @@ namespace Project02.ViewModels
         public string Movie_Status { get; set; } = default!;
         public IFormFile? Movie_Poster { get; set; }
         public string ExistingPoster { get; set; } = default!;
-        public byte[]? RowVersion { get; set; }
+        public byte[]? RowsVersion { get; set; }
     }
 }
