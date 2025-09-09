@@ -3,7 +3,6 @@
     public class MovieRowVm
     {
         public long Movie_ID { get; set; }
-
         public string Movie_Slug { get; set; } = default!;
         public string Movie_Name { get; set; } = default!;
         public string Movie_Description { get; set; } = default!;

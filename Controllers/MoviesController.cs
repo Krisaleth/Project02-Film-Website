@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
 using Project02.Extension;
+using Project02.Helper;
 using Project02.Models;
 using Project02.Services;
 using Project02.ViewModels;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using Project02.Helper;
 
 
 namespace Project02.Controllers
@@ -25,13 +26,14 @@ namespace Project02.Controllers
         }
 
         // GET: Movies
-        [HttpGet("admin/movie")]
+        [HttpGet("/admin/movie")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string? q, int page = 1, int pageSize = 10)
         {
             if (page < 1) page = 1;
             if (pageSize <= 0) pageSize = 10;
 
-            IQueryable<Movie> query = _ctx.Movies.AsNoTracking();
+            IQueryable<Movie> query = _ctx.Movie.AsNoTracking();
 
             // Search
             if (!string.IsNullOrEmpty(q))
@@ -71,10 +73,10 @@ namespace Project02.Controllers
         }
 
         
-        [HttpGet("movie/{id}")]
+        [HttpGet("/movie/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            var vm = await _ctx.Movies.Where(m => m.Movie_Slug == id)
+            var vm = await _ctx.Movie.Where(m => m.Movie_Slug == id)
                 .AsNoTracking()
                 .Select(m => new MovieDetailVm
                 {
@@ -94,18 +96,20 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-        // GET: Movies/Create
+        
+        [Authorize(Roles = "Admin")]
         [HttpGet("/admin/movie/create")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Movies/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/movie/create")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Create(MovieCreateVm vm)
         {
             if (!ModelState.IsValid) return View(vm);
@@ -122,42 +126,54 @@ namespace Project02.Controllers
                 Movie_Poster = posterPath
             };
 
-            _ctx.Movies.Add(movie);
+            _ctx.Movie.Add(movie);
             await _ctx.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Movies/Edit/5
-        [HttpGet("admin/movie/edit/{id}")]
-        public async Task<IActionResult> Edit(long? id)
+        [HttpGet("/admin/movie/edit/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit([FromRoute]string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var movie = await _ctx.Movies.FindAsync(id);
-            if (movie == null)
+            var vm = await _ctx.Movie.Where(m => m.Movie_Slug == id)
+                .AsNoTracking()
+                .Select(m => new MovieEditVm
+                {
+                    Movie_ID = m.Movie_ID,        
+                    Movie_Name = m.Movie_Name,
+                    Movie_Slug = m.Movie_Slug,
+                    Movie_Description = m.Movie_Description,
+                    Movie_Duration = m.Movie_Duration,
+                    Movie_Status = m.Movie_Status,
+                    ExistingPoster = m.Movie_Poster,    // để show ảnh hiện tại
+                    RowsVersion = m.RowsVersion
+                }).FirstOrDefaultAsync();
+            if (vm == null)
             {
                 return NotFound();
             }
-            return View(movie);
+            return View(vm);
         }
 
-        // POST: Movies/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/movie/edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(MovieEditVm vm)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit([FromRoute]string id, MovieEditVm vm)
         {
             if (!ModelState.IsValid)
             {
                 return View(vm);
             }
 
-            var movie = await _ctx.Movies.FirstOrDefaultAsync(m => m.Movie_ID == vm.Movie_ID);
+            var movie = await _ctx.Movie.FirstOrDefaultAsync(m => m.Movie_Slug == id);
             if (movie == null) return NotFound();
 
             movie.Movie_Name = vm.Movie_Name;
@@ -165,11 +181,11 @@ namespace Project02.Controllers
             movie.Movie_Duration = vm.Movie_Duration;
             movie.Movie_Status = vm.Movie_Status;
 
-            if (vm.Movie_Poster != null)
+            string? newPosterPath = null;
+            if (vm.Movie_Poster != null && vm.Movie_Poster.Length > 0)
             {
-                await _files.DeleteAsync(movie.Movie_Poster);
-
-                movie.Movie_Poster = await _files.SaveAsync(vm.Movie_Poster, "uploads/posters");
+                newPosterPath = await _files.SaveAsync(vm.Movie_Poster, "uploads/posters");
+                movie.Movie_Poster = newPosterPath;
             }
 
             _ctx.Entry(movie).Property("RowsVersion").OriginalValue = vm.RowsVersion;
@@ -187,42 +203,36 @@ namespace Project02.Controllers
             
         }
 
-        // GET: Movies/Delete/5
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var movie = await _ctx.Movies
-                .FirstOrDefaultAsync(m => m.Movie_ID == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(movie);
-        }
-
-        // POST: Movies/Delete/5
-        [HttpPost, ActionName("Delete")]
+        
+        [HttpPost("/admin/movie/delete/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteConfirmed(string id, string? rowVersionBase64)
         {
-            var movie = await _ctx.Movies.FindAsync(id);
-            if (movie != null)
+            var movie = await _ctx.Movie.FirstOrDefaultAsync(m => m.Movie_Slug == id);
+            if (movie == null) return Json(new { ok = false, message = "Not Found" });
+
+            if (!string.IsNullOrEmpty(rowVersionBase64))
             {
-                _ctx.Movies.Remove(movie);
+                _ctx.Entry(movie).Property(x => x.RowsVersion).OriginalValue = Convert.FromBase64String(rowVersionBase64);
             }
 
-            await _ctx.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            _ctx.Movie.Remove(movie);
+
+            try
+            {
+                await _ctx.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return Json(new { ok = false, message = "Bản ghi đã bị thay đổi bới ai đó" });
+            }
+            return Json(new { ok = true });
         }
 
-        private bool MovieExists(long id)
+        private bool MovieExists(string id)
         {
-            return _ctx.Movies.Any(e => e.Movie_ID == id);
+            return _ctx.Movie.Any(e => e.Movie_Slug == id);
         }
     }
 }

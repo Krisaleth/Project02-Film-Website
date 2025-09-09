@@ -20,7 +20,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Genre> Genres { get; set; }
 
-    public virtual DbSet<Movie> Movies { get; set; }
+    public virtual DbSet<Movie> Movie { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
