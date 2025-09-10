@@ -28,7 +28,7 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C9235C963B");
+            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C95BE6E4D1");
 
             entity.Property(e => e.Create_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Password_Algo).HasDefaultValue("PBKDF2");
@@ -38,7 +38,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143B189C5CF6");
+            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143BBF64197B");
 
             entity.Property(e => e.Created_At).HasDefaultValueSql("(sysutcdatetime())");
 
@@ -58,12 +58,12 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A2006EBC0430C");
+            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A2006153FB9D2");
         });
 
         modelBuilder.Entity<Movie>(entity =>
         {
-            entity.HasKey(e => e.Movie_ID).HasName("PK__Movie__7A8804052768157B");
+            entity.HasKey(e => e.Movie_ID).HasName("PK__Movie__7A88040572A2E483");
 
             entity.Property(e => e.Movie_Created_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Movie_Producer).HasDefaultValue("Unknown");
@@ -92,7 +92,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Users_ID).HasName("PK__Users__EB68290D2E4C036F");
+            entity.HasKey(e => e.Users_ID).HasName("PK__Users__EB68290D4B644C2C");
 
             entity.Property(e => e.RowsVersion)
                 .IsRowVersion()

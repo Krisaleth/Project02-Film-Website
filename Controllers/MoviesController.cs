@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
 using Project02.Helper;
@@ -28,7 +29,7 @@ namespace Project02.Controllers
         // GET: Movies
         [HttpGet("/admin/movie")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(string? q, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string? q, string? sortOrder, int page = 1, int pageSize = 10)
         {
             if (page < 1) page = 1;
             if (pageSize <= 0) pageSize = 10;
@@ -42,10 +43,20 @@ namespace Project02.Controllers
                 query = query.Where(m => m.Movie_Name.Contains(keyWord));
             }
 
+            query = sortOrder switch
+            {
+                "name_asc" => query.OrderBy(m => m.Movie_Name),
+                "name_desc" => query.OrderByDescending(m => m.Movie_Name),
+                "status_asc" => query.OrderBy(m => m.Movie_Status),
+                "status_desc" => query.OrderByDescending(m => m.Movie_Status),
+                "year_asc" => query.OrderBy(m => m.Movie_Year),          // nếu có cột năm
+                "year_desc" => query.OrderByDescending(m => m.Movie_Year),
+                _ => query.OrderBy(m => m.Movie_ID)
+            };
+
             var total = await query.CountAsync();
 
             var items = await query
-                .OrderByDescending(m => m.Movie_Name)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(m => new MovieRowVm
@@ -68,6 +79,17 @@ namespace Project02.Controllers
                 PageSize = pageSize,
                 TotalItems = total,
                 Q = q,
+                SortOptions = new List<SelectListItem>
+                {
+                    new("Sort by", "", string.IsNullOrEmpty(sortOrder)),
+                    new("Name Ascending", "name_asc", sortOrder == "name_asc"),
+                    new("Name Descending", "name_desc", sortOrder == "name_desc"),
+                    new("Status Ascending", "status_asc", sortOrder == "status_asc"),
+                    new("Status Descending", "status_desc", sortOrder == "status_desc"),
+                    new("Year Ascending", "year_asc", sortOrder == "year_asc"),
+                    new("Year Descending", "year_desc", sortOrder == "year_desc"),
+                },
+                sortOrder = sortOrder
             };
 
             return View(vm);

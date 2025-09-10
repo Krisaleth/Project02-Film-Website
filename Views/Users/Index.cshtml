@@ -13,13 +13,17 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <h3 class="card-title mb-0">User table to see and edit some value like status and more thing like that</h3>
+                    <form asp-action="Index" method="get">
+                        <select asp-for="sortOrder" asp-items="Model.SortOptions" class="form-select form-select-sm me-2"
+                                onchange="this.form.submit()"></select>
+                    </form>
                     <div class="d-flex ms-auto">
                         <form asp-action="Index" method="get" class="d-flex me-2">
                             <input type="text" name="search" value="@Model.search" class="form-control form-control-sm me-2" placeholder="Search by name..."/>
                             <input type="hidden" name="pageSize" value="@Model.PageSize" />
                             <button class="btn btn-sm btn-secondary d-flex align-items-center" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
                         </form>
+                        <a asp-action="Create" class="btn btn-sm btn-primary d-flex align-items-center"><i class="fa-solid fa-plus"></i> Add New</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -75,6 +79,14 @@
                                     <a asp-action="Edit" asp-route-id="@item.Users_ID"
                                         class="btn btn-sm btn-outline-primary">
                                         <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Users_ID"
+                                        class="btn btn-sm btn-outline-info">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Users_ID"
+                                        class="btn btn-sm btn-outline-danger">
+                                        <i class="fa-solid fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>

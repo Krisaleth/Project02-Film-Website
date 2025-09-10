@@ -25,7 +25,7 @@ namespace Project02.Controllers
         // GET: Genres
         [HttpGet("admin/genre")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string? search, string? sortOrder, int page = 1, int pageSize = 10)
         {
             if (page < 1) page = 1;
             if (pageSize <= 0) pageSize = 10;
@@ -38,25 +38,38 @@ namespace Project02.Controllers
                 var keyWord = search.Trim();
                 query = query.Where(g => g.Genre_Name.Contains(keyWord));
             }
+
+            query = sortOrder switch
+            {
+                "name_asc" => query.OrderBy(g => g.Genre_Name),
+                "name_desc" => query.OrderByDescending(g => g.Genre_Name),
+                _ => query.OrderBy(g => g.Genre_ID)
+            };
             var total = await query.CountAsync();
             var items = await query
-                .OrderByDescending(g => g.Genre_ID)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(g => new ViewModels.Genre.GenreRowVm
+                .Select(g => new GenreRowVm
                 {
                     Genre_ID = g.Genre_ID,
                     Genre_Name = g.Genre_Name,
                     Genre_Slug = g.Genre_Slug
                 })
                 .ToListAsync();
-            var model = new ViewModels.Genre.GenreIndexVm
+            var model = new GenreIndexVm
                 {
                 Items = items,
                 Page = page,
                 PageSize = pageSize,
                 TotalItems = total,
-                search = search
+                search = search,
+                sortOrder = sortOrder,
+                SortOptions = new List<SelectListItem>
+                {
+                    new("Sort by", "", string.IsNullOrEmpty(sortOrder)),
+                    new("Name Ascending", "name_asc", sortOrder == "name_asc"),
+                    new("Name Descending", "name_desc", sortOrder == "name_desc"),
+                }
             };
             return View(model);
         }

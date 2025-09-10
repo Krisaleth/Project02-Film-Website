@@ -31,7 +31,7 @@ CREATE TABLE dbo.Account
     Create_At            DATETIME2(7)   NOT NULL CONSTRAINT DF_Account_CreateAt DEFAULT (SYSUTCDATETIME()),
     CONSTRAINT UQ_Account_UserName UNIQUE (UserName),
     CONSTRAINT CK_Account_Role CHECK (Role IN (N'Admin', N'User')),
-    CONSTRAINT CK_Account_Status CHECK (Status IN (N'Active', N'Banned')),
+    CONSTRAINT CK_Account_Status CHECK (Status IN (N'Active', N'Inactive', N'Banned')),
     CONSTRAINT CK_Account_Iters CHECK (Password_Iterations >= 10000)
 );
 GO

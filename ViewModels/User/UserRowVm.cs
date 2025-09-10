@@ -1,5 +1,7 @@
 ﻿
 
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 namespace Project02.ViewModels.User
 {
     public class UserRowVm
@@ -20,6 +22,8 @@ namespace Project02.ViewModels.User
         public int PageSize { get; set; } = 10;
         public int TotalItem { get; set; }
         public string? search { get; set; }
+        public string? sortOrder { get; set; }
+        public IEnumerable<SelectListItem>? SortOptions { get; set; }
         public int TotalPage => (int)Math.Ceiling((double)TotalItem / PageSize);
         public int Start => TotalItem == 0 ? 0 : (Page - 1) * PageSize + 1;
         public int End => Math.Min(Page * PageSize, TotalItem);

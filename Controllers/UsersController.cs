@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
 using Project02.Models;
 using Project02.ViewModels.User;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Project02.Controllers
 {
@@ -22,12 +23,14 @@ namespace Project02.Controllers
 
         // GET: Users
         [HttpGet("/admin/user")]
-        public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string? search, string? sortOrder, int page = 1, int pageSize = 10)
         {
             if (page == 1) page = 1;
             if (pageSize <= 0) pageSize = 10;
 
             IQueryable<User> query = _ctx.Users.AsNoTracking();
+
+            
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -35,9 +38,24 @@ namespace Project02.Controllers
                 query = query.Where(x => x.Users_FullName.Contains(keyWord)); 
             }
 
-            var total = await _ctx.Users.CountAsync();
+            query = sortOrder switch
+            {
+                "name_asc" => query.OrderBy(u => u.Users_FullName),
+                "name_desc" => query.OrderByDescending(u => u.Users_FullName),
+                "email_asc" => query.OrderBy(u => u.Users_Email),
+                "email_desc" => query.OrderByDescending(u => u.Users_Email),
+                "status_asc" => query.OrderBy(u => u.Account.Status),  // đổi tên theo model của bạn
+                "status_desc" => query.OrderByDescending(u => u.Account.Status),
+                _ => query.OrderBy(u => u.Users_ID) // mặc định
+            };
 
-            var items = await query.OrderBy(m => m.Users_ID)
+            var total = await query.CountAsync();
+
+            var maxPage = (int)Math.Ceiling((double)total / pageSize);
+            if (maxPage == 0) maxPage = 1;
+            if (page > maxPage) page = maxPage;
+
+            var items = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(m => new UserRowVm
@@ -57,6 +75,18 @@ namespace Project02.Controllers
                 PageSize = pageSize,
                 TotalItem = total,
                 search = search,
+                sortOrder = sortOrder
+            };
+
+            vm.SortOptions = new List<SelectListItem>
+            {
+                new("Sort by", "", string.IsNullOrEmpty(vm.sortOrder)),
+                new("Name Ascending", "name_asc", vm.sortOrder == "name_asc"),
+                new("Name Descending", "name_desc", vm.sortOrder == "name_desc"),
+                new("Email Ascending", "email_asc", vm.sortOrder == "email_asc"),
+                new("Email Descending", "email_desc", vm.sortOrder == "email_desc"),
+                new("Status Ascending", "status_asc", vm.sortOrder == "status_asc"),
+                new("Status Descending", "status_desc", vm.sortOrder == "status_desc")
             };
 
             return View(vm);

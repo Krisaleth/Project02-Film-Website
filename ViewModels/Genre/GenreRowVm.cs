@@ -1,4 +1,6 @@
-﻿namespace Project02.ViewModels.Genre
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Project02.ViewModels.Genre
 {
     public class GenreRowVm
     {
@@ -15,6 +17,8 @@
         public int PageSize { get; set; } = 10;
         public int TotalItems { get; set; }
         public string? search { get; set; }
+        public string? sortOrder { get; set; }
+        public IEnumerable<SelectListItem>? SortOptions { get; set; }
         public int TotalPage => (int)Math.Ceiling((double)TotalItems / PageSize);
         public int Start => TotalItems == 0 ? 0 : (Page - 1) * PageSize + 1;
         public int End => Math.Min(Page * PageSize, TotalItems);
