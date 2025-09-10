@@ -8,43 +8,57 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
 using Project02.Models;
+using Project02.ViewModels.Genre;
+using Project02.ViewModels.Movie;
 
 namespace Project02.Controllers
 {
     public class GenresController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _ctx;
 
-        public GenresController(AppDbContext context)
+        public GenresController(AppDbContext ctx)
         {
-            _context = context;
+            _ctx = ctx;
         }
 
         // GET: Genres
         [HttpGet("admin/genre")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 10)
         {
-            return View(await _context.Genres.ToListAsync());
-        }
+            if (page < 1) page = 1;
+            if (pageSize <= 0) pageSize = 10;
 
-        // GET: Genres/Details/5
-        [HttpGet("/{id}")]
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
+            IQueryable<Genre> query = _ctx.Genres.AsNoTracking();
+
+            // Search
+            if (!string.IsNullOrEmpty(search))
             {
-                return NotFound();
+                var keyWord = search.Trim();
+                query = query.Where(g => g.Genre_Name.Contains(keyWord));
             }
-
-            var genre = await _context.Genres
-                .FirstOrDefaultAsync(m => m.Genre_Slug == id);
-            if (genre == null)
-            {
-                return NotFound();
-            }
-
-            return View(genre);
+            var total = await query.CountAsync();
+            var items = await query
+                .OrderByDescending(g => g.Genre_ID)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(g => new ViewModels.Genre.GenreRowVm
+                {
+                    Genre_ID = g.Genre_ID,
+                    Genre_Name = g.Genre_Name,
+                    Genre_Slug = g.Genre_Slug
+                })
+                .ToListAsync();
+            var model = new ViewModels.Genre.GenreIndexVm
+                {
+                Items = items,
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = total,
+                search = search
+            };
+            return View(model);
         }
 
         // GET: Genres/Create
@@ -58,28 +72,38 @@ namespace Project02.Controllers
         // POST: Genres/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/genre/create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Genre_ID,Genre_Name,Genre_Slug")] Genre genre)
+        public async Task<IActionResult> Create(GenreCreateVm vm)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) return View(vm);
+            var genre = new Genre
             {
-                _context.Add(genre);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(genre);
+                Genre_Name = vm.Genre_Name,
+                Genre_Slug = vm.Genre_Name.ToLower().Replace(" ", "-")
+            };
+            _ctx.Add(genre);
+            await _ctx.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Genres/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        [HttpGet("/admin/genre/edit/{id}")]
+        public async Task<IActionResult> Edit([FromRoute]string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var genre = await _context.Genres.FindAsync(id);
+            var genre = await _ctx.Genres.Where(m => m.Genre_Slug == id)
+                .AsNoTracking()
+                .Select(m => new GenreEditVm
+                {
+                    Genre_ID = m.Genre_ID,
+                    Genre_Name = m.Genre_Name,
+                    Genre_Slug = m.Genre_Slug
+                }).FirstOrDefaultAsync();
             if (genre == null)
             {
                 return NotFound();
@@ -90,74 +114,38 @@ namespace Project02.Controllers
         // POST: Genres/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/genre/edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Genre_ID,Genre_Name,Genre_Slug")] Genre genre)
+        public async Task<IActionResult> Edit([FromRoute]string id, GenreEditVm vm)
         {
-            if (id != genre.Genre_ID)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return View(vm);
             }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(genre);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GenreExists(genre.Genre_ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(genre);
-        }
-
-        // GET: Genres/Delete/5
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var genre = await _context.Genres
-                .FirstOrDefaultAsync(m => m.Genre_ID == id);
+            var genre = await _ctx.Genres.FirstOrDefaultAsync(m => m.Genre_Slug == id);
             if (genre == null)
             {
                 return NotFound();
             }
-
-            return View(genre);
-        }
-
-        // POST: Genres/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
-        {
-            var genre = await _context.Genres.FindAsync(id);
-            if (genre != null)
-            {
-                _context.Genres.Remove(genre);
-            }
-
-            await _context.SaveChangesAsync();
+            genre.Genre_Name = vm.Genre_Name;
+            genre.Genre_Slug = vm.Genre_Name.ToLower().Replace(" ", "-");
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GenreExists(long id)
+        [HttpPost("/admin/genre/delete/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            return _context.Genres.Any(e => e.Genre_ID == id);
+            var genre = await _ctx.Genres.FirstOrDefaultAsync(m => m.Genre_Slug == id);
+            if (genre == null) return Json(new { ok = false, message = "Not Found" });
+            _ctx.Genres.Remove(genre);
+            await _ctx.SaveChangesAsync();
+            return Json(new { ok = true });
+        }
+
+        private bool GenreExists(string id)
+        {
+            return _ctx.Genres.Any(e => e.Genre_Slug == id);
         }
     }
 }

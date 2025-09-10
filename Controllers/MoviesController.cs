@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
-using Project02.Extension;
 using Project02.Helper;
 using Project02.Models;
 using Project02.Services;
@@ -54,6 +53,8 @@ namespace Project02.Controllers
                     Movie_ID = m.Movie_ID,
                     Movie_Slug = m.Movie_Slug,
                     Movie_Name = m.Movie_Name,
+                    Movie_Year = m.Movie_Year,
+                    Movie_Producer = m.Movie_Producer,
                     Movie_Description = m.Movie_Description,
                     Movie_Duration = m.Movie_Duration,
                     Movie_Poster = m.Movie_Poster,
@@ -83,6 +84,8 @@ namespace Project02.Controllers
                 {
                     Movie_Slug = m.Movie_Slug,
                     Movie_Name = m.Movie_Name,
+                    Movie_Year = m.Movie_Year,
+                    Movie_Producer = m.Movie_Producer,
                     Movie_Description = m.Movie_Description,
                     Movie_Poster = m.Movie_Poster,
                     DurationFormatted = (m.Movie_Duration / 60) + "h" + (m.Movie_Duration % 60) + "m",
@@ -123,7 +126,7 @@ namespace Project02.Controllers
                 Movie_Description = vm.Movie_Description,
                 Movie_Duration = vm.Movie_Duration,
                 Movie_Status = vm.Movie_Status,
-                Movie_Slug = SlugHelper.GenerateSlug(vm.Movie_Name),
+                Movie_Slug = SlugHelper.GenerateSlug($"{vm.Movie_Name}-${vm.Movie_Year}" ),
                 Movie_Poster = posterPath
             };
 
@@ -149,10 +152,12 @@ namespace Project02.Controllers
                     Movie_ID = m.Movie_ID,        
                     Movie_Name = m.Movie_Name,
                     Movie_Slug = m.Movie_Slug,
+                    Movie_Year = m.Movie_Year,
+                    Movie_Producer = m.Movie_Producer,
                     Movie_Description = m.Movie_Description,
                     Movie_Duration = m.Movie_Duration,
                     Movie_Status = m.Movie_Status,
-                    ExistingPoster = m.Movie_Poster,    // để show ảnh hiện tại
+                    ExistingPoster = m.Movie_Poster,
                     RowsVersion = m.RowsVersion
                 }).FirstOrDefaultAsync();
             if (vm == null)

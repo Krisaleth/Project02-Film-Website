@@ -1,41 +1,180 @@
-﻿@model IEnumerable<Project02.Models.Genre>
+﻿@using Project02.ViewModels.Genre
+@model GenreIndexVm
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Genre";
+    Layout = "_AdminLayout";
 }
 
-<h1>Index</h1>
+<form id="antiForgeryForm" method="post">@Html.AntiForgeryToken()</form>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <h3 class="card-title mb-0">Movies table with minimum features</h3>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Genre_Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genre_Slug)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre_Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre_Slug)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Genre_ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Genre_ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Genre_ID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                    <div class="d-flex ms-auto">
+                        <form asp-action="Index" method="get" class="d-flex me-2">
+                            <input type="text" name="q" value="@Model.search"
+                                   class="form-control form-control-sm me-2"
+                                   placeholder="Search by name..." />
+                            <input type="hidden" name="pageSize" value="@Model.PageSize" />
+                            <button type="submit" class="btn btn-sm btn-secondary d-flex align-items-center">
+                                <i class="fa-solid fa-magnifying-glass me-1"></i>
+                                Search
+                            </button>
+
+                        </form>
+
+                        <a asp-action="Create" class="btn btn-sm btn-primary">
+                            <i class="fa-solid fa-plus"></i> Add Genre
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Slug</th>
+                                <th>Name</th>
+                                <th class="text-center">Control</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Items.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">No genres found</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var item in Model.Items)
+                                {
+                                    var rv = "";
+
+                                    <tr>
+                                        <td>@item.Genre_Slug</td>
+                                        <td>@item.Genre_Name</td>
+                                        <td>
+                                            <a asp-action="Edit" class="btn btn-sm btn-outline-primary" asp-route-id="@item.Genre_Slug"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete" data-id="@item.Genre_Slug" data-rowid="@item.Genre_ID" data-name="@item.Genre_Name" data-rv="@rv"><i class="fa-solid fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <div class="row my-1">
+                        <div class="col-12"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            Showing @Model.Start to @Model.End of @Model.TotalItems entries
+                        </div>
+                        <nav>
+                            <ul class="pagination mb-0">
+                                <li class="page-item me-1 @(Model.Page == 1 ? "disabled" : "")">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-search="@ViewBag.Search"
+                                       asp-route-page="@(Model.Page - 1)"
+                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-left"></i></a>
+                                </li>
+
+                                @for (int p = 1; p <= Model.TotalPage; p++)
+                                {
+                                    <li class="page-item me-1 @(p == Model.Page ? "active" : "")">
+                                        <a class="page-link"
+                                           asp-action="Index"
+                                           asp-route-search="@ViewBag.Search"
+                                           asp-route-page="@p"
+                                           asp-route-pageSize="@(Model.PageSize)">@p</a>
+                                    </li>
+                                }
+
+                                <li class="page-item me-1 @(Model.Page == Model.TotalPage ? "disabled" : "")">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-search="@ViewBag.Search"
+                                       asp-route-page="@(Model.Page + 1)"
+                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-right"></i></a>
+                                </li>
+                            </ul>
+
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest(".btn-delete");
+
+        if (!btn) return;
+
+        const slug = btn.dataset.id;
+        const id = btn.dataset.rowId;
+        const name = btn.dataset.name;
+        const rv = btn.dataset.rv || '';
+
+        const ok = await Swal.fire ({
+            title: "Xác nhận xoá",
+            text: `Bạn có chắc muốn xoá "${name}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xoá',
+            cancelButtonText: 'Huỷ'
+        }).then(r => r.isConfirmed);
+
+        if (!ok) {
+            return;
+        }
+
+        const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
+        const url = `/admin/genre/delete/${encodeURIComponent(slug)}`;
+
+        const res = await fetch(url, {
+            method: 'post',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset="utf-8" '},
+            credentials: 'same-origin',
+            body: new URLSearchParams({
+                '__RequestVerificationToken': token,
+                'rowVersionBase64': rv
+            })
+        });
+
+        const raw = await res.text();
+        let json;
+        try {
+            json = raw && res.headers.get('content-type')?.includes('application/json')
+            ? JSON.parse(raw)
+            : null;
+        } catch {
+            json = null;
+        }
+
+        if (!json) {
+            console.error('Non-JSON response', res.status, raw);
+            Swal.fire({ icon:'error', title:`HTTP ${res.status}`, text:'Máy chủ trả về non-JSON.' });
+            return;
+        }
+
+
+        if (json.ok) {
+            const row = document.getElementById(`row-${id}`);
+            row?.remove();
+            Swal.fire ({ icon:'success', title:'Đã xoá', timer: 1200, showConfirmButton:false });
+            location.reload();
+        } else {
+            Swal.fire ({ icon:'error', title:'Lỗi', text: json.message || "Không xoá được" });
+        }
+    });
+</script>

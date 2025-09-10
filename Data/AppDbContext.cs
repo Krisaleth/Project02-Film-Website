@@ -28,7 +28,7 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C917B43223");
+            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C9235C963B");
 
             entity.Property(e => e.Create_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Password_Algo).HasDefaultValue("PBKDF2");
@@ -38,7 +38,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143B2DF3DAC5");
+            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143B189C5CF6");
 
             entity.Property(e => e.Created_At).HasDefaultValueSql("(sysutcdatetime())");
 
@@ -58,16 +58,18 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A200633AA1E13");
+            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A2006EBC0430C");
         });
 
         modelBuilder.Entity<Movie>(entity =>
         {
-            entity.HasKey(e => e.Movie_ID).HasName("PK__Movie__7A880405BB7A926E");
+            entity.HasKey(e => e.Movie_ID).HasName("PK__Movie__7A8804052768157B");
 
             entity.Property(e => e.Movie_Created_At).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.Movie_Producer).HasDefaultValue("Unknown");
             entity.Property(e => e.Movie_Status).HasDefaultValue("Publish");
             entity.Property(e => e.Movie_Update_At).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.Movie_Year).HasDefaultValue(2000);
             entity.Property(e => e.RowsVersion)
                 .IsRowVersion()
                 .IsConcurrencyToken();
@@ -90,7 +92,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Users_ID).HasName("PK__Users__EB68290D82C419B6");
+            entity.HasKey(e => e.Users_ID).HasName("PK__Users__EB68290D2E4C036F");
 
             entity.Property(e => e.RowsVersion)
                 .IsRowVersion()

@@ -9,6 +9,10 @@ namespace Project02.ViewModels.Movie
         [Required]
         public string Movie_Description { get; set; } = default!;
         [Required]
+        public int Movie_Year { get; set;} = default!;
+        [Required]
+        public string Movie_Producer { get; set; } = default!;
+        [Required]
         public short Movie_Duration { get; set; }
         [Required]
         public string Movie_Status { get; set; } = "Publish";
