@@ -63,6 +63,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Users_Phone)
                                 </td>
+                                <td>
                                     @if (item.Account_Status == "Active")
                                     {
                                         <span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> Active</span>
@@ -75,6 +76,7 @@
                                     {
                                         <span class="badge bg-warning text-dark">Unknown</span>
                                     }
+                                </td>
                                 <td class="text-center">
                                     <a asp-action="Edit" asp-route-id="@item.Users_ID"
                                         class="btn btn-sm btn-outline-primary">

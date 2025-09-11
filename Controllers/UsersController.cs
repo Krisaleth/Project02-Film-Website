@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
 using Project02.Models;
+using Project02.Security;
 using Project02.ViewModels.User;
 using System;
 using System.Collections.Generic;
@@ -23,6 +25,7 @@ namespace Project02.Controllers
 
         // GET: Users
         [HttpGet("/admin/user")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string? search, string? sortOrder, int page = 1, int pageSize = 10)
         {
             if (page == 1) page = 1;
@@ -92,7 +95,8 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-        // GET: Users/Details/5
+        [HttpGet("admin/user/detail/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -100,95 +104,154 @@ namespace Project02.Controllers
                 return NotFound();
             }
 
-            var user = await _ctx.Users
-                .Include(u => u.Account)
-                .FirstOrDefaultAsync(m => m.Users_ID == id);
-            if (user == null)
+            var vm = await _ctx.Users.Where(a => a.Users_ID == id)
+                .AsNoTracking()
+                .Select(m => new UserDetailVm
+                {
+                    UserId = m.Users_ID,
+                    UserName = m.Account.UserName,
+                    FullName = m.Users_FullName,
+                    UserEmail = m.Users_Email,
+                    UserPhone = m.Users_Phone,
+                    Account_Status = m.Account.Status,
+                }).FirstOrDefaultAsync();
+            if (vm == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(vm);
         }
 
-        // GET: Users/Create
+        [HttpGet("/admin/user/create")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewData["Account_ID"] = new SelectList(_ctx.Accounts, "Account_ID", "Account_ID");
             return View();
         }
 
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("admin/user/create")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Users_ID,Users_FullName,Users_Email,Users_Phone,RowsVersion,Account_ID")] User user)
+        public async Task<IActionResult> Create(UserCreateVm vm)
         {
-            if (ModelState.IsValid)
+            if (vm == null)
             {
-                _ctx.Add(user);
-                await _ctx.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            ViewData["Account_ID"] = new SelectList(_ctx.Accounts, "Account_ID", "Account_ID", user.Account_ID);
-            return View(user);
+            var userNameExists = await _ctx.Accounts.AnyAsync(a => a.UserName == vm.UserName);
+            if (userNameExists)
+            {
+                ModelState.AddModelError(nameof(vm.UserName), "Tên này đã tồn tại");
+                return View(vm);
+            }
+            var emailExists = await _ctx.Users.AnyAsync(a => a.Users_Email == vm.User_Email);
+            if (emailExists)
+            {
+                ModelState.AddModelError(nameof(vm.User_Email), "Email đã tồn tại!");
+                return View(vm);
+            }
+
+            var (hash, salt) = PasswordHasher.HashPassword(vm.Password);
+
+            var account = new Account
+            {
+                UserName = vm.UserName,
+                Password_Hash = hash,
+                Password_Salt = salt,
+                Password_Algo = "PBKDF2",
+                Password_Iterations = 100000,
+                Role = "User",
+                Status = "Active"
+            };
+            _ctx.Accounts.Add(account);
+            _ctx.SaveChanges();
+
+            var user = new User
+            {
+                Users_FullName = vm.User_Name,
+                Users_Email = vm.User_Email,
+                Users_Phone = vm.User_Phone,
+                Account_ID = account.Account_ID,
+            };
+            _ctx.Users.Add(user);
+            _ctx.SaveChanges();
+             return RedirectToAction("Index");
         }
 
-        // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        [HttpGet("/admin/edit/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit([FromRoute]long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _ctx.Users.FindAsync(id);
-            if (user == null)
+            var vm = await _ctx.Users.Where(a => a.Users_ID == id)
+                .AsNoTracking()
+                .Select(m => new UserEditVm
+                {
+                    User_ID = m.Users_ID,
+                    User_Name = m.Account.UserName,
+                    User_Email = m.Users_Email,
+                    User_Phone = m.Users_Phone,
+                    User_FullName = m.Users_FullName,
+                    Account_Status = m.Account.Status,
+                    RowsVersion = m.RowsVersion,
+                })
+                .FirstOrDefaultAsync();
+
+            if (vm == null)
             {
                 return NotFound();
             }
-            ViewData["Account_ID"] = new SelectList(_ctx.Accounts, "Account_ID", "Account_ID", user.Account_ID);
-            return View(user);
+            return View(vm);
         }
 
         // POST: Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Users_ID,Users_FullName,Users_Email,Users_Phone,RowsVersion,Account_ID")] User user)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit([FromRoute]long id, UserEditVm vm)
         {
-            if (id != user.Users_ID)
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+            var user = await _ctx.Users.FirstOrDefaultAsync(m => m.Users_ID == id);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            user.Users_FullName = vm.User_FullName;
+            user.Users_Phone = vm.User_Phone;
+            user.Users_Email = vm.User_Email;
+            user.Account.Status = vm.Account_Status;
+            user.Account.UserName = vm.User_Name;
+
+            _ctx.Entry(user).Property("RowsVersion").OriginalValue = vm.RowsVersion;
+
+            try
             {
-                try
-                {
-                    _ctx.Update(user);
-                    await _ctx.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Users_ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _ctx.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Account_ID"] = new SelectList(_ctx.Accounts, "Account_ID", "Account_ID", user.Account_ID);
-            return View(user);
+            catch (DbUpdateConcurrencyException)
+            {
+                ModelState.AddModelError("", "Bản ghi đã được thay đổi trước đó!");
+                return View(vm);
+            }
         }
 
         // GET: Users/Delete/5
+
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -210,6 +273,7 @@ namespace Project02.Controllers
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var user = await _ctx.Users.FindAsync(id);

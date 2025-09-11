@@ -1,48 +1,48 @@
-﻿@model Project02.Models.User
+﻿@using Project02.ViewModels.User
+@model UserDetailVm
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Details User";
+    Layout = "_AdminLayout";
 }
 
 <h1>Details</h1>
 
 <div>
-    <h4>User</h4>
-    <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Users_FullName)
+        <dt class="col-sm-2">
+            User Name
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Users_FullName)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Users_Email)
+            Full Name
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Users_Email)
+            @Html.DisplayFor(model => model.FullName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Users_Phone)
+            Email
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Users_Phone)
+            @Html.DisplayFor(model => model.UserEmail)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RowsVersion)
+            Phone
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RowsVersion)
+            @Html.DisplayFor(model => model.UserPhone)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Account)
+            Status
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Account.Account_ID)
+            @Html.DisplayFor(model => model.Account_Status)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Users_ID">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.UserId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
