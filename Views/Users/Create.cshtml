@@ -1,0 +1,69 @@
+﻿@using Project02.ViewModels.User
+@model UserCreateVm
+
+
+@{
+    ViewData["Title"] = "Create User Account";
+    Layout = "_AdminLayout";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <form asp-action="Create">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">User create form or you can call it a register form</h3>
+                    </div>
+                    <div class="card-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label class="form-label"><strong>Full Name</strong></label>
+                            <input asp-for="User_Name" class="form-control" />
+                            <span class="text-danger" asp-validation-for="User_Name"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><strong>Email</strong></label>
+                            <input asp-for="User_Email" class="form-control" />
+                            <span class="text-danger" asp-validation-for="User_Email"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><strong>Phone</strong></label>
+                            <input asp-for="User_Phone" class="form-control" />
+                            <span class="text-danger" asp-validation-for="User_Phone"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><strong>User Name</strong></label>
+                            <input asp-for="UserName" class="form-control" />
+                            <span class="text-danger" asp-validation-for="UserName"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><strong>Password</strong></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span class="text-danger" asp-validation-for="Password"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><strong>Confirm Password</strong></label>
+                            <input asp-for="ConfirmPassword" class="form-control" />
+                            <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
+                        </div>
+                        
+                    </div>
+                    <div class="card-footer">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                        <a asp-action="Index" class="btn btn-outline-secondary float-end">Back to List</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

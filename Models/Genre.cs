@@ -19,6 +19,7 @@ public partial class Genre
     [StringLength(100)]
     public string Genre_Slug { get; set; } = null!;
 
+    [ForeignKey("Genre_ID")]
     [InverseProperty("Genres")]
     public virtual ICollection<Movie> Movies { get; set; } = new List<Movie>();
 }

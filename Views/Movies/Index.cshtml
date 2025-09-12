@@ -1,9 +1,9 @@
-﻿@using Project02.ViewModels
+﻿@using Project02.ViewModels.Movie
 @model MovieIndexVm
 
 @{
     Layout = "_AdminLayout";
-    ViewData["Title"] = "Movies";
+    ViewData["Title"] = "Movie";
 }
 
 <form id="antiForgeryForm" method="post">@Html.AntiForgeryToken()</form>
@@ -12,7 +12,13 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <h3 class="card-title mb-0">Movies table with minimum features</h3>
+                    <div>
+                        <form asp-action="Index" method="get">
+                            <select asp-for="sortOrder" asp-items="Model.SortOptions" class="form-select form-select-sm me-2"
+                                    onchange="this.form.submit()"></select>
+                        </form>
+                    </div>
+
 
                     <div class="d-flex ms-auto">
                         <form asp-action="Index" method="get" class="d-flex me-2">
@@ -40,6 +46,8 @@
                                 <th>Slug</th>
                                 <th>Name</th>
                                 <th>Poster</th>
+                                <th>Year</th>
+                                <th>Producer</th>
                                 <th>Description</th>
                                 <th>Duration</th>
                                 <th>Status</th>
@@ -66,6 +74,8 @@
                                             <img src="@item.Movie_Poster" alt="Poster @item.Movie_Name"
                                                  style="width:80px;height:auto;object-fit:cover;" />
                                         </td>
+                                        <td>@item.Movie_Year</td>
+                                        <td>@item.Movie_Producer</td>
                                         <td class="text-truncate" style="max-width: 420px;">@item.Movie_Description</td>
                                         <td class="text-center">@item.Movie_Duration mins</td>
                                         <td>
@@ -138,7 +148,6 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('click', async (e) => {
         const btn = e.target.closest(".btn-delete");

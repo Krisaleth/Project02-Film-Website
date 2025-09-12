@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Project02.ViewModels
+namespace Project02.ViewModels.Movie
 {
     public class MovieCreateVm
     {
@@ -8,6 +8,10 @@ namespace Project02.ViewModels
         public string Movie_Name { get; set; } = default!;
         [Required]
         public string Movie_Description { get; set; } = default!;
+        [Required]
+        public int Movie_Year { get; set;} = default!;
+        [Required]
+        public string Movie_Producer { get; set; } = default!;
         [Required]
         public short Movie_Duration { get; set; }
         [Required]

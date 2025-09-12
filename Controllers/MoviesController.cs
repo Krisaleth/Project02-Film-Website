@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
-using Project02.Extension;
 using Project02.Helper;
 using Project02.Models;
 using Project02.Services;
 using Project02.ViewModels;
+using Project02.ViewModels.Movie;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -28,12 +29,12 @@ namespace Project02.Controllers
         // GET: Movies
         [HttpGet("/admin/movie")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(string? q, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string? q, string? sortOrder, int page = 1, int pageSize = 10)
         {
             if (page < 1) page = 1;
             if (pageSize <= 0) pageSize = 10;
 
-            IQueryable<Movie> query = _ctx.Movie.AsNoTracking();
+            IQueryable<Movie> query = _ctx.Movies.AsNoTracking();
 
             // Search
             if (!string.IsNullOrEmpty(q))
@@ -42,10 +43,20 @@ namespace Project02.Controllers
                 query = query.Where(m => m.Movie_Name.Contains(keyWord));
             }
 
+            query = sortOrder switch
+            {
+                "name_asc" => query.OrderBy(m => m.Movie_Name),
+                "name_desc" => query.OrderByDescending(m => m.Movie_Name),
+                "status_asc" => query.OrderBy(m => m.Movie_Status),
+                "status_desc" => query.OrderByDescending(m => m.Movie_Status),
+                "year_asc" => query.OrderBy(m => m.Movie_Year),          // nếu có cột năm
+                "year_desc" => query.OrderByDescending(m => m.Movie_Year),
+                _ => query.OrderBy(m => m.Movie_ID)
+            };
+
             var total = await query.CountAsync();
 
             var items = await query
-                .OrderByDescending(m => m.Movie_Name)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(m => new MovieRowVm
@@ -53,6 +64,8 @@ namespace Project02.Controllers
                     Movie_ID = m.Movie_ID,
                     Movie_Slug = m.Movie_Slug,
                     Movie_Name = m.Movie_Name,
+                    Movie_Year = m.Movie_Year,
+                    Movie_Producer = m.Movie_Producer,
                     Movie_Description = m.Movie_Description,
                     Movie_Duration = m.Movie_Duration,
                     Movie_Poster = m.Movie_Poster,
@@ -66,6 +79,17 @@ namespace Project02.Controllers
                 PageSize = pageSize,
                 TotalItems = total,
                 Q = q,
+                SortOptions = new List<SelectListItem>
+                {
+                    new("Sort by", "", string.IsNullOrEmpty(sortOrder)),
+                    new("Name Ascending", "name_asc", sortOrder == "name_asc"),
+                    new("Name Descending", "name_desc", sortOrder == "name_desc"),
+                    new("Status Ascending", "status_asc", sortOrder == "status_asc"),
+                    new("Status Descending", "status_desc", sortOrder == "status_desc"),
+                    new("Year Ascending", "year_asc", sortOrder == "year_asc"),
+                    new("Year Descending", "year_desc", sortOrder == "year_desc"),
+                },
+                sortOrder = sortOrder
             };
 
             return View(vm);
@@ -76,12 +100,14 @@ namespace Project02.Controllers
         [HttpGet("/movie/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            var vm = await _ctx.Movie.Where(m => m.Movie_Slug == id)
+            var vm = await _ctx.Movies.Where(m => m.Movie_Slug == id)
                 .AsNoTracking()
                 .Select(m => new MovieDetailVm
                 {
                     Movie_Slug = m.Movie_Slug,
                     Movie_Name = m.Movie_Name,
+                    Movie_Year = m.Movie_Year,
+                    Movie_Producer = m.Movie_Producer,
                     Movie_Description = m.Movie_Description,
                     Movie_Poster = m.Movie_Poster,
                     DurationFormatted = (m.Movie_Duration / 60) + "h" + (m.Movie_Duration % 60) + "m",
@@ -122,11 +148,11 @@ namespace Project02.Controllers
                 Movie_Description = vm.Movie_Description,
                 Movie_Duration = vm.Movie_Duration,
                 Movie_Status = vm.Movie_Status,
-                Movie_Slug = SlugHelper.GenerateSlug(vm.Movie_Name),
+                Movie_Slug = SlugHelper.GenerateSlug($"{vm.Movie_Name}-${vm.Movie_Year}" ),
                 Movie_Poster = posterPath
             };
 
-            _ctx.Movie.Add(movie);
+            _ctx.Movies.Add(movie);
             await _ctx.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -141,17 +167,19 @@ namespace Project02.Controllers
                 return NotFound();
             }
 
-            var vm = await _ctx.Movie.Where(m => m.Movie_Slug == id)
+            var vm = await _ctx.Movies.Where(m => m.Movie_Slug == id)
                 .AsNoTracking()
                 .Select(m => new MovieEditVm
                 {
                     Movie_ID = m.Movie_ID,        
                     Movie_Name = m.Movie_Name,
                     Movie_Slug = m.Movie_Slug,
+                    Movie_Year = m.Movie_Year,
+                    Movie_Producer = m.Movie_Producer,
                     Movie_Description = m.Movie_Description,
                     Movie_Duration = m.Movie_Duration,
                     Movie_Status = m.Movie_Status,
-                    ExistingPoster = m.Movie_Poster,    // để show ảnh hiện tại
+                    ExistingPoster = m.Movie_Poster,
                     RowsVersion = m.RowsVersion
                 }).FirstOrDefaultAsync();
             if (vm == null)
@@ -173,7 +201,7 @@ namespace Project02.Controllers
                 return View(vm);
             }
 
-            var movie = await _ctx.Movie.FirstOrDefaultAsync(m => m.Movie_Slug == id);
+            var movie = await _ctx.Movies.FirstOrDefaultAsync(m => m.Movie_Slug == id);
             if (movie == null) return NotFound();
 
             movie.Movie_Name = vm.Movie_Name;
@@ -209,7 +237,7 @@ namespace Project02.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(string id, string? rowVersionBase64)
         {
-            var movie = await _ctx.Movie.FirstOrDefaultAsync(m => m.Movie_Slug == id);
+            var movie = await _ctx.Movies.FirstOrDefaultAsync(m => m.Movie_Slug == id);
             if (movie == null) return Json(new { ok = false, message = "Not Found" });
 
             if (!string.IsNullOrEmpty(rowVersionBase64))
@@ -217,7 +245,7 @@ namespace Project02.Controllers
                 _ctx.Entry(movie).Property(x => x.RowsVersion).OriginalValue = Convert.FromBase64String(rowVersionBase64);
             }
 
-            _ctx.Movie.Remove(movie);
+            _ctx.Movies.Remove(movie);
 
             try
             {
@@ -232,7 +260,7 @@ namespace Project02.Controllers
 
         private bool MovieExists(string id)
         {
-            return _ctx.Movie.Any(e => e.Movie_Slug == id);
+            return _ctx.Movies.Any(e => e.Movie_Slug == id);
         }
     }
 }

@@ -27,10 +27,11 @@ CREATE TABLE dbo.Account
     Password_Algo        NVARCHAR(20)   NOT NULL CONSTRAINT DF_Account_Algo DEFAULT(N'PBKDF2'),
     Password_Iterations  INT            NOT NULL CONSTRAINT DF_Account_Iters DEFAULT(100000),
     Role                 NVARCHAR(10)   NOT NULL,
-    Status               BIT            NOT NULL CONSTRAINT DF_Account_Status DEFAULT(1),
+    Status               NVARCHAR(10)   NOT NULL CONSTRAINT DF_Account_Status DEFAULT(N'Active'),
     Create_At            DATETIME2(7)   NOT NULL CONSTRAINT DF_Account_CreateAt DEFAULT (SYSUTCDATETIME()),
     CONSTRAINT UQ_Account_UserName UNIQUE (UserName),
     CONSTRAINT CK_Account_Role CHECK (Role IN (N'Admin', N'User')),
+    CONSTRAINT CK_Account_Status CHECK (Status IN (N'Active', N'Inactive', N'Banned')),
     CONSTRAINT CK_Account_Iters CHECK (Password_Iterations >= 10000)
 );
 GO
@@ -65,9 +66,11 @@ CREATE TABLE dbo.Movie
     Movie_ID           BIGINT IDENTITY(1,1) PRIMARY KEY,
     Movie_Slug         NVARCHAR(255) NOT NULL,
     Movie_Name         NVARCHAR(255) NOT NULL,
+    Movie_Producer     NVARCHAR(255) NOT NULL DEFAULT N'Unknown',
     Movie_Poster       NVARCHAR(500) NOT NULL,
     Movie_Description  NVARCHAR(MAX) NOT NULL,
     Movie_Duration     SMALLINT      NOT NULL,
+    Movie_Year         INT           NOT NULL DEFAULT 2000,
     RowsVersion        ROWVERSION    NOT NULL,
     Movie_Status       NVARCHAR(30)  NOT NULL CONSTRAINT DF_Movie_Status DEFAULT (N'Publish'),
     Movie_Created_At   DATETIME2(7)  NOT NULL CONSTRAINT DF_Movie_Created_At DEFAULT (SYSUTCDATETIME()),
@@ -165,32 +168,38 @@ VALUES
 
 
 INSERT INTO dbo.Movie
-    (Movie_Slug, Movie_Name, Movie_Description, Movie_Duration, Movie_Status, Movie_Poster)
+(Movie_Slug, Movie_Name, Movie_Description, Movie_Duration, Movie_Status, Movie_Poster, Movie_Producer, Movie_Year)
 VALUES
 -- 1
 ('interstellar-2014', N'Interstellar',
  N'A team of explorers travel through a wormhole in space to ensure humanity''s survival.',
- 169, N'Publish', N'/uploads/posters/interstellar-2014.jpg'),
+ 169, N'Publish', N'/uploads/posters/interstellar-2014.jpg', 
+ N'Syncopy / Warner Bros.', 2014),
 
 -- 2
 ('inception-2010', N'Inception',
  N'A skilled thief leads a team into the subconscious world of dreams.',
- 148, N'Publish', N'/uploads/posters/inception-2010.jpg'),
+ 148, N'Publish', N'/uploads/posters/inception-2010.jpg', 
+ N'Syncopy / Warner Bros.', 2010),
 
 -- 3
 ('tenet-2020', N'Tenet',
  N'A secret agent manipulates time to prevent World War III.',
- 150, N'Unpublish', N'/uploads/posters/tenet-2020.jpg'),
+ 150, N'Unpublish', N'/uploads/posters/tenet-2020.jpg', 
+ N'Syncopy / Warner Bros.', 2020),
 
 -- 4
 ('avengers-endgame-2019', N'Avengers: Endgame',
  N'The Avengers assemble once more to reverse the damage caused by Thanos.',
- 181, N'Publish', N'/uploads/posters/avengers-endgame-2019.jpg'),
+ 181, N'Publish', N'/uploads/posters/avengers-endgame-2019.jpg', 
+ N'Marvel Studios', 2019),
 
 -- 5
 ('joker-2019', N'Joker',
  N'An origin story of the infamous DC villain Arthur Fleck.',
- 122, N'Unpublish', N'/uploads/posters/joker-2019.jpg');
+ 122, N'Unpublish', N'/uploads/posters/joker-2019.jpg', 
+ N'Warner Bros. Pictures', 2019);
+
 
 
 

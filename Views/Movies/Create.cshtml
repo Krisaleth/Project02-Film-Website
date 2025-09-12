@@ -1,4 +1,5 @@
-﻿@model Project02.ViewModels.MovieCreateVm
+﻿@using Project02.ViewModels.Movie
+@model MovieCreateVm
 
 @{
     Layout = "_AdminLayout";
@@ -22,6 +23,16 @@
                             <label class="control-label my-1"><strong>Name</strong></label>
                             <input asp-for="Movie_Name" class="form-control" />
                             <span asp-validation-for="Movie_Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label my-1"><strong>Year</strong></label>
+                            <input asp-for="Movie_Year" class="form-control" />
+                            <span asp-validation-for="Movie_Year" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label my-1"><strong>Producer</strong></label>
+                            <input asp-for="Movie_Producer" class="form-control" />
+                            <span asp-validation-for="Movie_Producer" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label class="control-label my-1"><strong>Description</strong></label>

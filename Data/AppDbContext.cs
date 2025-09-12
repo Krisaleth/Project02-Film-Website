@@ -20,7 +20,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Genre> Genres { get; set; }
 
-    public virtual DbSet<Movie> Movie { get; set; }
+    public virtual DbSet<Movie> Movies { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -28,17 +28,17 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C9CE46C016");
+            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C95BE6E4D1");
 
             entity.Property(e => e.Create_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Password_Algo).HasDefaultValue("PBKDF2");
             entity.Property(e => e.Password_Iterations).HasDefaultValue(100000);
-            entity.Property(e => e.Status).HasDefaultValue(true);
+            entity.Property(e => e.Status).HasDefaultValue("Active");
         });
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143BB80FE3E2");
+            entity.HasKey(e => e.Comment_ID).HasName("PK__Comments__99FC143BBF64197B");
 
             entity.Property(e => e.Created_At).HasDefaultValueSql("(sysutcdatetime())");
 
@@ -58,16 +58,18 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A2006F88FC7ED");
+            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A2006153FB9D2");
         });
 
         modelBuilder.Entity<Movie>(entity =>
         {
-            entity.HasKey(e => e.Movie_ID).HasName("PK__Movie__7A880405016B7ECC");
+            entity.HasKey(e => e.Movie_ID).HasName("PK__Movie__7A88040572A2E483");
 
             entity.Property(e => e.Movie_Created_At).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.Movie_Producer).HasDefaultValue("Unknown");
             entity.Property(e => e.Movie_Status).HasDefaultValue("Publish");
             entity.Property(e => e.Movie_Update_At).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.Movie_Year).HasDefaultValue(2000);
             entity.Property(e => e.RowsVersion)
                 .IsRowVersion()
                 .IsConcurrencyToken();
@@ -90,7 +92,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Users_ID).HasName("PK__Users__EB68290D2A4C6460");
+            entity.HasKey(e => e.Users_ID).HasName("PK__Users__EB68290D4B644C2C");
 
             entity.Property(e => e.RowsVersion)
                 .IsRowVersion()

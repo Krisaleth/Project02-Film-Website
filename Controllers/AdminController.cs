@@ -43,7 +43,7 @@ namespace Project02.Controllers
             var user = await _db.Accounts.AsNoTracking().FirstOrDefaultAsync(a => a.UserName == vm.UserName);
 
             // Check user + status
-            if (user is null || !user.Status)
+            if (user is null || user.Status != "Active")
             {
                 ModelState.AddModelError("", "Tài khoản và mật khẩu không đúng!!");
                 return View(vm);

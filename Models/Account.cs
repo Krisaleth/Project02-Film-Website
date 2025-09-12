@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +28,8 @@ public partial class Account
     [StringLength(10)]
     public string Role { get; set; } = null!;
 
-    public bool Status { get; set; }
+    [StringLength(10)]
+    public string Status { get; set; } = null!;
 
     public DateTime Create_At { get; set; }
 

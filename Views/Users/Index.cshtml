@@ -1,8 +1,8 @@
-﻿@using Project02.ViewModels.Genre
-@model GenreIndexVm
+﻿@using Project02.ViewModels.User
+@model UserIndexVm
 
 @{
-    ViewData["Title"] = "Genre";
+    ViewData["Title"] = "User";
     Layout = "_AdminLayout";
 }
 
@@ -12,73 +12,94 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <div>
-                        <form asp-action="Index" method="get">
-                            <select asp-for="sortOrder" asp-items="Model.SortOptions" class="form-select form-select-sm me-2"
-                                    onchange="this.form.submit()"></select>
-                        </form>
-                    </div>
-
+                    <form asp-action="Index" method="get">
+                        <select asp-for="sortOrder" asp-items="Model.SortOptions" class="form-select form-select-sm me-2"
+                                onchange="this.form.submit()"></select>
+                    </form>
                     <div class="d-flex ms-auto">
                         <form asp-action="Index" method="get" class="d-flex me-2">
-                            <input type="text" name="q" value="@Model.search"
-                                   class="form-control form-control-sm me-2"
-                                   placeholder="Search by name..." />
+                            <input type="text" name="search" value="@Model.search" class="form-control form-control-sm me-2" placeholder="Search by name..."/>
                             <input type="hidden" name="pageSize" value="@Model.PageSize" />
-                            <button type="submit" class="btn btn-sm btn-secondary d-flex align-items-center">
-                                <i class="fa-solid fa-magnifying-glass me-1"></i>
-                                Search
-                            </button>
-
+                            <button class="btn btn-sm btn-secondary d-flex align-items-center" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
                         </form>
-
-                        <a asp-action="Create" class="btn btn-sm btn-primary">
-                            <i class="fa-solid fa-plus"></i> Add Genre
-                        </a>
+                        <a asp-action="Create" class="btn btn-sm btn-primary d-flex align-items-center"><i class="fa-solid fa-plus"></i> Add New</a>
                     </div>
                 </div>
-
                 <div class="card-body">
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>Slug</th>
-                                <th>Name</th>
-                                <th class="text-center">Control</th>
+                                <th>
+                                    User Name
+                                </th>
+                                <th>
+                                    Full Name
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Phone
+                                </th>
+                                <th>Status</th>
+                                <th>
+                                    Control
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.Items.Count == 0)
-                            {
-                                <tr>
-                                    <td colspan="3" class="text-center text-muted">No genres found</td>
-                                </tr>
-                            }
-                            else
-                            {
-                                foreach (var item in Model.Items)
-                                {
-                                    var rv = "";
+                            @foreach (var item in Model.Items) {
+                                var rv = "";
 
-                                    <tr>
-                                        <td>@item.Genre_Slug</td>
-                                        <td>@item.Genre_Name</td>
-                                        <td>
-                                            <a asp-action="Edit" class="btn btn-sm btn-outline-primary" asp-route-id="@item.Genre_Slug"><i class="fa-solid fa-pen-to-square"></i></a>
-                                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete" data-id="@item.Genre_Slug" data-rowid="@item.Genre_ID" data-name="@item.Genre_Name" data-rv="@rv"><i class="fa-solid fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                }
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Username)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Users_FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Users_Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Users_Phone)
+                                </td>
+                                <td>
+                                    @if (item.Account_Status == "Active")
+                                    {
+                                        <span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> Active</span>
+                                    }
+                                    else if (item.Account_Status == "Banned")
+                                    {
+                                        <span class="badge bg-danger"><i class="fa-solid fa-ban"></i> Banned</span>
+                                    }
+                                    else
+                                    {
+                                            <span class="badge bg-warning text-dark"><i class="fa-regular fa-circle"></i> Inactive</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="Edit" asp-route-id="@item.Users_ID"
+                                        class="btn btn-sm btn-outline-primary">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Users_ID"
+                                        class="btn btn-sm btn-outline-info">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <button class="btn btn-outline-danger btn-sm btn-delete" data-id="@item.Users_ID" data-rv="@rv">
+                                            <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
-                    <div class="row my-1">
-                        <div class="col-12"></div>
-                    </div>
-
+                </div>
+                <div class="card-footer">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            Showing @Model.Start to @Model.End of @Model.TotalItems entries
+                            Showing @Model.Start to @Model.End of @Model.TotalItem entries
                         </div>
                         <nav>
                             <ul class="pagination mb-0">
@@ -112,23 +133,20 @@
 
                         </nav>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script>
-    document.addEventListener('click', async (e) => {
-        const btn = e.target.closest(".btn-delete");
+    document.addEventListener('click', async(e) => {
+        const btn = e.target.closest('.btn-delete');
 
-        if (!btn) return;
+        if !btn return;
 
-        const slug = btn.dataset.id;
-        const id = btn.dataset.rowId;
-        const name = btn.dataset.name;
+        const id = btn.dataset.id;
         const rv = btn.dataset.rv || '';
-
+        
         const ok = await Swal.fire ({
             title: "Xác nhận xoá",
             text: `Bạn có chắc muốn xoá "${name}"?`,
@@ -144,7 +162,7 @@
 
         const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
 
-        const url = `/admin/genre/delete/${encodeURIComponent(slug)}`;
+        const url = `/admin/user/delete/${encodeURIComponent(slug)}`;
 
         const res = await fetch(url, {
             method: 'post',
@@ -183,3 +201,4 @@
         }
     });
 </script>
+
