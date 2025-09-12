@@ -7,7 +7,9 @@ using Project02.Helper;
 using Project02.Models;
 using Project02.Services;
 using Project02.ViewModels;
+using Project02.ViewModels.Genre;
 using Project02.ViewModels.Movie;
+using Project02.ViewModels.MovieDetailVm;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -97,32 +99,115 @@ namespace Project02.Controllers
         }
 
         
-        [HttpGet("/movie/{id}")]
-        public async Task<IActionResult> Details(string id)
+        [HttpGet("/admin/movie/{id}")]
+        public async Task<IActionResult> Details([FromRoute]string id)
         {
-            var vm = await _ctx.Movies.Where(m => m.Movie_Slug == id)
-                .AsNoTracking()
-                .Select(m => new MovieDetailVm
-                {
-                    Movie_Slug = m.Movie_Slug,
-                    Movie_Name = m.Movie_Name,
-                    Movie_Year = m.Movie_Year,
-                    Movie_Producer = m.Movie_Producer,
-                    Movie_Description = m.Movie_Description,
-                    Movie_Poster = m.Movie_Poster,
-                    DurationFormatted = (m.Movie_Duration / 60) + "h" + (m.Movie_Duration % 60) + "m",
-                    Genres = m.Genres.Select(g => g.Genre_Name).ToList(),
-                }).FirstOrDefaultAsync();
+            var movie = await _ctx.Movies
+                .Include(m => m.Genres)
+                .FirstOrDefaultAsync(m => m.Movie_Slug == id);
 
-            if (vm == null)
+            if (movie == null) return NotFound();
+
+            var allGenres = await _ctx.Genres.ToListAsync();
+
+            var genres = movie.Genres.Select(g => new GenreRowVm
             {
-                return NotFound();
-            }
+                Genre_ID = g.Genre_ID,
+                Genre_Name = g.Genre_Name,
+                Genre_Slug = g.Genre_Slug,
+            }).ToList();
+
+            var remainingGenres = allGenres
+                .Where(g => !movie.Genres.Any(mg => mg.Genre_ID == g.Genre_ID)).Select(
+                g => new GenreRowVm
+                {
+                    Genre_ID = g.Genre_ID,
+                    Genre_Name = g.Genre_Name,
+                    Genre_Slug = g.Genre_Slug,
+                }).ToList();
+            var vm = new MovieDetailVm
+            {
+                Movie = new MovieRowVm
+                {
+                    Movie_ID = movie.Movie_ID,
+                    Movie_Slug = movie.Movie_Slug,
+                    Movie_Name = movie.Movie_Name,
+                    Movie_Year = movie.Movie_Year,
+                    Movie_Producer = movie.Movie_Producer,
+                    Movie_Description = movie.Movie_Description,
+                    Movie_Duration = movie.Movie_Duration,
+                    Movie_Poster = movie.Movie_Poster,
+                    Movie_Status = movie.Movie_Status,
+                    Genres = genres
+                },
+                RemainingGenres = remainingGenres,
+                NewGenreName = ""
+            };
 
             return View(vm);
         }
 
-        
+        [HttpPost("/admin/movie/{movieSlug}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Details([FromRoute]string movieSlug, [FromForm]string genreName)
+        {
+            if (string.IsNullOrWhiteSpace(genreName))
+            {
+                ModelState.AddModelError("GenreName", "Genre Name không được để trống");
+                return BadRequest(ModelState);
+            }
+
+            var movie = await _ctx.Movies
+                .Include(m => m.Genres)
+                .FirstOrDefaultAsync(m => m.Movie_Slug == movieSlug);
+
+            if (movie == null)
+            {
+                return NotFound($"Movie với Slug {movieSlug} không tồn tại.");
+            }
+
+            var genre = await _ctx.Genres.FirstOrDefaultAsync(g => g.Genre_Name == genreName);
+
+            if (genre == null)
+            {
+                genre = new Genre { Genre_Name = genreName };
+                _ctx.Genres.Add(genre);
+                await _ctx.SaveChangesAsync();
+            }
+
+            if (!movie.Genres.Any(g => g.Genre_ID == genre.Genre_ID))
+            {
+                movie.Genres.Add(genre);
+                await _ctx.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", new { id = movieSlug });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveGenre(string movieSlug, long genreId)
+        {
+            var movie = await _ctx.Movies
+                .Include(m => m.Genres)
+                .FirstOrDefaultAsync(m => m.Movie_Slug == movieSlug);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            var genre = movie.Genres.FirstOrDefault(g => g.Genre_ID == genreId);
+            if (genre != null)
+            {
+                movie.Genres.Remove(genre);
+                await _ctx.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", new { movieSlug });
+        }
+
+
         [Authorize(Roles = "Admin")]
         [HttpGet("/admin/movie/create")]
         public IActionResult Create()
