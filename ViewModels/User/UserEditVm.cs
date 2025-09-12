@@ -9,6 +9,7 @@ namespace Project02.ViewModels.User
         [Required]
         public string User_FullName { get; set; } = default!;
         [Required]
+        [EmailAddress]
         public string User_Email { get; set; } = default!;
         [Required]
         public string User_Phone { get; set; } = default!;

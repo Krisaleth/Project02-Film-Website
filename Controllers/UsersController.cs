@@ -68,7 +68,8 @@ namespace Project02.Controllers
                     Users_Email = m.Users_Email,
                     Users_Phone = m.Users_Phone,
                     Account_Status = m.Account.Status,
-                    Username = m.Account.UserName,  
+                    Username = m.Account.UserName,
+                    Account_Id = m.Account_ID,
                 }).ToListAsync();
 
             var vm = new UserIndexVm
@@ -191,7 +192,8 @@ namespace Project02.Controllers
                 return NotFound();
             }
 
-            var vm = await _ctx.Users.Where(a => a.Users_ID == id)
+            var vm = await _ctx.Users
+                .Where(a => a.Users_ID == id)
                 .AsNoTracking()
                 .Select(m => new UserEditVm
                 {
@@ -224,7 +226,7 @@ namespace Project02.Controllers
             {
                 return View(vm);
             }
-            var user = await _ctx.Users.FirstOrDefaultAsync(m => m.Users_ID == id);
+            var user = await _ctx.Users.Include(a => a.Account).FirstOrDefaultAsync(m => m.Users_ID == id);
             if (user == null)
             {
                 return NotFound();
@@ -274,16 +276,34 @@ namespace Project02.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(long id, string rowVersionBase64)
         {
-            var user = await _ctx.Users.FindAsync(id);
-            if (user != null)
+            var user = await _ctx.Users.FirstOrDefaultAsync(m => m.Users_ID == id);
+
+            if (user == null)
             {
-                _ctx.Users.Remove(user);
+                return NotFound();
             }
 
-            await _ctx.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if(!string.IsNullOrEmpty(rowVersionBase64))
+            {
+
+                var rowVersion = Convert.FromBase64String(rowVersionBase64);
+                _ctx.Entry(user).Property("RowsVersion").OriginalValue = rowVersion;
+            }
+            _ctx.Users.Remove(user);
+            _ctx.Accounts.Remove(user.Account);
+
+            try
+            {
+                await _ctx.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return Json(new { ok = false, message = "Bản ghi đã được thay đổi trước đó!" });
+            }
+            return Json(new { ok = true });
+
         }
 
         private bool UserExists(long id)

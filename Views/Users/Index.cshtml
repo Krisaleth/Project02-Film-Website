@@ -7,7 +7,6 @@
 }
 
 <form id="antiForgeryForm" method="post">@Html.AntiForgeryToken()</form>
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -50,6 +49,8 @@
                         </thead>
                         <tbody>
                             @foreach (var item in Model.Items) {
+                                var rv = "";
+
                             <tr>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Username)
@@ -70,11 +71,11 @@
                                     }
                                     else if (item.Account_Status == "Banned")
                                     {
-                                        <span class="badge bg-warning"><i class="fa-solid fa-ban"></i> Banned</span>
+                                        <span class="badge bg-danger"><i class="fa-solid fa-ban"></i> Banned</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-warning text-dark">Unknown</span>
+                                            <span class="badge bg-warning text-dark"><i class="fa-regular fa-circle"></i> Inactive</span>
                                     }
                                 </td>
                                 <td class="text-center">
@@ -86,18 +87,118 @@
                                         class="btn btn-sm btn-outline-info">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
-                                    <a asp-action="Delete" asp-route-id="@item.Users_ID"
-                                        class="btn btn-sm btn-outline-danger">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
+                                    <button class="btn btn-outline-danger btn-sm btn-delete" data-id="@item.Users_ID" data-rv="@rv">
+                                            <i class="fa-solid fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                             }
                         </tbody>
                     </table>
                 </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            Showing @Model.Start to @Model.End of @Model.TotalItem entries
+                        </div>
+                        <nav>
+                            <ul class="pagination mb-0">
+                                <li class="page-item me-1 @(Model.Page == 1 ? "disabled" : "")">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-search="@ViewBag.Search"
+                                       asp-route-page="@(Model.Page - 1)"
+                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-left"></i></a>
+                                </li>
+
+                                @for (int p = 1; p <= Model.TotalPage; p++)
+                                {
+                                    <li class="page-item me-1 @(p == Model.Page ? "active" : "")">
+                                        <a class="page-link"
+                                           asp-action="Index"
+                                           asp-route-search="@ViewBag.Search"
+                                           asp-route-page="@p"
+                                           asp-route-pageSize="@(Model.PageSize)">@p</a>
+                                    </li>
+                                }
+
+                                <li class="page-item me-1 @(Model.Page == Model.TotalPage ? "disabled" : "")">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-search="@ViewBag.Search"
+                                       asp-route-page="@(Model.Page + 1)"
+                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-right"></i></a>
+                                </li>
+                            </ul>
+
+                        </nav>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('click', async(e) => {
+        const btn = e.target.closest('.btn-delete');
+
+        if !btn return;
+
+        const id = btn.dataset.id;
+        const rv = btn.dataset.rv || '';
+        
+        const ok = await Swal.fire ({
+            title: "Xác nhận xoá",
+            text: `Bạn có chắc muốn xoá "${name}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xoá',
+            cancelButtonText: 'Huỷ'
+        }).then(r => r.isConfirmed);
+
+        if (!ok) {
+            return;
+        }
+
+        const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
+        const url = `/admin/user/delete/${encodeURIComponent(slug)}`;
+
+        const res = await fetch(url, {
+            method: 'post',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset="utf-8" '},
+            credentials: 'same-origin',
+            body: new URLSearchParams({
+                '__RequestVerificationToken': token,
+                'rowVersionBase64': rv
+            })
+        });
+
+        const raw = await res.text();
+        let json;
+        try {
+            json = raw && res.headers.get('content-type')?.includes('application/json')
+            ? JSON.parse(raw)
+            : null;
+        } catch {
+            json = null;
+        }
+
+        if (!json) {
+            console.error('Non-JSON response', res.status, raw);
+            Swal.fire({ icon:'error', title:`HTTP ${res.status}`, text:'Máy chủ trả về non-JSON.' });
+            return;
+        }
+
+
+        if (json.ok) {
+            const row = document.getElementById(`row-${id}`);
+            row?.remove();
+            Swal.fire ({ icon:'success', title:'Đã xoá', timer: 1200, showConfirmButton:false });
+            location.reload();
+        } else {
+            Swal.fire ({ icon:'error', title:'Lỗi', text: json.message || "Không xoá được" });
+        }
+    });
+</script>
 

@@ -12,6 +12,7 @@ namespace Project02.ViewModels.User
         public string Users_Phone { get; set; } = default!;
         public byte[] RowsVersion { get; set; } = default!;
         public string Username { get; set; } = default!;
+        public long? Account_Id { get; set; } = default!;
         public string Account_Status { get; set; } = default!;  
     }
 
