@@ -4,4 +4,169 @@
     ViewData["Username"] = ViewBag.Username;
 }
 
+<div class="container-fluid">
+    <div class="row">
+        <!-- Info Boxes -->
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="info-box bg-info">
+                <span class="info-box-icon"><i class="fas fa-bookmark"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Bookmarks</span>
+                    <span class="info-box-number">41,410</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 70%"></div>
+                    </div>
+                    <span class="progress-description">70% Increase in 30 Days</span>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="info-box bg-success">
+                <span class="info-box-icon"><i class="fas fa-thumbs-up"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Likes</span>
+                    <span class="info-box-number">12,300</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 50%"></div>
+                    </div>
+                    <span class="progress-description">50% Increase in 7 Days</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="info-box bg-warning">
+                <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Events</span>
+                    <span class="info-box-number">320</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 40%"></div>
+                    </div>
+                    <span class="progress-description">12 New This Month</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="info-box bg-danger">
+                <span class="info-box-icon"><i class="fas fa-comments"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Comments</span>
+                    <span class="info-box-number">5,210</span>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 30%"></div>
+                    </div>
+                    <span class="progress-description">30% Increase in 1 Week</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- To Do List + Inbox -->
+    <div class="row">
+        <!-- To Do List -->
+        <div class="col-lg-6 col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-clipboard-list"></i> To Do List</h3>
+                </div>
+                <div class="card-body" id="todo-list">
+                    <div class="todo-item d-flex align-items-center justify-content-between border-bottom py-2">
+                        <input type="checkbox" onchange="toggleDone(this)">
+                        <span class="todo-label ms-2">Design a nice theme</span>
+                        <span class="badge bg-danger ms-2">2 mins</span>
+                        <button class="btn btn-sm btn-link text-danger ms-2" onclick="deleteTask(this)">🗑</button>
+                    </div>
+                    <div class="todo-item d-flex align-items-center justify-content-between border-bottom py-2">
+                        <input type="checkbox" checked onchange="toggleDone(this)">
+                        <span class="todo-label done ms-2">Make it responsive</span>
+                        <span class="badge bg-secondary ms-2">4 hours</span>
+                        <button class="btn btn-sm btn-link text-danger ms-2" onclick="deleteTask(this)">🗑</button>
+                    </div>
+                    <div class="todo-item d-flex align-items-center justify-content-between border-bottom py-2">
+                        <input type="checkbox" onchange="toggleDone(this)">
+                        <span class="todo-label ms-2">Polish UI</span>
+                        <span class="badge bg-warning text-dark ms-2">1 day</span>
+                        <button class="btn btn-sm btn-link text-danger ms-2" onclick="deleteTask(this)">🗑</button>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="input-group">
+                        <input type="text" id="new-task" class="form-control" placeholder="New task...">
+                        <button class="btn btn-primary" onclick="addTask()">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mailbox -->
+        <div class="col-lg-6 col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-envelope"></i> Inbox</h3>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr><th>Sender</th><th>Subject</th><th>Time</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-primary fw-bold">Alexander Pierce</td>
+                                <td><span class="fw-bold">AdminLTE 3.0 Issue</span> - Trying to find a solution...</td>
+                                <td><small class="text-muted">5 mins ago</small></td>
+                            </tr>
+                            <tr>
+                                <td class="text-primary fw-bold">Alexander Pierce</td>
+                                <td><span class="fw-bold">AdminLTE 3.0 Issue</span> - Trying to find a solution...</td>
+                                <td><small class="text-muted">28 mins ago</small></td>
+                            </tr>
+                            <tr>
+                                <td class="text-primary fw-bold">Alexander Pierce</td>
+                                <td><span class="fw-bold">AdminLTE 3.0 Issue</span> - Trying to find a solution...</td>
+                                <td><small class="text-muted">11 hours ago</small></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleDone(checkbox) {
+            const label = checkbox.parentElement.querySelector(".todo-label");
+            if (checkbox.checked) {
+                label.classList.add("text-decoration-line-through", "text-muted");
+            } else {
+                label.classList.remove("text-decoration-line-through", "text-muted");
+            }
+        }
+
+        function deleteTask(btn) {
+            btn.closest(".todo-item").remove();
+        }
+
+        function addTask() {
+            const input = document.getElementById("new-task");
+            const value = input.value.trim();
+            if (value === "") return;
+
+            const todoList = document.getElementById("todo-list");
+
+            const div = document.createElement("div");
+            div.className = "todo-item d-flex align-items-center justify-content-between border-bottom py-2";
+            div.innerHTML = `
+                <input type="checkbox" onchange="toggleDone(this)">
+                <span class="todo-label ms-2">${value}</span>
+                <button class="btn btn-sm btn-link text-danger ms-2" onclick="deleteTask(this)">🗑</button>
+            `;
+            todoList.appendChild(div);
+            input.value = "";
+        }
+    </script>
+}
