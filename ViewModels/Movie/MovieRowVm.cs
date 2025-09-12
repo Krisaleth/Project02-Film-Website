@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿    using Microsoft.AspNetCore.Mvc.Rendering;
+using Project02.ViewModels.Genre;
 using System.Runtime.CompilerServices;
 
 namespace Project02.ViewModels.Movie
@@ -14,6 +15,7 @@ namespace Project02.ViewModels.Movie
         public short Movie_Duration { get; set; } = default!;
         public string Movie_Status { get; set; } = default!;
         public string Movie_Poster { get; set; } = default!;
+        public List<GenreRowVm> Genres { get; set; } = new List<GenreRowVm>();
     }
 
     public class MovieIndexVm

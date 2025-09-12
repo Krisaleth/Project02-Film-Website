@@ -6,7 +6,6 @@ namespace Project02.ViewModels.Genre
     {
         public long Genre_ID { get; set; }
         public string Genre_Name { get; set; } = default!;
-        public string Genre_Description { get; set; } = default!;
         public string Genre_Slug { get; set; } = default!;
     }
 

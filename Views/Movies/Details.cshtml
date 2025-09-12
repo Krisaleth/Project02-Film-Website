@@ -1,55 +1,78 @@
-﻿@using Project02.ViewModels.Movie
+﻿@using Project02.ViewModels.MovieDetailVm
 @model MovieDetailVm;
 
 @{
     ViewData["Title"] = "Details";
+    Layout = "_AdminLayout";
 }
 
-<h1>Details</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3>@Model.Movie.Movie_Name</h3>
+                </div>
+                <div class="card-body">
+                    <h3>Current Genres:</h3>
+                    <ul class="list-group my-1">
+                        @foreach (var genre in Model.Movie.Genres)
+                        {
+                            <li class="list-group-item">@genre.Genre_Name
+                                <form asp-action="RemoveGenre" asp-controller="Movies" method="post" class="d-flex float-end">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="movieSlug" value="@Model.Movie.Movie_Slug" />
+                                    <input type="hidden" name="genreId" value="@genre.Genre_ID" />
+                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                                </form>
+                            </li>  
+                        }
+                    </ul>
 
-<div>
-    <h4>Movie</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            Slug
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Movie_Slug)
-        </dd>
-        <dt class = "col-sm-2">
-            Name
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Movie_Name)
-        </dd>
-        <dt class="col-sm-2">
-            Year
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Movie_Year)
-        </dd>
-        <dt class="col-sm-2">
-            Producer
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Movie_Producer)
-        </dd>
-        <dt class = "col-sm-2">
-            Description
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Movie_Description)
-        </dd>
-        <dt class = "col-sm-2">
-            Status
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Movie_Status)
-        </dd>
+                    <div class="form-group">
+                        <h3>Add a genre</h3>
+                        <form asp-action="Details" asp-controller="Movies" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="movieSlug" value="@Model.Movie.Movie_Slug" />
 
-    </dl>
+                            <select name="genreName" class="form-select">
+                                <option value="">-- Choose genre to add --</option>
+                                @foreach (var genre in Model.RemainingGenres)
+                                {
+                                    <option value="@genre.Genre_Name">@genre.Genre_Name</option>
+                                }
+                            </select>
+
+                            <input type="submit" value="Add Genre" class="btn btn-primary my-2" />
+                        </form>
+                    </div>
+
+                    <div class="form-group">
+                        <h3>Or add a new genre</h3>
+                        <form asp-action="Details" asp-controller="Movies" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="movieSlug" value="@Model.Movie.Movie_Slug" />
+                            <input type="text"
+                                   name="genreName"
+                                   placeholder="Enter new genre name"
+                                   class="form-control" />
+                            <input type="submit" value="Add New Genre" class="btn btn-success mt-2" />
+                        </form>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+
+
 <div>
-    <a href="">Back to List</a>
+    
 </div>
