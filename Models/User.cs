@@ -6,22 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Project02.Models;
 
-[Index("Users_Email", Name = "UQ_Users_Email", IsUnique = true)]
-[Index("Users_FullName", Name = "UQ_Users_FullName", IsUnique = true)]
+[Index("User_Email", Name = "UQ_Users_Email", IsUnique = true)]
+[Index("User_Name", Name = "UQ_Users_FullName", IsUnique = true)]
 public partial class User
 {
     [Key]
-    public long Users_ID { get; set; }
+    public long User_ID { get; set; }
 
     [StringLength(255)]
-    public string Users_FullName { get; set; } = null!;
+    public string User_Name { get; set; } = null!;
 
     [StringLength(255)]
-    public string Users_Email { get; set; } = null!;
+    public string User_Email { get; set; } = null!;
 
     [StringLength(15)]
     [Unicode(false)]
-    public string Users_Phone { get; set; } = null!;
+    public string User_Phone { get; set; } = null!;
 
     public byte[] RowsVersion { get; set; } = null!;
 
@@ -31,9 +31,9 @@ public partial class User
     [InverseProperty("Users")]
     public virtual Account? Account { get; set; }
 
-    [InverseProperty("Users")]
-    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    [InverseProperty("User")]
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    [InverseProperty("Users")]
-    public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
+    [InverseProperty("User")]
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }
