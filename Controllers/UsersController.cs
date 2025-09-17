@@ -38,18 +38,18 @@ namespace Project02.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 var keyWord = search.Trim();
-                query = query.Where(x => x.Users_FullName.Contains(keyWord)); 
+                query = query.Where(x => x.User_Name.Contains(keyWord)); 
             }
 
             query = sortOrder switch
             {
-                "name_asc" => query.OrderBy(u => u.Users_FullName),
-                "name_desc" => query.OrderByDescending(u => u.Users_FullName),
-                "email_asc" => query.OrderBy(u => u.Users_Email),
-                "email_desc" => query.OrderByDescending(u => u.Users_Email),
+                "name_asc" => query.OrderBy(u => u.User_Name),
+                "name_desc" => query.OrderByDescending(u => u.User_Name),
+                "email_asc" => query.OrderBy(u => u.User_Email),
+                "email_desc" => query.OrderByDescending(u => u.User_Email),
                 "status_asc" => query.OrderBy(u => u.Account.Status),  // đổi tên theo model của bạn
                 "status_desc" => query.OrderByDescending(u => u.Account.Status),
-                _ => query.OrderBy(u => u.Users_ID) // mặc định
+                _ => query.OrderBy(u => u.User_ID) // mặc định
             };
 
             var total = await query.CountAsync();
@@ -63,10 +63,10 @@ namespace Project02.Controllers
                 .Take(pageSize)
                 .Select(m => new UserRowVm
                 {
-                    Users_ID = m.Users_ID,
-                    Users_FullName = m.Users_FullName,
-                    Users_Email = m.Users_Email,
-                    Users_Phone = m.Users_Phone,
+                    User_ID = m.User_ID,
+                    User_Name = m.User_Name,
+                    User_Email = m.User_Email,
+                    User_Phone = m.User_Phone,
                     Account_Status = m.Account.Status,
                     Username = m.Account.UserName,
                     Account_Id = m.Account_ID,
@@ -77,7 +77,7 @@ namespace Project02.Controllers
                 Items = items,
                 Page = page,
                 PageSize = pageSize,
-                TotalItem = total,
+                TotalItems = total,
                 search = search,
                 sortOrder = sortOrder
             };
@@ -105,15 +105,15 @@ namespace Project02.Controllers
                 return NotFound();
             }
 
-            var vm = await _ctx.Users.Where(a => a.Users_ID == id)
+            var vm = await _ctx.Users.Where(a => a.User_ID == id)
                 .AsNoTracking()
                 .Select(m => new UserDetailVm
                 {
-                    UserId = m.Users_ID,
+                    UserId = m.User_ID,
                     UserName = m.Account.UserName,
-                    FullName = m.Users_FullName,
-                    UserEmail = m.Users_Email,
-                    UserPhone = m.Users_Phone,
+                    FullName = m.User_Name,
+                    UserEmail = m.User_Email,
+                    UserPhone = m.User_Phone,
                     Account_Status = m.Account.Status,
                 }).FirstOrDefaultAsync();
             if (vm == null)
@@ -149,7 +149,7 @@ namespace Project02.Controllers
                 ModelState.AddModelError(nameof(vm.UserName), "Tên này đã tồn tại");
                 return View(vm);
             }
-            var emailExists = await _ctx.Users.AnyAsync(a => a.Users_Email == vm.User_Email);
+            var emailExists = await _ctx.Users.AnyAsync(a => a.User_Email == vm.User_Email);
             if (emailExists)
             {
                 ModelState.AddModelError(nameof(vm.User_Email), "Email đã tồn tại!");
@@ -173,9 +173,9 @@ namespace Project02.Controllers
 
             var user = new User
             {
-                Users_FullName = vm.User_Name,
-                Users_Email = vm.User_Email,
-                Users_Phone = vm.User_Phone,
+                User_Name = vm.User_Name,
+                User_Email = vm.User_Email,
+                User_Phone = vm.User_Phone,
                 Account_ID = account.Account_ID,
             };
             _ctx.Users.Add(user);
@@ -193,15 +193,15 @@ namespace Project02.Controllers
             }
 
             var vm = await _ctx.Users
-                .Where(a => a.Users_ID == id)
+                .Where(a => a.User_ID == id)
                 .AsNoTracking()
                 .Select(m => new UserEditVm
                 {
-                    User_ID = m.Users_ID,
-                    User_Name = m.Account.UserName,
-                    User_Email = m.Users_Email,
-                    User_Phone = m.Users_Phone,
-                    User_FullName = m.Users_FullName,
+                    User_ID = m.User_ID,
+                    UserName = m.Account.UserName,
+                    User_Email = m.User_Email,
+                    User_Phone = m.User_Phone,
+                    User_Name = m.User_Name,
                     Account_Status = m.Account.Status,
                     RowsVersion = m.RowsVersion,
                 })
@@ -214,7 +214,7 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-        // POST: Users/Edit/5
+        // POST: User/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/edit/{id}")]
@@ -226,17 +226,17 @@ namespace Project02.Controllers
             {
                 return View(vm);
             }
-            var user = await _ctx.Users.Include(a => a.Account).FirstOrDefaultAsync(m => m.Users_ID == id);
+            var user = await _ctx.Users.Include(a => a.Account).FirstOrDefaultAsync(m => m.User_ID == id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            user.Users_FullName = vm.User_FullName;
-            user.Users_Phone = vm.User_Phone;
-            user.Users_Email = vm.User_Email;
+            user.User_Name = vm.User_Name;
+            user.User_Phone = vm.User_Phone;
+            user.User_Email = vm.User_Email;
             user.Account.Status = vm.Account_Status;
-            user.Account.UserName = vm.User_Name;
+            user.Account.UserName = vm.UserName;
 
             _ctx.Entry(user).Property("RowsVersion").OriginalValue = vm.RowsVersion;
 
@@ -252,7 +252,7 @@ namespace Project02.Controllers
             }
         }
 
-        // GET: Users/Delete/5
+        // GET: User/Delete/5
 
         public async Task<IActionResult> Delete(long? id)
         {
@@ -263,7 +263,7 @@ namespace Project02.Controllers
 
             var user = await _ctx.Users
                 .Include(u => u.Account)
-                .FirstOrDefaultAsync(m => m.Users_ID == id);
+                .FirstOrDefaultAsync(m => m.User_ID == id);
             if (user == null)
             {
                 return NotFound();
@@ -272,13 +272,13 @@ namespace Project02.Controllers
             return View(user);
         }
 
-        // POST: Users/Delete/5
+        // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(long id, string rowVersionBase64)
         {
-            var user = await _ctx.Users.FirstOrDefaultAsync(m => m.Users_ID == id);
+            var user = await _ctx.Users.FirstOrDefaultAsync(m => m.User_ID == id);
 
             if (user == null)
             {
@@ -308,7 +308,7 @@ namespace Project02.Controllers
 
         private bool UserExists(long id)
         {
-            return _ctx.Users.Any(e => e.Users_ID == id);
+            return _ctx.Users.Any(e => e.User_ID == id);
         }
     }
 }

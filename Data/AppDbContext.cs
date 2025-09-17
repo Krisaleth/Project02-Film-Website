@@ -37,7 +37,6 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<Account>(entity =>
         {
             entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C904BBB18C");
-
             entity.Property(e => e.Create_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Password_Algo).HasDefaultValue("PBKDF2");
             entity.Property(e => e.Password_Iterations).HasDefaultValue(100000);
