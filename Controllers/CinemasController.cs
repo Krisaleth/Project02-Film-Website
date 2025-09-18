@@ -132,7 +132,7 @@ namespace Project02.Controllers
 
         // GET: Cinemas/Edit/5
         [HttpGet("/admin/cinema/edit/{id}")]
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit([FromRoute]long? id)
         {
             if (id == null)
             {
@@ -158,67 +158,40 @@ namespace Project02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Cinema_ID,Cinema_Name,Location,Contact_Info")] Cinema cinema)
+        public async Task<IActionResult> Edit([FromRoute]long id, CinemaEditVm vm)
         {
-            if (id != cinema.Cinema_ID)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return View(vm);
             }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(cinema);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CinemaExists(cinema.Cinema_ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(cinema);
-        }
-
-        // GET: Cinemas/Delete/5
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cinema = await _context.Cinemas
-                .FirstOrDefaultAsync(m => m.Cinema_ID == id);
+            var cinema = await _context.Cinemas.FindAsync(id);
             if (cinema == null)
             {
                 return NotFound();
             }
 
-            return View(cinema);
+            cinema.Cinema_Name = vm.Cinema_Name;
+            cinema.Location = vm.Location;
+            cinema.Contact_Info = vm.Contact_Info;
+
+            _context.Update(cinema);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
         }
 
-        // POST: Cinemas/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("/admin/cinema/delete/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var cinema = await _context.Cinemas.FindAsync(id);
+            var cinema = await _context.Cinemas.FirstOrDefaultAsync(m => m.Cinema_ID == id);
             if (cinema != null)
             {
                 _context.Cinemas.Remove(cinema);
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { ok = true });
         }
 
         private bool CinemaExists(long id)
