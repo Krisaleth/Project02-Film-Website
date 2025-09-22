@@ -5,12 +5,17 @@ namespace Project02.ViewModels.Ticket
     public class TicketRowVm
     {
         public long Ticket_ID { get; set; }
-        public long Showtime_ID { get; set; }
-        public string Movie_Title { get; set; } = default!;
-        public DateTime Showtime { get; set; }
-        public string Seat_Number { get; set; } = default!;
+        public string Movie_Name { get; set; }
+        public DateTime Start_Time { get; set; }
+        public string SeatNumber { get; set; } = default!;
+        public string User_Name { get; set; } = default!;
+        public string User_Phone { get; set; } = default!;
+        public string User_Email { get; set; } = default!;
         public decimal Price { get; set; }
+        public string Payment_Method { get; set; } = default!;
+        public string Payment_Status { get; set; } = default!;
         public string Status { get; set; } = default!;
+
     }
 
     public class TicketIndexVm

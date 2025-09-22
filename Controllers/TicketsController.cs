@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,9 @@ namespace Project02.Controllers
             _context = context;
         }
 
-        // GET: Tickets
+        [HttpGet("/admin/ticket")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Index(string? search, string? sortOrder, int page = 1, int pageSize = 10)
         {
             if (page < 1) page = 1;
@@ -56,15 +59,19 @@ namespace Project02.Controllers
                 page = totalPages;
             var items = await query.Skip((page - 1) * pageSize)
                                    .Take(pageSize)
-                                   .Select(t => new ViewModels.Ticket.TicketRowVm
+                                   .Select(t => new TicketRowVm
                                    {
                                        Ticket_ID = t.Ticket_ID,
-                                       Showtime_ID = t.Showtime_ID,
-                                       Movie_Title = t.Showtime.Movie.Movie_Name,
-                                       Showtime = t.Showtime.Start_Time,
-                                       Seat_Number = t.Seat.SeatNumber,
+                                       Movie_Name = t.Showtime.Movie.Movie_Name,
+                                       Start_Time = t.Showtime.Start_Time,
+                                       SeatNumber = t.Seat.SeatNumber,
+                                       User_Name = t.User.User_Name,
+                                       User_Phone = t.User.User_Phone,
+                                       User_Email = t.User.User_Email,
                                        Price = t.Price,
-                                       Status = t.Status
+                                       Payment_Method = t.Payments.OrderByDescending(p => p.PaymentTime).Select(p => p.PaymentMethod).FirstOrDefault() ?? "N/A",
+                                       Payment_Status = t.Payments.OrderByDescending(p => p.PaymentTime).Select(p => p.PaymentStatus).FirstOrDefault() ?? "N/A",
+                                       Status = t.Status,
                                    })
                                    .ToListAsync();
             var vm = new TicketIndexVm
@@ -77,7 +84,7 @@ namespace Project02.Controllers
                 sortOrder = sortOrder,
                 SortOptions = new List<SelectListItem>
                 {
-                    new SelectListItem { Value = "", Text = "Ticket ID Ascending", Selected = string.IsNullOrEmpty(sortOrder) },
+                    new SelectListItem { Value = "", Text = "Sort by", Selected = string.IsNullOrEmpty(sortOrder) },
                     new SelectListItem { Value = "price_asc", Text = "Price Ascending", Selected = sortOrder == "price_asc" },
                     new SelectListItem { Value = "price_desc", Text = "Price Descending", Selected = sortOrder == "price_desc" },
                     new SelectListItem { Value = "bookingtime_asc", Text = "Booking Time Ascending", Selected = sortOrder == "bookingtime_asc" },

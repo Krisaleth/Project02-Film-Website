@@ -15,7 +15,6 @@ namespace Project02.ViewModels.User
         public long? Account_Id { get; set; } = default!;
         public string Account_Status { get; set; } = default!;  
     }
-
     public class UserIndexVm
     {
         public List<UserRowVm> Items { get; set; } = new();

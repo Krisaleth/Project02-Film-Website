@@ -255,3 +255,25 @@ INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
 -- Joker: Drama, Crime, Thriller
 INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
 (5, 5), (5, 9), (5, 6);
+
+INSERT INTO dbo.Cinemas (Cinema_Name, [Location], Contact_Info) VALUES
+(N'Galaxy Cinema', N'123 Le Loi, District 1, HCM City', N'0909123456'),
+(N'CineStar', N'456 Nguyen Trai, District 5, HCM City', N'0833123456'),
+(N'BHD Star', N'789 Tran Hung Dao, District 3, HCM City', N'0899123456');
+
+INSERT INTO dbo.Halls (Cinema_ID, Capacity) VALUES
+(1, 150),
+(1, 100),
+(2, 120);
+
+INSERT INTO dbo.Seats (Hall_ID, RowNumber, SeatNumber, SeatType) VALUES
+(1, N'A', N'01', N'VIP'),
+(1, N'A', N'02', N'VIP'),
+(1, N'B', N'01', N'Normal'),
+(2, N'A', N'01', N'Normal'),
+(2, N'B', N'02', N'Couple');
+
+INSERT INTO dbo.Showtimes (Movie_ID, Cinema_ID, Hall_ID, Start_Time, End_Time, [Language], [Format], Price) VALUES
+(1, 1, 1, '2025-09-22 14:00:00', '2025-09-22 16:00:00', N'Vietnamese', N'2D', 100000),
+(2, 1, 2, '2025-09-22 16:30:00', '2025-09-22 18:30:00', N'English', N'3D', 150000),
+(3, 2, 3, '2025-09-22 19:00:00', '2025-09-22 21:00:00', N'French', N'2D', 120000);

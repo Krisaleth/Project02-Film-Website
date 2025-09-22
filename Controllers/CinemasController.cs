@@ -22,12 +22,11 @@ namespace Project02.Controllers
 
         // GET: Cinemas
         [HttpGet("/admin/cinema")]
+
         public async Task<IActionResult> Index(string? search, string? sortOrder, int page = 1, int pageSize = 10)
         {
             if (page < 1) page = 1;
             if (pageSize <= 0) pageSize = 10;
-
-
 
             IQueryable<Cinema> query = _context.Cinemas.AsNoTracking();
 
@@ -92,12 +91,20 @@ namespace Project02.Controllers
             }
 
             var cinema = await _context.Cinemas
-                .FirstOrDefaultAsync(m => m.Cinema_ID == id);
+                .AsNoTracking()
+                .Where(m => m.Cinema_ID == id)
+                .Select(m => new CinemaDetailVm
+                {
+                    Cinema_ID = m.Cinema_ID,
+                    Cinema_Name = m.Cinema_Name,
+                    Location = m.Location,
+                    Contact_Info = m.Contact_Info
+                }).FirstOrDefaultAsync();
+
             if (cinema == null)
             {
                 return NotFound();
             }
-
             return View(cinema);
         }
 
@@ -111,7 +118,7 @@ namespace Project02.Controllers
         // POST: Cinemas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/cinema/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CinemaCreateVm vm)
         {
@@ -156,7 +163,7 @@ namespace Project02.Controllers
         // POST: Cinemas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("/admin/edit/{id}")]
+        [HttpPost("/admin/cinema/edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromRoute]long id, CinemaEditVm vm)
         {
