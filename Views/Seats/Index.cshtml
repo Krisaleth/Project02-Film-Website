@@ -1,0 +1,59 @@
+﻿@using Project02.ViewModels.Seat;
+@model IEnumerable<SeatStatusVm>;
+@{
+    ViewData["Title"] = "Seat Status";
+    Layout = "_AdminLayout";
+}
+
+
+<style>
+    .seat {
+        width: 30px;
+        height: 30px;
+        margin: 3px;
+        text-align: center;
+        line-height: 30px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        user-select: none;
+    }
+
+    .Available {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .Booked {
+        background-color: #f44336;
+        color: white;
+    }
+
+    .seat-row {
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Seat Status</h2>
+        </div>
+        <div class="card-body">
+            @foreach (var rowGroup in Model.GroupBy(s => s.RowNumber).OrderBy(g => g.Key))
+            {
+                <div class="seat-row">
+                    <span><strong>@rowGroup.Key</strong></span>
+                    @foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
+                    {
+                        <div class="seat @seat.Status" title="@($"Seat {seat.RowNumber}{seat.SeatNumber} - {seat.Status}")">
+                            @seat.SeatNumber
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    
+</div>

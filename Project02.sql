@@ -1,7 +1,4 @@
-﻿-- =========================================
---  Database & Schema (PBKDF2-ready)
--- =========================================
-IF DB_ID(N'db_movie') IS NULL
+﻿IF DB_ID(N'db_movie') IS NULL
 BEGIN
     CREATE DATABASE db_movie;
 END
@@ -10,12 +7,6 @@ GO
 USE db_movie;
 GO
 
--- Drop tables if needed (SAFE ORDER) - optional in dev
--- DROP TABLE IF EXISTS Comments, Favorites, MovieGenres, Genres, Movie, Admin, Users, Account;
-
--- =========================================
---  Account (PBKDF2)
--- =========================================
 IF OBJECT_ID(N'dbo.Account', N'U') IS NOT NULL DROP TABLE dbo.Account;
 GO
 CREATE TABLE dbo.Account
@@ -34,34 +25,30 @@ CREATE TABLE dbo.Account
     CONSTRAINT CK_Account_Status CHECK (Status IN (N'Active', N'Inactive', N'Banned')),
     CONSTRAINT CK_Account_Iters CHECK (Password_Iterations >= 10000)
 );
-GO
+GO  
 
--- =========================================
---  Users
--- =========================================
+
 IF OBJECT_ID(N'dbo.Users', N'U') IS NOT NULL DROP TABLE dbo.Users;
 GO
 CREATE TABLE dbo.Users
 (
-    Users_ID       BIGINT IDENTITY(1,1) PRIMARY KEY,
-    Users_FullName NVARCHAR(255) NOT NULL,
-    Users_Email    NVARCHAR(255) NOT NULL,
-    Users_Phone    VARCHAR(15)   NOT NULL,
+    [User_ID]     BIGINT IDENTITY(1,1) PRIMARY KEY,
+    [User_Name]   NVARCHAR(255) NOT NULL,
+    User_Email    NVARCHAR(255) NOT NULL,
+    User_Phone    VARCHAR(15)   NOT NULL,
     RowsVersion    ROWVERSION    NOT NULL,
     Account_ID      BIGINT        NULL,
-    CONSTRAINT UQ_Users_FullName UNIQUE (Users_FullName),
-    CONSTRAINT UQ_Users_Email    UNIQUE (Users_Email),
+    CONSTRAINT UQ_Users_FullName UNIQUE ([User_Name]),
+    CONSTRAINT UQ_Users_Email    UNIQUE (User_Email),
     CONSTRAINT FK_Users_Account  FOREIGN KEY(Account_ID) REFERENCES dbo.Account(Account_ID)
         ON UPDATE NO ACTION ON DELETE SET NULL
 );
 GO
 
--- =========================================
---  Movie
--- =========================================
+
 IF OBJECT_ID(N'dbo.Movie', N'U') IS NOT NULL DROP TABLE dbo.Movie;
 GO
-CREATE TABLE dbo.Movie
+CREATE TABLE dbo.Movies
 (
     Movie_ID           BIGINT IDENTITY(1,1) PRIMARY KEY,
     Movie_Slug         NVARCHAR(255) NOT NULL,
@@ -81,9 +68,7 @@ CREATE TABLE dbo.Movie
 );
 GO
 
--- =========================================
---  Genres
--- =========================================
+
 IF OBJECT_ID(N'dbo.Genres', N'U') IS NOT NULL DROP TABLE dbo.Genres;
 GO
 CREATE TABLE dbo.Genres
@@ -95,61 +80,109 @@ CREATE TABLE dbo.Genres
 );
 GO
 
--- =========================================
---  MovieGenres (many-to-many)
--- =========================================
+
 IF OBJECT_ID(N'dbo.MovieGenres', N'U') IS NOT NULL DROP TABLE dbo.MovieGenres;
 GO
 CREATE TABLE dbo.MovieGenres
 (
-    Movie_ID   BIGINT NOT NULL,
+    Movie_ID BIGINT NOT NULL,
     Genre_ID BIGINT NOT NULL,
     CONSTRAINT PK_MovieGenre PRIMARY KEY (Movie_ID, Genre_ID),
-    CONSTRAINT FK_MovieGenre_Movie   FOREIGN KEY (Movie_ID)   REFERENCES dbo.Movie(Movie_ID)
+    CONSTRAINT FK_MovieGenre_Movie   FOREIGN KEY (Movie_ID)   REFERENCES dbo.Movies(Movie_ID)
         ON UPDATE NO ACTION ON DELETE CASCADE,
     CONSTRAINT FK_MovieGenre_Genre FOREIGN KEY (Genre_ID) REFERENCES dbo.Genres(Genre_ID)
         ON UPDATE NO ACTION ON DELETE CASCADE
 );
 GO
 
--- =========================================
---  Favorites
--- =========================================
-IF OBJECT_ID(N'dbo.Favorites', N'U') IS NOT NULL DROP TABLE dbo.Favorites;
+IF OBJECT_ID(N'dbo.Cinemas', N'U') IS NOT NULL DROP TABLE dbo.Cinemas;
 GO
-CREATE TABLE dbo.Favorites
+CREATE TABLE dbo.Cinemas
 (
-    Users_ID  BIGINT       NOT NULL,
-    Movie_ID    BIGINT       NOT NULL,
-    Created_At DATETIME2(7) NOT NULL CONSTRAINT DF_Favorites_Created_At DEFAULT (SYSUTCDATETIME()),
-    CONSTRAINT PK_Favorites PRIMARY KEY (Users_ID, Movie_ID),
-    CONSTRAINT FK_Favorites_Users FOREIGN KEY (Users_ID) REFERENCES dbo.Users(Users_ID)
-        ON UPDATE NO ACTION ON DELETE CASCADE,
-    CONSTRAINT FK_Favorites_Movie   FOREIGN KEY (Movie_ID)   REFERENCES dbo.Movie(Movie_ID)
-        ON UPDATE NO ACTION ON DELETE CASCADE
-);
-GO
+    Cinema_ID BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    Cinema_Name NVARCHAR(50) UNIQUE NOT NULL,
+    [Location] NVARCHAR(255) NOT NULL,
+    Contact_Info NVARCHAR(200) NOT NULL, 
+)
 
--- =========================================
---  Comments
--- =========================================
-IF OBJECT_ID(N'dbo.Comments', N'U') IS NOT NULL DROP TABLE dbo.Comments;
+IF OBJECT_ID(N'dbo.Halls', N'U') IS NOT NULL DROP TABLE dbo.Halls;
 GO
-CREATE TABLE dbo.Comments
+CREATE TABLE dbo.Halls
 (
-    Comment_ID BIGINT IDENTITY(1,1) PRIMARY KEY,
-    Users_ID  BIGINT       NOT NULL,
-    Movie_ID    BIGINT       NOT NULL,
-    Content    NVARCHAR(MAX) NOT NULL,
-    Created_At DATETIME2(7) NOT NULL CONSTRAINT DF_Comments_Created_At DEFAULT (SYSUTCDATETIME()),
-    CONSTRAINT FK_Comments_Users FOREIGN KEY (Users_ID) REFERENCES dbo.Users(Users_ID)
-        ON UPDATE NO ACTION ON DELETE CASCADE,
-    CONSTRAINT FK_Comments_Movie   FOREIGN KEY (Movie_ID)   REFERENCES dbo.Movie(Movie_ID)
-        ON UPDATE NO ACTION ON DELETE CASCADE
-);
-GO
+    Hall_ID BIGINT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    Cinema_ID BIGINT NOT NULL,
+    Capacity INT NOT NULL,
+    CONSTRAINT FK_Halls_Cinema_ID FOREIGN KEY (Cinema_ID) REFERENCES dbo.Cinemas(Cinema_ID),
+)
 
-CREATE INDEX IX_Movie_Slug ON dbo.Movie(Movie_Slug);
+IF OBJECT_ID(N'dbo.Showtimes', N'U') IS NOT NULL DROP TABLE dbo.Showtimes;
+GO
+CREATE TABLE dbo.Showtimes
+(
+    Showtime_ID BIGINT IDENTITY(1, 1) PRIMARY KEY,
+    Movie_ID BIGINT NOT NULL,
+    Cinema_ID BIGINT NOT NULL,
+    Hall_ID BIGINT NOT NULL,
+    Start_Time DATETIME2 NOT NULL,
+    End_Time DATETIME2 NOT NULL,
+    [Language] NVARCHAR(20) NOT NULL,
+    [Format] NVARCHAR(20) NOT NULL,
+    Price DECIMAL(19,0) NOT NULL,
+    CONSTRAINT FK_Showtimes_Movie_ID FOREIGN KEY (Movie_ID) REFERENCES dbo.Movies(Movie_ID),
+    CONSTRAINT FK_Showtimes_Cinema_ID FOREIGN KEY (Cinema_ID) REFERENCES dbo.Cinemas(Cinema_ID),
+    CONSTRAINT FK_Showtimes_Hall_ID FOREIGN KEY (Hall_ID) REFERENCES dbo.Halls(Hall_ID),
+    CONSTRAINT CK_Showtimes_Format CHECK ([Format] IN (N'3D', N'2D')),
+);
+
+IF OBJECT_ID(N'dbo.Seats', N'U') IS NOT NULL DROP TABLE dbo.Seats;
+GO
+CREATE TABLE dbo.Seats
+(
+    Seat_ID BIGINT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    Hall_ID BIGINT NOT NULL ,
+    RowNumber NVARCHAR(1) NOT NULL,
+    SeatNumber NVARCHAR(2) NOT NULL,
+    SeatType NVARCHAR(10) NOT NULL,
+    CONSTRAINT FK_Seats_Hall_ID FOREIGN KEY (Hall_ID) REFERENCES dbo.Halls(Hall_ID),
+    CONSTRAINT CK_Seats_SeatType CHECK (SeatType IN (N'VIP', N'Normal', N'Couple')),
+);
+
+IF OBJECT_ID(N'dbo.Tickets', N'U') IS NOT NULL DROP TABLE dbo.Tickets;
+GO
+CREATE TABLE dbo.Tickets
+(
+    Ticket_ID BIGINT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    Showtime_ID BIGINT NOT NULL,
+    Seat_ID BIGINT NOT NULL,
+    [User_ID] BIGINT NOT NULL,
+    Price DECIMAL(19, 0) NOT NULL,
+    Status NVARCHAR(50) NOT NULL,
+    BookingTime DATETIME2 NOT NULL,
+    CONSTRAINT FK_Tickets_Showtimes_ID FOREIGN KEY (Showtime_ID) REFERENCES dbo.Showtimes(Showtime_ID),
+    CONSTRAINT FK_Tickets_Seat_ID FOREIGN KEY (Seat_ID) REFERENCES dbo.Seats(Seat_ID),
+    CONSTRAINT FK_Tickets_User_ID FOREIGN KEY ([User_ID]) REFERENCES dbo.Users([User_ID]),
+    CONSTRAINT CK_Tickets_Status CHECK (Status IN (N'Available', N'Reserved', N'Paid', N'Cancelled', N'Used', N'Expired')),
+);
+
+IF OBJECT_ID(N'dbo.Payments', N'U') IS NOT NULL DROP TABLE dbo.Payments;
+GO
+CREATE TABLE dbo.Payments 
+(
+    Payment_ID BIGINT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    [User_ID] BIGINT NOT NULL,
+    Ticket_ID BIGINT NOT NULL,
+    Amount INT NOT NULL,
+    PaymentMethod NVARCHAR(50) NOT NULL,
+    PaymentStatus NVARCHAR(50) NOT NULL,
+    PaymentTime DATETIME2 NOT NULL,
+    CONSTRAINT FK_Payments_User_ID FOREIGN KEY ([User_ID]) REFERENCES dbo.Users([User_ID]),
+    CONSTRAINT FK_Payments_Ticket_ID FOREIGN KEY (Ticket_ID) REFERENCES dbo.Tickets(Ticket_ID),
+    CONSTRAINT CK_Payments_PaymentMethod CHECK (PaymentMethod IN (N'CreditCard', N'DebitCard', N'BankTransfer', N'EWallet', N'Cash', N'Paypal', N'Other')),
+    CONSTRAINT CK_Payments_PaymentStatus CHECK (PaymentStatus IN (N'Pending', N'Completed', N'Failed', N'Cancelled', N'Refunded')),
+);
+
+
+CREATE INDEX IX_Movie_Slug ON dbo.Movies(Movie_Slug);
 CREATE INDEX IX_Genres_Slug ON dbo.Genres(Genre_Slug);
 
 INSERT INTO dbo.Genres (Genre_Name, Genre_Slug)
@@ -167,7 +200,7 @@ VALUES
 (N'Crime','crime');
 
 
-INSERT INTO dbo.Movie
+INSERT INTO dbo.Movies
 (Movie_Slug, Movie_Name, Movie_Description, Movie_Duration, Movie_Status, Movie_Poster, Movie_Producer, Movie_Year)
 VALUES
 -- 1
@@ -222,3 +255,25 @@ INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
 -- Joker: Drama, Crime, Thriller
 INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
 (5, 5), (5, 9), (5, 6);
+
+INSERT INTO dbo.Cinemas (Cinema_Name, [Location], Contact_Info) VALUES
+(N'Galaxy Cinema', N'123 Le Loi, District 1, HCM City', N'0909123456'),
+(N'CineStar', N'456 Nguyen Trai, District 5, HCM City', N'0833123456'),
+(N'BHD Star', N'789 Tran Hung Dao, District 3, HCM City', N'0899123456');
+
+INSERT INTO dbo.Halls (Cinema_ID, Capacity) VALUES
+(1, 150),
+(1, 100),
+(2, 120);
+
+INSERT INTO dbo.Seats (Hall_ID, RowNumber, SeatNumber, SeatType) VALUES
+(1, N'A', N'01', N'VIP'),
+(1, N'A', N'02', N'VIP'),
+(1, N'B', N'01', N'Normal'),
+(2, N'A', N'01', N'Normal'),
+(2, N'B', N'02', N'Couple');
+
+INSERT INTO dbo.Showtimes (Movie_ID, Cinema_ID, Hall_ID, Start_Time, End_Time, [Language], [Format], Price) VALUES
+(1, 1, 1, '2025-09-22 14:00:00', '2025-09-22 16:00:00', N'Vietnamese', N'2D', 100000),
+(2, 1, 2, '2025-09-22 16:30:00', '2025-09-22 18:30:00', N'English', N'3D', 150000),
+(3, 2, 3, '2025-09-22 19:00:00', '2025-09-22 21:00:00', N'French', N'2D', 120000);

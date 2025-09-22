@@ -110,37 +110,25 @@
                         <div>
                             Showing @Model.Start to @Model.End of @Model.TotalItems entries
                         </div>
-                        <nav>
-                            <ul class="pagination mb-0">
-                                <li class="page-item me-1 @(Model.Page == 1 ? "disabled" : "")">
-                                    <a class="page-link"
-                                       asp-action="Index"
-                                       asp-route-search="@ViewBag.Search"
-                                       asp-route-page="@(Model.Page - 1)"
-                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-left"></i></a>
-                                </li>
-
-                                @for (int p = 1; p <= Model.TotalPage; p++)
-                                {
-                                    <li class="page-item me-1 @(p == Model.Page ? "active" : "")">
-                                        <a class="page-link"
-                                           asp-action="Index"
-                                           asp-route-search="@ViewBag.Search"
-                                           asp-route-page="@p"
-                                           asp-route-pageSize="@(Model.PageSize)">@p</a>
+                        @if (Model.TotalItems > 0)
+                        {
+                            <nav>
+                                <ul class="pagination mb-0">
+                                    <li class="page-item me-1 @(Model.Page == 1 ? "disabled" : "")">
+                                        <a class="page-link" asp-route-page="@(Model.Page - 1)" ...><i class="fa-solid fa-arrow-left"></i></a>
                                     </li>
-                                }
-
-                                <li class="page-item me-1 @(Model.Page == Model.TotalPage ? "disabled" : "")">
-                                    <a class="page-link"
-                                       asp-action="Index"
-                                       asp-route-search="@ViewBag.Search"
-                                       asp-route-page="@(Model.Page + 1)"
-                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-right"></i></a>
-                                </li>
-                            </ul>
-
-                        </nav>
+                                    @for (int p = 1; p <= Model.TotalPage; p++)
+                                    {
+                                        <li class="page-item me-1 @(p == Model.Page ? "active" : "")">
+                                            <a class="page-link" asp-route-page="@p" ...>@p</a>
+                                        </li>
+                                    }
+                                    <li class="page-item me-1 @(Model.Page == Model.TotalPage ? "disabled" : "")">
+                                        <a class="page-link" asp-route-page="@(Model.Page + 1)" ...><i class="fa-solid fa-arrow-right"></i></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        }
                     </div>
 
                 </div>

@@ -1,8 +1,8 @@
-﻿@using Project02.ViewModels.Genre
-@model GenreIndexVm
+﻿@using Project02.ViewModels.Cinema
+@model CinemaIndexVm
 
 @{
-    ViewData["Title"] = "Genre";
+    ViewData["Title"] = "Cinemas";
     Layout = "_AdminLayout";
 }
 
@@ -19,9 +19,10 @@
                         </form>
                     </div>
 
+
                     <div class="d-flex ms-auto">
                         <form asp-action="Index" method="get" class="d-flex me-2">
-                            <input type="text" name="q" value="@Model.search"
+                            <input type="text" name="search" value="@Model.search"
                                    class="form-control form-control-sm me-2"
                                    placeholder="Search by name..." />
                             <input type="hidden" name="pageSize" value="@Model.PageSize" />
@@ -33,7 +34,7 @@
                         </form>
 
                         <a asp-action="Create" class="btn btn-sm btn-primary">
-                            <i class="fa-solid fa-plus"></i> Add Genre
+                            <i class="fa-solid fa-plus"></i> Add Cinema
                         </a>
                     </div>
                 </div>
@@ -42,29 +43,37 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>Slug</th>
                                 <th>Name</th>
-                                <th class="text-center">Control</th>
+                                <th>Location</th>
+                                <th>Contact Info</th>
+                                <th>Control</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if (Model.Items.Count == 0)
                             {
                                 <tr>
-                                    <td colspan="3" class="text-center text-muted">No genres found</td>
+                                    <td colspan="4" class="text-center text-muted">No cinemas found</td>
                                 </tr>
                             }
                             else
                             {
                                 foreach (var item in Model.Items)
                                 {
-
-                                    <tr>
-                                        <td>@item.Genre_Slug</td>
-                                        <td>@item.Genre_Name</td>
+                                    <tr id="row-@item.Cinema_ID">
                                         <td>
-                                            <a asp-action="Edit" class="btn btn-sm btn-outline-primary" asp-route-id="@item.Genre_Slug"><i class="fa-solid fa-pen-to-square"></i></a>
-                                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete" data-id="@item.Genre_Slug" data-rowid="@item.Genre_ID" data-name="@item.Genre_Name"><i class="fa-solid fa-trash"></i></button>
+                                            @Html.DisplayFor(modelItem => item.Cinema_Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Location)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Contact_Info)
+                                        </td>
+                                        <td>
+                                            <a asp-action="Edit" class="btn btn-sm btn-outline-primary" asp-route-id="@item.Cinema_ID"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a asp-action="Details" class="btn btn-sm btn-outline-info" asp-route-id="@item.Cinema_ID"><i class="fas fa-info-circle"></i> </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete" data-id="@item.Cinema_ID" data-name="@item.Cinema_Name"><i class="fa-solid fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -79,37 +88,25 @@
                         <div>
                             Showing @Model.Start to @Model.End of @Model.TotalItems entries
                         </div>
-                        <nav>
-                            <ul class="pagination mb-0">
-                                <li class="page-item me-1 @(Model.Page == 1 ? "disabled" : "")">
-                                    <a class="page-link"
-                                       asp-action="Index"
-                                       asp-route-search="@ViewBag.Search"
-                                       asp-route-page="@(Model.Page - 1)"
-                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-left"></i></a>
-                                </li>
-
-                                @for (int p = 1; p <= Model.TotalPage; p++)
-                                {
-                                    <li class="page-item me-1 @(p == Model.Page ? "active" : "")">
-                                        <a class="page-link"
-                                           asp-action="Index"
-                                           asp-route-search="@ViewBag.Search"
-                                           asp-route-page="@p"
-                                           asp-route-pageSize="@(Model.PageSize)">@p</a>
+                        @if (Model.TotalItems > 0)
+                        {
+                            <nav>
+                                <ul class="pagination mb-0">
+                                    <li class="page-item me-1 @(Model.Page == 1 ? "disabled" : "")">
+                                        <a class="page-link" asp-route-page="@(Model.Page - 1)" ...><i class="fa-solid fa-arrow-left"></i></a>
                                     </li>
-                                }
-
-                                <li class="page-item me-1 @(Model.Page == Model.TotalPage ? "disabled" : "")">
-                                    <a class="page-link"
-                                       asp-action="Index"
-                                       asp-route-search="@ViewBag.Search"
-                                       asp-route-page="@(Model.Page + 1)"
-                                       asp-route-pageSize="@(Model.PageSize)"><i class="fa-solid fa-arrow-right"></i></a>
-                                </li>
-                            </ul>
-
-                        </nav>
+                                    @for (int p = 1; p <= Model.TotalPage; p++)
+                                    {
+                                        <li class="page-item me-1 @(p == Model.Page ? "active" : "")">
+                                            <a class="page-link" asp-route-page="@p" ...>@p</a>
+                                        </li>
+                                    }
+                                    <li class="page-item me-1 @(Model.Page == Model.TotalPage ? "disabled" : "")">
+                                        <a class="page-link" asp-route-page="@(Model.Page + 1)" ...><i class="fa-solid fa-arrow-right"></i></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        }
                     </div>
 
                 </div>
@@ -123,8 +120,7 @@
 
         if (!btn) return;
 
-        const slug = btn.dataset.id;
-        const id = btn.dataset.rowId;
+        const id = btn.dataset.id;
         const name = btn.dataset.name;
 
         const ok = await Swal.fire ({
@@ -142,7 +138,7 @@
 
         const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
 
-        const url = `/admin/genre/delete/${encodeURIComponent(slug)}`;
+        const url = `/admin/cinema/delete/${encodeURIComponent(id)}`;
 
         const res = await fetch(url, {
             method: 'post',

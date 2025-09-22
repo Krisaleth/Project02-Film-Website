@@ -1,8 +1,8 @@
-﻿@using Project02.ViewModels.User
-@model UserIndexVm
+﻿@using Project02.ViewModels.Ticket;
+@model TicketIndexVm;
 
 @{
-    ViewData["Title"] = "User";
+    ViewData["Title"] = "Ticket";
     Layout = "_AdminLayout";
 }
 
@@ -12,91 +12,89 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <form asp-action="Index" method="get">
-                        <select asp-for="sortOrder" asp-items="Model.SortOptions" class="form-select form-select-sm me-2"
-                                onchange="this.form.submit()"></select>
-                    </form>
+                    <div>
+                        <form asp-action="Index" method="get">
+                            <select asp-for="sortOrder"
+                                    asp-items="Model.SortOptions"
+                                    class="form-select form-select-sm me-2"
+                                    onchange="this.form.submit()"></select>
+                        </form>
+                    </div>
+
+
                     <div class="d-flex ms-auto">
                         <form asp-action="Index" method="get" class="d-flex me-2">
-                            <input type="text" name="search" value="@Model.search" class="form-control form-control-sm me-2" placeholder="Search by name..."/>
+                            <input type="text" name="search" value="@Model.search"
+                                   class="form-control form-control-sm me-2"
+                                   placeholder="Search by name..." />
                             <input type="hidden" name="pageSize" value="@Model.PageSize" />
-                            <button class="btn btn-sm btn-secondary d-flex align-items-center" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                            <button type="submit" class="btn btn-sm btn-secondary d-flex align-items-center">
+                                <i class="fa-solid fa-magnifying-glass me-1"></i>
+                                Search
+                            </button>
+
                         </form>
-                        <a asp-action="Create" class="btn btn-sm btn-primary d-flex align-items-center"><i class="fa-solid fa-plus"></i> Add New</a>
+
+                        <a asp-action="Create" class="btn btn-sm btn-primary">
+                            <i class="fa-solid fa-plus"></i> Add ticket
+                        </a>
                     </div>
                 </div>
+
                 <div class="card-body">
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>
-                                    User Name
-                                </th>
-                                <th>
-                                    Full Name
-                                </th>
-                                <th>
-                                    Email
-                                </th>
-                                <th>
-                                    Phone
-                                </th>
+                                <th>Movie Name</th>
+                                <th>Start Time</th>
+                                <th>Seat Number</th>
+                                <th>User Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Price</th>
+                                <th>Payment Method</th>
+                                <th>Payment Status</th>
                                 <th>Status</th>
-                                <th>
-                                    Control
-                                </th>
+                                <th>Control</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.Items) {
-                                var rv = "";
-
-                            <tr>
+                            @if (Model.Items.Count == 0)
+                            {
+                                <td colspan="11" class="text-center text-mute">No ticket found</td>
+                            }
+                            else
+                            {
+                                foreach (var item in Model.Items)
+                                {
+                                <td>@Html.DisplayFor(modelItem => item.Movie_Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Start_Time)</td>
+                                <td>@Html.DisplayFor(modelItem => item.SeatNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.User_Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.User_Phone)</td>
+                                <td>@Html.DisplayFor(modelItem => item.User_Email)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Payment_Method)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Payment_Status)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Status)</td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Username)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.User_Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.User_Email)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.User_Phone)
-                                </td>
-                                <td>
-                                    @if (item.Account_Status == "Active")
-                                    {
-                                        <span class="badge bg-success"><i class="fa-solid fa-circle-check"></i> Active</span>
-                                    }
-                                    else if (item.Account_Status == "Banned")
-                                    {
-                                        <span class="badge bg-danger"><i class="fa-solid fa-ban"></i> Banned</span>
-                                    }
-                                    else
-                                    {
-                                            <span class="badge bg-warning text-dark"><i class="fa-regular fa-circle"></i> Inactive</span>
-                                    }
-                                </td>
-                                <td class="text-center">
-                                    <a asp-action="Edit" asp-route-id="@item.User_ID"
-                                        class="btn btn-sm btn-outline-primary">
+                                    <a asp-action="Edit" asp-route-id="@item.Ticket_ID" class="btn btn-sm btn-primary me-1">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
-                                    <a asp-action="Details" asp-route-id="@item.User_ID"
-                                        class="btn btn-sm btn-outline-info">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                    <button class="btn btn-outline-danger btn-sm btn-delete" data-id="@item.User_ID" data-rv="@rv">
-                                            <i class="fa-solid fa-trash"></i>
-                                    </button>
+                                    <button type="button"
+                                            class="btn btn-sm btn-danger btn-delete"
+                                            data-id="@item.Ticket_ID"
+                                            data-name="@item.Movie_Name">
+                                        <i class="fa-solid fa-trash"></i>
                                 </td>
-                            </tr>
+                                }
                             }
                         </tbody>
                     </table>
-                </div>
-                <div class="card-footer">
+                    <div class="row my-1">
+                        <div class="col-12"></div>
+                    </div>
+
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             Showing @Model.Start to @Model.End of @Model.TotalItems entries
@@ -121,20 +119,21 @@
                             </nav>
                         }
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script>
-    document.addEventListener('click', async(e) => {
-        const btn = e.target.closest('.btn-delete');
+     document.addEventListener('click', async (e) => {
+        const btn = e.target.closest(".btn-delete");
 
-        if !btn return;
+        if (!btn) return;
 
         const id = btn.dataset.id;
-        const rv = btn.dataset.rv || '';
-        
+        const name = btn.dataset.name;
+
         const ok = await Swal.fire ({
             title: "Xác nhận xoá",
             text: `Bạn có chắc muốn xoá "${name}"?`,
@@ -150,7 +149,7 @@
 
         const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
 
-        const url = `/admin/user/delete/${encodeURIComponent(slug)}`;
+        const url = `/admin/ticket/delete/${EncodeURIComponent(id)}`;
 
         const res = await fetch(url, {
             method: 'post',
@@ -158,7 +157,6 @@
             credentials: 'same-origin',
             body: new URLSearchParams({
                 '__RequestVerificationToken': token,
-                'rowVersionBase64': rv
             })
         });
 
@@ -189,4 +187,3 @@
         }
     });
 </script>
-

@@ -56,7 +56,11 @@ namespace Project02.Controllers
                 _ => query.OrderBy(m => m.Movie_ID)
             };
 
-            var total = await query.CountAsync();
+            var totalItems = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            if (page > totalPages && totalPages > 0)
+                page = totalPages;
 
             var items = await query
                 .Skip((page - 1) * pageSize)
@@ -79,7 +83,7 @@ namespace Project02.Controllers
                 Items = items,
                 Page = page,
                 PageSize = pageSize,
-                TotalItems = total,
+                TotalItems = totalItems,
                 Q = q,
                 SortOptions = new List<SelectListItem>
                 {

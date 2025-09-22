@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Project02.Models;
 
-[Table("Movie")]
 [Index("Movie_Slug", Name = "IX_Movie_Slug")]
 [Index("Movie_Name", Name = "UQ_Movie_Name", IsUnique = true)]
 [Index("Movie_Slug", Name = "UQ_Movie_Slug", IsUnique = true)]
@@ -43,10 +42,7 @@ public partial class Movie
     public DateTime Movie_Update_At { get; set; }
 
     [InverseProperty("Movie")]
-    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
-
-    [InverseProperty("Movie")]
-    public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
+    public virtual ICollection<Showtime> Showtimes { get; set; } = new List<Showtime>();
 
     [ForeignKey("Movie_ID")]
     [InverseProperty("Movies")]
