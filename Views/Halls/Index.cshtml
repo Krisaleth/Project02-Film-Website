@@ -141,7 +141,7 @@
 
         const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
 
-        const url = `/admin/hall/delete/${encodeURIComponent(slug)}`;
+        const url = `/admin/hall/delete/${encodeURIComponent(id)}`;
 
         const res = await fetch(url, {
             method: 'post',
@@ -170,7 +170,7 @@
 
 
         if (json.ok) {
-            const row = document.getElementById(`row-${id}`);
+            const row = document.getElementById(`${id}`);
             row?.remove();
             Swal.fire ({ icon:'success', title:'Đã xoá', timer: 1200, showConfirmButton:false });
             location.reload();
