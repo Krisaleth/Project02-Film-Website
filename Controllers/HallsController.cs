@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
 using Project02.Models;
+using Project02.ViewModels.Hall;
 
 namespace Project02.Controllers
 {
@@ -20,11 +21,66 @@ namespace Project02.Controllers
         }
 
         // GET: Halls
-        public async Task<IActionResult> Index()
+        [HttpGet("/admin/hall")]
+        public async Task<IActionResult> Index(string? Q, string? sortOrder, int page = 1, int pageSize = 10)
         {
-            var appDbContext = _context.Halls.Include(h => h.Cinema);
-            return View(await appDbContext.ToListAsync());
+            if (page <= 0) page = 1;
+            if (pageSize <= 0) pageSize = 10;
+            IQueryable<Hall> hallsQuery = _context.Halls.Include(h => h.Cinema).AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(Q))
+            {
+                hallsQuery = hallsQuery.Where(h => h.Cinema.Cinema_Name.Contains(Q));
+            }
+            if (!string.IsNullOrWhiteSpace(sortOrder))
+            {
+                hallsQuery = sortOrder switch
+                {
+                    "cinema_asc" => hallsQuery.OrderBy(h => h.Cinema.Cinema_Name),
+                    "cinema_desc" => hallsQuery.OrderByDescending(h => h.Cinema.Cinema_Name),
+                    "capacity_asc" => hallsQuery.OrderBy(h => h.Capacity),
+                    "capacity_desc" => hallsQuery.OrderByDescending(h => h.Capacity),
+                    _ => hallsQuery.OrderBy(h => h.Hall_ID),
+                };
+            }
+            else
+            {
+                hallsQuery = hallsQuery.OrderBy(h => h.Hall_ID);
+
+            }
+
+            var totalItems = await hallsQuery.CountAsync();
+
+            var halls = await hallsQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(h => new HallRowVm
+                {
+                    Hall_ID = h.Hall_ID,
+                    Cinema_Name = h.Cinema.Cinema_Name,
+                    Capacity = h.Capacity
+                })
+                .ToListAsync();
+
+            var vm = new HallIndexVm
+            {
+                Items = halls,
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = totalItems,
+                Q = Q,
+                sortOrder = sortOrder,
+                SortOptions = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = "cinema_asc", Text = "Cinema Name Ascending" },
+                    new SelectListItem { Value = "cinema_desc", Text = "Cinema Name Descending" },
+                    new SelectListItem { Value = "capacity_asc", Text = "Capacity Ascending" },
+                    new SelectListItem { Value = "capacity_desc", Text = "Capacity Descending" },
+                }
+            };
+            return View(vm);
         }
+
 
         // GET: Halls/Details/5
         public async Task<IActionResult> Details(long? id)

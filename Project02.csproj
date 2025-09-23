@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
-    <Folder Include="ViewModels\Hall\" />
     <Folder Include="ViewModels\Payment\" />
     <Folder Include="ViewModels\Showtime\" />
     <Folder Include="wwwroot\uploads\posters\" />

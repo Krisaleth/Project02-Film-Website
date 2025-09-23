@@ -45,9 +45,11 @@ namespace Project02.Controllers
                 SeatNumber = s.SeatNumber,
                 SeatType = s.SeatType,
                 Cinema_Name = s.Hall.Cinema.Cinema_Name,
-                St
+                Status = "Available" // Placeholder for actual status logic
 
             }).ToListAsync();
+
+            return View(seats);
         }
 
         // GET: Seats/Details/5
