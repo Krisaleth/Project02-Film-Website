@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Project02</title>
+    <title>@ViewData["Title"]Online Film Review</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Project02.styles.css" asp-append-version="true" />
@@ -12,7 +12,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Project02</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,15 +20,26 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index"><img src="./image/logo.png" class="logo"/></a>
                         </li>
+                        <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Thể loại</a></li>
+                        <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Tất cả film</a></li>
+                        <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Điều khoản </a></li>
+                        <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Về chúng tôi</a></li>
+                        <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Trang cá nhân</a></li>
+                        @* <li class="nav-item">  *@
+                        @*      <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
+                        @* </li>  *@
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
+                            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
                         </li>
                     </ul>
+                    <form class="navbar-search d-flex" method="get" action="#">
+                        <input type="text" class="form-control me-2" name="q" placeholder="Tìm kiếm phim..." />
+                        <button type="submit" aria-label="Tìm kiếm">
+                            <span class="search-icon btn btn-secondary">&#128269;</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </nav>
@@ -41,7 +52,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - Project02 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - TKT Team - Project II - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

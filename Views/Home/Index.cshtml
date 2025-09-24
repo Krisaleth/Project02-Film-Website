@@ -4,8 +4,8 @@
 }
 
 <!-- Navbar đẹp mắt + thanh tìm kiếm góc phải -->
-<nav class="simple-navbar navbar navbar-expand-lg navbar-dark">
-    <a class="navbar-brand" href="#"></a>
+<!--<nav class="simple-navbar navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="#">TKT Team</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
             aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon text-white"><i class="fa-solid fa-caret-down"></i></span>
@@ -26,13 +26,183 @@
             </form>
         </div>
         
-</nav>
+</nav>-->
 
 <div class="container py-5">
-    <h1 class="mb-4 fw-bold text-center" style="color: #fff;">🎬 Khám Phá Phim</h1>
+    <h1 class="mb-4 fw-bold text-left" style="color: #fff;">🎬 Khám Phá Phim</h1>
+    <!-- Banner Carousel -->
+    <div id="bannerCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/image/Inception-poster.jpg" class="d-block banner-img" alt="Banner 1">
+            </div>
+            <div class="carousel-item">
+                <img src="/image/creepyME.jpg" class="d-block banner-img" alt="Banner 2">
+            </div>
+            <div class="carousel-item">
+                <img src="/image/creepyFE.jpg" class="d-block banner-img" alt="Banner 3">
+            </div>
+            <div class="carousel-item">
+                <img src="/image/trans3.jpg" class="d-block banner-img" alt="Banner 4">
+            </div>
+            <div class="carousel-item">
+                <img src="/image/creepyFE.jpg" class="d-block banner-img" alt="Banner 5">
+            </div>
+            <div class="carousel-item">
+                <img src="/image/trans3.jpg" class="d-block banner-img" alt="Banner 6">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev"> 
+            <span class="carousel-control-prev-icon"></span>
+        </button> 
+        <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+    <h3 class="movie-label">Phim đề cử</h3>
+    <div class="movie-wrapper">
+        <!-- Nút mũi tên trái -->
+        <button class="arrow left" onclick="scrollLeftFn()">&#10094;</button>
+        <div class="movie-container">
+        <!-- Movie Card -->
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster1.jpg" alt="Nhiệm Vụ Bất Khả Thi">
+                <span class="badge badge-4k">4K</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Nhiệm Vụ Bất Khả Thi: Nghiệp Báo Cuối Cùng</h3>
+                <p class="title-en">Mission: Impossible – The ...</p>
+            </div>
+        </div>
 
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster2.jpg" alt="Na Tra 2">
+                <span class="badge badge-hd">Full HD</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Na Tra 2: Ma Đồng Náo Hải</h3>
+                <p class="title-en">Ne Zha 2 (2025)</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster3.jpg" alt="Cưới Ma Giải Hạn">
+                <span class="badge badge-hd">Full HD</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Cưới Ma Giải Hạn</h3>
+                <p class="title-en">The Red Envelope (2025)</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster3.jpg" alt="Cưới Ma Giải Hạn">
+                <span class="badge badge-hd">Full HD</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Cưới Ma Giải Hạn</h3>
+                <p class="title-en">The Red Envelope (2025)</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster3.jpg" alt="Cưới Ma Giải Hạn">
+                <span class="badge badge-hd">Full HD</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Cưới Ma Giải Hạn</h3>
+                <p class="title-en">The Red Envelope (2025)</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster3.jpg" alt="Cưới Ma Giải Hạn">
+                <span class="badge badge-hd">Full HD</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Cưới Ma Giải Hạn</h3>
+                <p class="title-en">The Red Envelope (2025)</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster3.jpg" alt="Cưới Ma Giải Hạn">
+                <span class="badge badge-hd">Full HD</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Cưới Ma Giải Hạn</h3>
+                <p class="title-en">The Red Envelope (2025)</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster3.jpg" alt="Cưới Ma Giải Hạn">
+                <span class="badge badge-hd">Full HD</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Cưới Ma Giải Hạn</h3>
+                <p class="title-en">The Red Envelope (2025)</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster1.jpg" alt="Nhiệm Vụ Bất Khả Thi">
+                <span class="badge badge-4k">4K</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Nhiệm Vụ Bất Khả Thi: Nghiệp Báo Cuối Cùng</h3>
+                <p class="title-en">Mission: Impossible – The ...</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster1.jpg" alt="Nhiệm Vụ Bất Khả Thi">
+                <span class="badge badge-4k">4K</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Nhiệm Vụ Bất Khả Thi: Nghiệp Báo Cuối Cùng</h3>
+                <p class="title-en">Mission: Impossible – The ...</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster1.jpg" alt="Nhiệm Vụ Bất Khả Thi">
+                <span class="badge badge-4k">4K</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Nhiệm Vụ Bất Khả Thi: Nghiệp Báo Cuối Cùng</h3>
+                <p class="title-en">Mission: Impossible – The ...</p>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-img">
+                <img src="poster1.jpg" alt="Nhiệm Vụ Bất Khả Thi">
+                <span class="badge badge-4k">4K</span>
+            </div>
+            <div class="movie-info">
+                <h3 class="title-vi">Nhiệm Vụ Bất Khả Thi: Nghiệp Báo Cuối Cùng</h3>
+                <p class="title-en">Mission: Impossible – The ...</p>
+            </div>
+        </div>
+        <!-- Thêm các card khác ở đây -->
+    </div>
+        <!-- Nút mũi tên phải -->
+    <button class="arrow right" onclick="scrollRightFn()">&#10095;</button>
+    </div>
     <div class="row g-4">
-        @for (int i = 0; i < 8; i++)
+        @for (int i = 0; i < 12; i++)
         {
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="film-card">
@@ -46,18 +216,66 @@
         }
     </div>
 </div>
+@* Hàm bấm sang trái và phải của "Phim đề cử" *@
+<script>
+    function scrollLeftFn() {
+        const container = document.querySelector('.movie-container');
+        container.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+    function scrollRightFn() {
+        const container = document.querySelector('.movie-container');
+        container.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+</script>
+@* Loop vô tận cho "Phim đề cử" *@
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.querySelector('.movie-container');
+      const leftBtn = document.querySelector('.arrow.left');
+      const rightBtn = document.querySelector('.arrow.right');
 
+      // Tính khoảng cuộn bằng width + gap
+      const firstCard = container.querySelector('.movie-card');
+      const style = getComputedStyle(container);
+      const gap = parseInt(style.gap) || 15;
+      const cardWidth = firstCard.offsetWidth;
+      const scrollAmount = cardWidth + gap;
+
+      rightBtn.addEventListener('click', () => {
+        if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
+          // đang ở cuối ➝ quay lại đầu
+          container.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+      });
+
+      leftBtn.addEventListener('click', () => {
+        if (container.scrollLeft <= 0) {
+          // đang ở đầu ➝ quay về cuối
+          container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        }
+      });
+    });
+</script>
 <style>
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background: #8E0E00;
-        background: -webkit-linear-gradient(to right, #1F1C18, #8E0E00);
-        background: linear-gradient(to right, #1F1C18, #8E0E00);
+        background: -webkit-linear-gradient(to right, #8E0E00, orange);
+        background: linear-gradient(to right, #8E0E00, orange);
         min-height: 100vh;
         margin: 0;
         color: #333;
     }
+    /*Movie Label*/
+    .movie-label {
+        text-align: center;
+        color: white;
 
+    }
     /* Navbar đẹp */
     .simple-navbar {
         width: 100%;
@@ -140,5 +358,126 @@
     .film-year {
         font-size: .875rem;
         color: #6b7280;
+    }
+    /*movie*/
+    .movie-wrapper {
+        position: relative;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    .movie-container {
+        display: flex;
+        gap: 15px;
+        padding: 20px;
+        overflow-x: auto;
+        scroll-behavior: smooth; /* trượt mượt */
+    }
+
+        .movie-container::-webkit-scrollbar {
+            display: none; /* ẩn thanh cuộn ngang */
+        }
+
+    .movie-card {
+        width: 200px;
+        flex-shrink: 0;
+        background: black;
+        border-radius: 6px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+
+    .movie-img {
+        position: relative;
+    }
+
+        .movie-img img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+    .badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: red;
+        padding: 3px 6px;
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 3px;
+    }
+
+    .badge-4k {
+        background: #ff9800;
+    }
+
+    .badge-hd {
+        background: #b71c1c;
+    }
+
+    .movie-info {
+        padding: 10px;
+    }
+
+    .title-vi {
+        font-size: 14px;
+        margin: 0;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .title-en {
+        font-size: 12px;
+        margin: 4px 0 0;
+        color: #7dd3fc; /* xanh dương nhạt */
+    }
+
+    .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.6);
+        border: none;
+        color: darkgoldenrod;
+        font-size: 24px;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 10;
+        border-radius: 50%;
+        transition: background 0.3s;
+    }
+    .arrow:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .arrow.left {
+        left: 0;
+    }
+
+    .arrow.right {
+        right: 0;
+    }
+
+    /* Banner responsive theo tỷ lệ gốc ảnh */
+    .banner-img {
+        width: 100%; /* luôn full ngang */
+        max-width: 1920px; /* không vượt quá 1920px */
+        height: 720px; /* giữ đúng tỷ lệ gốc */
+        object-fit: cover; /* cắt cho đẹp nếu cần */
+        border-radius: 12px;
+        display: block;
+        margin: 0 auto;
+        transition: transform 0.3s ease;
+    }
+
+    /* Optional: hiệu ứng hover */
+    .banner-img:hover {
+        transform: scale(1.02);
     }
 </style>
