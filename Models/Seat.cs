@@ -22,6 +22,12 @@ public partial class Seat
     [StringLength(10)]
     public string SeatType { get; set; } = null!;
 
+    [StringLength(255)]
+    public string? Description { get; set; }
+
+    [StringLength(20)]
+    public string SeatStatus { get; set; } = null!;
+
     [ForeignKey("Hall_ID")]
     [InverseProperty("Seats")]
     public virtual Hall Hall { get; set; } = null!;

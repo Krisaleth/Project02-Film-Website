@@ -1,21 +1,20 @@
 ﻿@using Project02.ViewModels.Seat;
-@model IEnumerable<SeatStatusVm>;
+@model SeatIndexVm;
 @{
     ViewData["Title"] = "Seat Status";
     Layout = "_AdminLayout";
 }
 
-
 <style>
     .seat {
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         margin: 3px;
         text-align: center;
-        line-height: 30px;
+        line-height: 40px;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 14px;
         font-weight: bold;
         user-select: none;
     }
@@ -30,6 +29,8 @@
         color: white;
     }
 
+    .Broken
+
     .seat-row {
         margin-bottom: 10px;
     }
@@ -38,22 +39,39 @@
 <div class="container">
     <div class="card">
         <div class="card-header">
-            <h2>Seat Status</h2>
+            <form asp-action="Index" method="get" class="d-flex">
+                <select asp-for="selectedHallId" name="hallId" asp-items="Model.hallOptions" class="form-select me-2"
+                        onchange="this.form.submit()">
+                    <option value="">Select Hall</option>
+                </select>
+                <noscript><button type="submit" class="btn btn-primary">Filter</button></noscript>
+            </form>
         </div>
         <div class="card-body">
-            @foreach (var rowGroup in Model.GroupBy(s => s.RowNumber).OrderBy(g => g.Key))
+            <span><strong>
+                    @if (Model.Items.Any())
+                    {
+                        var firstSeat = Model.Items.First();
+                        @($"{firstSeat.Cinema_Name} - Hall {firstSeat.Hall_ID}")
+                    }
+                    else
+                    {
+                        <text>No seats available</text>
+                    }
+            </strong></span>
+            @foreach (var rowGroup in Model.Items.GroupBy(s => s.RowNumber).OrderBy(g => g.Key))
             {
-                <div class="seat-row">
-                    <span><strong>@rowGroup.Key</strong></span>
+                <div class="d-flex flex-row justify-content-center">
                     @foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
                     {
                         <div class="seat @seat.Status" title="@($"Seat {seat.RowNumber}{seat.SeatNumber} - {seat.Status}")">
-                            @seat.SeatNumber
+                            <a asp-action="Edit" asp-route-id="@seat.Seat_ID" style="color: inherit; text-decoration: none;">
+                                @($"{seat.RowNumber}{seat.SeatNumber}")
+                            </a>
                         </div>
                     }
                 </div>
             }
         </div>
     </div>
-    
 </div>

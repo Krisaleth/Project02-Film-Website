@@ -139,11 +139,14 @@ GO
 CREATE TABLE dbo.Seats
 (
     Seat_ID BIGINT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
-    Hall_ID BIGINT NOT NULL ,
+    Hall_ID BIGINT NOT NULL,
     RowNumber NVARCHAR(1) NOT NULL,
     SeatNumber NVARCHAR(2) NOT NULL,
     SeatType NVARCHAR(10) NOT NULL,
+    [Description] NVARCHAR(255),
+    SeatStatus NVARCHAR(20) NOT NULL,
     CONSTRAINT FK_Seats_Hall_ID FOREIGN KEY (Hall_ID) REFERENCES dbo.Halls(Hall_ID),
+    CONSTRAINT CK_Seats_Status CHECK (SeatStatus IN (N'Available', N'Booked', N'Hold', N'Broken')),
     CONSTRAINT CK_Seats_SeatType CHECK (SeatType IN (N'VIP', N'Normal', N'Couple')),
 );
 
@@ -266,12 +269,176 @@ INSERT INTO dbo.Halls (Cinema_ID, Capacity) VALUES
 (1, 100),
 (2, 120);
 
-INSERT INTO dbo.Seats (Hall_ID, RowNumber, SeatNumber, SeatType) VALUES
-(1, N'A', N'01', N'VIP'),
-(1, N'A', N'02', N'VIP'),
-(1, N'B', N'01', N'Normal'),
-(2, N'A', N'01', N'Normal'),
-(2, N'B', N'02', N'Couple');
+INSERT INTO dbo.Seats (Hall_ID, RowNumber, SeatNumber, SeatType, Description, SeatStatus)
+VALUES
+-- Row A
+(1, N'A', N'01', N'Normal', NULL, N'Available'),
+(1, N'A', N'02', N'Normal', NULL, N'Available'),
+(1, N'A', N'03', N'Normal', NULL, N'Available'),
+(1, N'A', N'04', N'Normal', NULL, N'Available'),
+(1, N'A', N'05', N'Normal', NULL, N'Available'),
+(1, N'A', N'06', N'Normal', NULL, N'Available'),
+(1, N'A', N'07', N'Normal', NULL, N'Available'),
+(1, N'A', N'08', N'Normal', NULL, N'Available'),
+(1, N'A', N'09', N'Normal', NULL, N'Available'),
+(1, N'A', N'10', N'Normal', NULL, N'Available'),
+(1, N'A', N'11', N'Normal', NULL, N'Available'),
+(1, N'A', N'12', N'Normal', NULL, N'Available'),
+
+-- Row B
+(1, N'B', N'01', N'Normal', NULL, N'Available'),
+(1, N'B', N'02', N'Normal', NULL, N'Available'),
+(1, N'B', N'03', N'Normal', NULL, N'Available'),
+(1, N'B', N'04', N'Normal', NULL, N'Available'),
+(1, N'B', N'05', N'Normal', NULL, N'Available'),
+(1, N'B', N'06', N'Normal', NULL, N'Available'),
+(1, N'B', N'07', N'Normal', NULL, N'Available'),
+(1, N'B', N'08', N'Normal', NULL, N'Available'),
+(1, N'B', N'09', N'Normal', NULL, N'Available'),
+(1, N'B', N'10', N'Normal', NULL, N'Available'),
+(1, N'B', N'11', N'Normal', NULL, N'Available'),
+(1, N'B', N'12', N'Normal', NULL, N'Available'),
+
+-- Row C
+(1, N'C', N'01', N'Normal', NULL, N'Available'),
+(1, N'C', N'02', N'Normal', NULL, N'Available'),
+(1, N'C', N'03', N'Normal', NULL, N'Available'),
+(1, N'C', N'04', N'Normal', NULL, N'Available'),
+(1, N'C', N'05', N'Normal', NULL, N'Available'),
+(1, N'C', N'06', N'Normal', NULL, N'Available'),
+(1, N'C', N'07', N'Normal', NULL, N'Available'),
+(1, N'C', N'08', N'Normal', NULL, N'Available'),
+(1, N'C', N'09', N'Normal', NULL, N'Available'),
+(1, N'C', N'10', N'Normal', NULL, N'Available'),
+(1, N'C', N'11', N'Normal', NULL, N'Available'),
+(1, N'C', N'12', N'Normal', NULL, N'Available'),
+
+-- Row D
+(1, N'D', N'01', N'Normal', NULL, N'Available'),
+(1, N'D', N'02', N'Normal', NULL, N'Available'),
+(1, N'D', N'03', N'Normal', NULL, N'Available'),
+(1, N'D', N'04', N'Normal', NULL, N'Available'),
+(1, N'D', N'05', N'Normal', NULL, N'Available'),
+(1, N'D', N'06', N'Normal', NULL, N'Available'),
+(1, N'D', N'07', N'Normal', NULL, N'Available'),
+(1, N'D', N'08', N'Normal', NULL, N'Available'),
+(1, N'D', N'09', N'Normal', NULL, N'Available'),
+(1, N'D', N'10', N'Normal', NULL, N'Available'),
+(1, N'D', N'11', N'Normal', NULL, N'Available'),
+(1, N'D', N'12', N'Normal', NULL, N'Available'),
+
+-- Row E
+(1, N'E', N'01', N'Normal', NULL, N'Available'),
+(1, N'E', N'02', N'Normal', NULL, N'Available'),
+(1, N'E', N'03', N'Normal', NULL, N'Available'),
+(1, N'E', N'04', N'Normal', NULL, N'Available'),
+(1, N'E', N'05', N'Normal', NULL, N'Available'),
+(1, N'E', N'06', N'Normal', NULL, N'Available'),
+(1, N'E', N'07', N'Normal', NULL, N'Available'),
+(1, N'E', N'08', N'Normal', NULL, N'Available'),
+(1, N'E', N'09', N'Normal', NULL, N'Available'),
+(1, N'E', N'10', N'Normal', NULL, N'Available'),
+(1, N'E', N'11', N'Normal', NULL, N'Available'),
+(1, N'E', N'12', N'Normal', NULL, N'Available'),
+
+-- Row F
+(1, N'F', N'01', N'Normal', NULL, N'Available'),
+(1, N'F', N'02', N'Normal', NULL, N'Available'),
+(1, N'F', N'03', N'Normal', NULL, N'Available'),
+(1, N'F', N'04', N'Normal', NULL, N'Available'),
+(1, N'F', N'05', N'Normal', NULL, N'Available'),
+(1, N'F', N'06', N'Normal', NULL, N'Available'),
+(1, N'F', N'07', N'Normal', NULL, N'Available'),
+(1, N'F', N'08', N'Normal', NULL, N'Available'),
+(1, N'F', N'09', N'Normal', NULL, N'Available'),
+(1, N'F', N'10', N'Normal', NULL, N'Available'),
+(1, N'F', N'11', N'Normal', NULL, N'Available'),
+(1, N'F', N'12', N'Normal', NULL, N'Available'),
+
+-- Row G
+(1, N'G', N'01', N'Normal', NULL, N'Available'),
+(1, N'G', N'02', N'Normal', NULL, N'Available'),
+(1, N'G', N'03', N'Normal', NULL, N'Available'),
+(1, N'G', N'04', N'Normal', NULL, N'Available'),
+(1, N'G', N'05', N'Normal', NULL, N'Available'),
+(1, N'G', N'06', N'Normal', NULL, N'Available'),
+(1, N'G', N'07', N'Normal', NULL, N'Available'),
+(1, N'G', N'08', N'Normal', NULL, N'Available'),
+(1, N'G', N'09', N'Normal', NULL, N'Available'),
+(1, N'G', N'10', N'Normal', NULL, N'Available'),
+(1, N'G', N'11', N'Normal', NULL, N'Available'),
+(1, N'G', N'12', N'Normal', NULL, N'Available'),
+
+-- Row H
+(1, N'H', N'01', N'Normal', NULL, N'Available'),
+(1, N'H', N'02', N'Normal', NULL, N'Available'),
+(1, N'H', N'03', N'Normal', NULL, N'Available'),
+(1, N'H', N'04', N'Normal', NULL, N'Available'),
+(1, N'H', N'05', N'Normal', NULL, N'Available'),
+(1, N'H', N'06', N'Normal', NULL, N'Available'),
+(1, N'H', N'07', N'Normal', NULL, N'Available'),
+(1, N'H', N'08', N'Normal', NULL, N'Available'),
+(1, N'H', N'09', N'Normal', NULL, N'Available'),
+(1, N'H', N'10', N'Normal', NULL, N'Available'),
+(1, N'H', N'11', N'Normal', NULL, N'Available'),
+(1, N'H', N'12', N'Normal', NULL, N'Available'),
+
+-- Row I
+(1, N'I', N'01', N'Normal', NULL, N'Available'),
+(1, N'I', N'02', N'Normal', NULL, N'Available'),
+(1, N'I', N'03', N'Normal', NULL, N'Available'),
+(1, N'I', N'04', N'Normal', NULL, N'Available'),
+(1, N'I', N'05', N'Normal', NULL, N'Available'),
+(1, N'I', N'06', N'Normal', NULL, N'Available'),
+(1, N'I', N'07', N'Normal', NULL, N'Available'),
+(1, N'I', N'08', N'Normal', NULL, N'Available'),
+(1, N'I', N'09', N'Normal', NULL, N'Available'),
+(1, N'I', N'10', N'Normal', NULL, N'Available'),
+(1, N'I', N'11', N'Normal', NULL, N'Available'),
+(1, N'I', N'12', N'Normal', NULL, N'Available'),
+
+-- Row J
+(1, N'J', N'01', N'Normal', NULL, N'Available'),
+(1, N'J', N'02', N'Normal', NULL, N'Available'),
+(1, N'J', N'03', N'Normal', NULL, N'Available'),
+(1, N'J', N'04', N'Normal', NULL, N'Available'),
+(1, N'J', N'05', N'Normal', NULL, N'Available'),
+(1, N'J', N'06', N'Normal', NULL, N'Available'),
+(1, N'J', N'07', N'Normal', NULL, N'Available'),
+(1, N'J', N'08', N'Normal', NULL, N'Available'),
+(1, N'J', N'09', N'Normal', NULL, N'Available'),
+(1, N'J', N'10', N'Normal', NULL, N'Available'),
+(1, N'J', N'11', N'Normal', NULL, N'Available'),
+(1, N'J', N'12', N'Normal', NULL, N'Available'),
+
+-- Row K
+(1, N'K', N'01', N'Normal', NULL, N'Available'),
+(1, N'K', N'02', N'Normal', NULL, N'Available'),
+(1, N'K', N'03', N'Normal', NULL, N'Available'),
+(1, N'K', N'04', N'Normal', NULL, N'Available'),
+(1, N'K', N'05', N'Normal', NULL, N'Available'),
+(1, N'K', N'06', N'Normal', NULL, N'Available'),
+(1, N'K', N'07', N'Normal', NULL, N'Available'),
+(1, N'K', N'08', N'Normal', NULL, N'Available'),
+(1, N'K', N'09', N'Normal', NULL, N'Available'),
+(1, N'K', N'10', N'Normal', NULL, N'Available'),
+(1, N'K', N'11', N'Normal', NULL, N'Available'),
+(1, N'K', N'12', N'Normal', NULL, N'Available'),
+
+-- Row L
+(1, N'L', N'01', N'Normal', NULL, N'Available'),
+(1, N'L', N'02', N'Normal', NULL, N'Available'),
+(1, N'L', N'03', N'Normal', NULL, N'Available'),
+(1, N'L', N'04', N'Normal', NULL, N'Available'),
+(1, N'L', N'05', N'Normal', NULL, N'Available'),
+(1, N'L', N'06', N'Normal', NULL, N'Available'),
+(1, N'L', N'07', N'Normal', NULL, N'Available'),
+(1, N'L', N'08', N'Normal', NULL, N'Available'),
+(1, N'L', N'09', N'Normal', NULL, N'Available'),
+(1, N'L', N'10', N'Normal', NULL, N'Available'),
+(1, N'L', N'11', N'Normal', NULL, N'Available'),
+(1, N'L', N'12', N'Normal', NULL, N'Available');
+
 
 INSERT INTO dbo.Showtimes (Movie_ID, Cinema_ID, Hall_ID, Start_Time, End_Time, [Language], [Format], Price) VALUES
 (1, 1, 1, '2025-09-22 14:00:00', '2025-09-22 16:00:00', N'Vietnamese', N'2D', 100000),

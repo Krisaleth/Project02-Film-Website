@@ -57,6 +57,7 @@
       integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
       crossorigin="anonymous"
     />
+    
   </head>
   <body class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
     <!--begin::App Wrapper-->
@@ -117,12 +118,12 @@
       </nav>
       <!--end::Header-->
       <!--begin::Sidebar-->
-      <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+      <aside class="app-sidebar bg-body-secondary shadow float-start" data-bs-theme="dark">
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
           <a href="/admin" class="brand-link">
-                    <img src="~/image/Adminicon.png" alt="TKT Films" class="brand-image img-circle elevation-3" style="opacity: .8" />
+            <img src="~/image/Adminicon.png" alt="TKT Films" class="brand-image img-circle elevation-3" style="opacity: .8" />
             <!--begin::Brand Text-->
             <span class="brand-text fw-light">TKT Team</span>
             <!--end::Brand Text-->
@@ -215,23 +216,23 @@
       <!--end::Sidebar-->
       <!--begin::App Main-->
       <main class="app-main">
-                <!--begin::App Content Header-->
-                <div class="app-content-header">
-                    <!--begin::Container-->
-                    <div class="container-fluid">
-                        <!--begin::Row-->
-                        <div class="row">
-                            <div class="col-sm-12"><h3 class="mb-0">@ViewData["Title"]</h3></div>
-                        </div>
-                        <!--end::Row-->
-                    </div>
-                    <!--end::Container-->
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Row-->
+                <div class="row">
+                    <div class="col-sm-12"><h3 class="mb-0">@ViewData["Title"]</h3></div>
                 </div>
-                <div class="app-content">
-                    @RenderBody()
-                    @RenderSection("Scripts", required: false)
-                </div>
-                <!--end::App Content-->
+                <!--end::Row-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <div class="app-content">
+            @RenderBody()
+            @RenderSection("Scripts", required: false)
+        </div>
+        <!--end::App Content-->
       </main>
       <!--end::App Main-->
       <!--begin::Footer-->

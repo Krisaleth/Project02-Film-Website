@@ -24,11 +24,13 @@ namespace Project02.Controllers
         [HttpGet("/admin/seat")]
         public async Task<IActionResult> Index(long? hallId)
         {
+            long selectedHallId = hallId ?? 1;
+
             IQueryable<Seat> seatsQuery = _context.Seats.Include(s => s.Hall).AsNoTracking();
 
             if (hallId.HasValue)
             {
-                seatsQuery = seatsQuery.Where(s => s.Hall_ID == hallId.Value);
+                seatsQuery = seatsQuery.Where(s => s.Hall_ID == hallId);
             }
 
             seatsQuery = (hallId ?? 1) switch
@@ -44,44 +46,71 @@ namespace Project02.Controllers
                 RowNumber = s.RowNumber,
                 SeatNumber = s.SeatNumber,
                 SeatType = s.SeatType,
+                Description = s.Description,
                 Cinema_Name = s.Hall.Cinema.Cinema_Name,
-                Status = "Available" // Placeholder for actual status logic
+                Status = s.SeatStatus,
 
             }).ToListAsync();
 
-            return View(seats);
-        }
+            var cinemasWithHalls = _context.Cinemas
+                .Select(cinema => new
+                {
+                    Cinema = cinema,
+                    Halls = _context.Halls.Where(h => h.Cinema_ID == cinema.Cinema_ID).ToList()
+                })
+                .ToList();
 
-        // GET: Seats/Details/5
-        public async Task<IActionResult> Details(long? id)
-        {
-            if (id == null)
+            var hallOptions = new List<SelectListItem>();
+
+            foreach (var item in cinemasWithHalls)
             {
-                return NotFound();
+                var cinemaName = item.Cinema.Cinema_Name;
+                var halls = item.Halls;
+                if (halls.Count == 1)
+                {
+                    hallOptions.Add(new SelectListItem
+                    {
+                        Value = halls[0].Hall_ID.ToString(),
+                        Text = $"{cinemaName} - Hall"
+                    });
+                }
+                else
+                {
+                    for (int i = 0; i < halls.Count; i++)
+                    {
+                        hallOptions.Add(new SelectListItem
+                        {
+                            Value = halls[i].Hall_ID.ToString(),
+                            Text = $"{cinemaName} - Hall {i + 1}"
+                        });
+                    }
+                }
             }
 
-            var seat = await _context.Seats
-                .Include(s => s.Hall)
-                .FirstOrDefaultAsync(m => m.Seat_ID == id);
-            if (seat == null)
+            var vm = new SeatIndexVm
             {
-                return NotFound();
-            }
+                Items = seats,
+                selectedHallId = hallId,
+                hallOptions = hallOptions,
+            };
 
-            return View(seat);
+            return View(vm);
         }
+
+
 
         // GET: Seats/Create
+        [HttpGet("/admin/seat/create")]
         public IActionResult Create()
         {
-            ViewData["Hall_ID"] = new SelectList(_context.Halls, "Hall_ID", "Hall_ID");
+            ViewData["Hall_ID"] = new SelectList(_context.Halls, "Hall_ID", "Cinema_Name");
             return View();
         }
 
         // POST: Seats/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/seat/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Seat_ID,Hall_ID,RowNumber,SeatNumber,SeatType")] Seat seat)
         {

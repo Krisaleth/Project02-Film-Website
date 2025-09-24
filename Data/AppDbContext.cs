@@ -36,7 +36,8 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C904BBB18C");
+            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C96E366CC1");
+
             entity.Property(e => e.Create_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Password_Algo).HasDefaultValue("PBKDF2");
             entity.Property(e => e.Password_Iterations).HasDefaultValue(100000);
@@ -45,17 +46,17 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Cinema>(entity =>
         {
-            entity.HasKey(e => e.Cinema_ID).HasName("PK__Cinemas__89C6DAE1C117991F");
+            entity.HasKey(e => e.Cinema_ID).HasName("PK__Cinemas__89C6DAE133132DED");
         });
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A2006B1B12865");
+            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A20062261E872");
         });
 
         modelBuilder.Entity<Hall>(entity =>
         {
-            entity.HasKey(e => e.Hall_ID).HasName("PK__Halls__927F7126E73B9F3C");
+            entity.HasKey(e => e.Hall_ID).HasName("PK__Halls__927F71268901F18C");
 
             entity.HasOne(d => d.Cinema).WithMany(p => p.Halls)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -64,7 +65,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Movie>(entity =>
         {
-            entity.HasKey(e => e.Movie_ID).HasName("PK__Movies__7A880405AFD5FE5D");
+            entity.HasKey(e => e.Movie_ID).HasName("PK__Movies__7A8804053FA2076E");
 
             entity.Property(e => e.Movie_Created_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Movie_Producer).HasDefaultValue("Unknown");
@@ -93,7 +94,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Payment_ID).HasName("PK__Payments__DA6C7FE1BBD1BE8F");
+            entity.HasKey(e => e.Payment_ID).HasName("PK__Payments__DA6C7FE16D15D604");
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.Payments)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -106,7 +107,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Seat>(entity =>
         {
-            entity.HasKey(e => e.Seat_ID).HasName("PK__Seats__8B2CE7B68D4A3022");
+            entity.HasKey(e => e.Seat_ID).HasName("PK__Seats__8B2CE7B6DC3B7031");
 
             entity.HasOne(d => d.Hall).WithMany(p => p.Seats)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -115,7 +116,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Showtime>(entity =>
         {
-            entity.HasKey(e => e.Showtime_ID).HasName("PK__Showtime__7C7A908933ECFD6F");
+            entity.HasKey(e => e.Showtime_ID).HasName("PK__Showtime__7C7A9089C6DCD7D9");
 
             entity.HasOne(d => d.Cinema).WithMany(p => p.Showtimes)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -132,7 +133,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.Ticket_ID).HasName("PK__Tickets__ED7260D9D77AD630");
+            entity.HasKey(e => e.Ticket_ID).HasName("PK__Tickets__ED7260D936BC005B");
 
             entity.HasOne(d => d.Seat).WithMany(p => p.Tickets)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -149,7 +150,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.User_ID).HasName("PK__Users__206D91904B7EC4BF");
+            entity.HasKey(e => e.User_ID).HasName("PK__Users__206D9190E1FA7460");
 
             entity.Property(e => e.RowsVersion)
                 .IsRowVersion()

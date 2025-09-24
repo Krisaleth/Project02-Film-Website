@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Project02.Models;
 
-[Index("Cinema_Name", Name = "UQ__Cinemas__AE9CA7870946423D", IsUnique = true)]
+[Index("Cinema_Name", Name = "UQ__Cinemas__AE9CA787B2565DFA", IsUnique = true)]
 public partial class Cinema
 {
     [Key]
