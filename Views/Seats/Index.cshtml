@@ -19,17 +19,36 @@
         user-select: none;
     }
 
-    .Available {
-        background-color: #4CAF50;
+    .Normal {
+        background-color: #4CAF50; /* Xanh lá cho ghế thường */
+        color: white;
+    }
+
+    .VIP {
+        background-color: #FFD700; /* Vàng cho ghế VIP */
+        color: black;
+    }
+
+    .Couple {
+        background-color: #FF69B4; /* Hồng cho ghế đôi */
         color: white;
     }
 
     .Booked {
-        background-color: #f44336;
+        background-color: #f44336; /* Đỏ khi đã đặt */
         color: white;
     }
 
-    .Broken
+    .Broken {
+        background-color: #9E9E9E; /* Xám khi hỏng */
+        color: white;
+    }
+
+    .Hold {
+        background-color: #FF9800; /* Cam khi hold */
+        color: white;
+    }
+
 
     .seat-row {
         margin-bottom: 10px;
@@ -38,14 +57,21 @@
 
 <div class="container">
     <div class="card">
-        <div class="card-header">
-            <form asp-action="Index" method="get" class="d-flex">
-                <select asp-for="selectedHallId" name="hallId" asp-items="Model.hallOptions" class="form-select me-2"
-                        onchange="this.form.submit()">
-                    <option value="">Select Hall</option>
-                </select>
-                <noscript><button type="submit" class="btn btn-primary">Filter</button></noscript>
-            </form>
+        <div class="card-header d-flex align-items-center">
+            <div>
+                <form asp-action="Index" method="get" class="d-flex">
+                    <select asp-for="selectedHallId" name="hallId" asp-items="Model.hallOptions" class="form-select me-2"
+                            onchange="this.form.submit()">
+                        <option value="">Select Hall</option>
+                    </select>
+                    <noscript><button type="submit" class="btn btn-primary">Filter</button></noscript>
+                </form>
+            </div>
+            <div class="d-flex ms-auto">
+                <a asp-action="Create" class="btn btn-sm btn-primary">
+                    <i class="fa-solid fa-plus"></i> Add Seat
+                </a>
+            </div>
         </div>
         <div class="card-body">
             <span><strong>
@@ -64,14 +90,20 @@
                 <div class="d-flex flex-row justify-content-center">
                     @foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
                     {
-                        <div class="seat @seat.Status" title="@($"Seat {seat.RowNumber}{seat.SeatNumber} - {seat.Status}")">
-                            <a asp-action="Edit" asp-route-id="@seat.Seat_ID" style="color: inherit; text-decoration: none;">
+                        // Xác định class
+                        string seatClass = seat.Status == "Available"
+                        ? seat.SeatType // Ghế thường, VIP, hoặc Couple
+                        : seat.Status;  // Booked, Broken, Hold
+
+                        <div class="seat @seatClass" title="@($"Seat {seat.RowNumber}{seat.SeatNumber} - {seat.Status}")">
+                            <a asp-action="Detail" asp-route-id="@seat.Seat_ID" style="color: inherit; text-decoration: none;">
                                 @($"{seat.RowNumber}{seat.SeatNumber}")
                             </a>
                         </div>
                     }
                 </div>
             }
+
         </div>
     </div>
 </div>

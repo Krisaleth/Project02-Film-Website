@@ -1,19 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
 using Project02.Models;
 using Project02.ViewModels.Seat;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Project02.Controllers
 {
     public class SeatsController : Controller
     {
         private readonly AppDbContext _context;
+
+        private void PopulateDropdowns()
+        {
+            var halls = _context.Halls
+                    .Include(h => h.Cinema)
+                    .OrderBy(h => h.Cinema.Cinema_Name)
+                    .ThenBy(h => h.Hall_ID)
+                    .ToList();
+
+            var hallList = new List<SelectListItem>();
+
+            string currentCinema = null;
+            int hallNumber = 0;
+
+            foreach (var hall in halls)
+            {
+                if (currentCinema != hall.Cinema.Cinema_Name)
+                {
+                    currentCinema = hall.Cinema.Cinema_Name;
+                    hallNumber = 1;
+                }
+                else
+                {
+                    hallNumber++;
+                }
+
+                hallList.Add(new SelectListItem
+                {
+                    Value = hall.Hall_ID.ToString(),
+                    Text = $"{currentCinema} - Hall {hallNumber}"
+                });
+            }
+
+            ViewBag.Hall_ID = hallList;
+
+
+            ViewBag.SeatType = new SelectList(new[]
+            {
+                new { Value = "Normal", Text = "Normal" },
+                new { Value = "VIP", Text = "VIP" },
+                new { Value = "Couple", Text = "Couple" }
+            }, "Value", "Text");
+
+            ViewBag.SeatStatus = new SelectList(new[]
+            {
+                new { Value = "Available", Text = "Available" },
+                new { Value = "Booked", Text = "Booked" },
+                new { Value = "Broken", Text = "Broken" }
+            }, "Value", "Text");
+        }
 
         public SeatsController(AppDbContext context)
         {
@@ -103,7 +154,21 @@ namespace Project02.Controllers
         [HttpGet("/admin/seat/create")]
         public IActionResult Create()
         {
-            ViewData["Hall_ID"] = new SelectList(_context.Halls, "Hall_ID", "Cinema_Name");
+            var hallList = _context.Halls
+                .Include(h => h.Cinema)
+                .Select(h => new SelectListItem
+                {
+                    Value = h.Hall_ID.ToString(),
+                    Text = $"{h.Cinema.Cinema_Name} - Hall {h.Hall_ID}"
+                }).ToList();
+            ViewBag.Hall_ID = hallList;
+            ViewBag.SeatType = new SelectList(new[]
+            {
+                new { Value = "Normal", Text = "Normal" },
+                new { Value = "VIP", Text = "VIP" },
+                new { Value = "Couple", Text = "Couple" }
+            }, "Value", "Text");
+
             return View();
         }
 
@@ -112,20 +177,45 @@ namespace Project02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/seat/create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Seat_ID,Hall_ID,RowNumber,SeatNumber,SeatType")] Seat seat)
+        public async Task<IActionResult> Create(SeatCreateVm vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(seat);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var hallList = _context.Halls
+                .Include(h => h.Cinema)
+                .Select(h => new SelectListItem
+                {
+                    Value = h.Hall_ID.ToString(),
+                    Text = $"{h.Cinema.Cinema_Name} - Hall {h.Hall_ID}"
+                }).ToList();
+                ViewBag.SeatType = new SelectList(new[]
+                {
+                    new { Value = "Normal", Text = "Normal" },
+                    new { Value = "VIP", Text = "VIP" },
+                    new { Value = "Couple", Text = "Couple" }
+                }, "Value", "Text");
+                ViewBag.Hall_ID = hallList;
+                return View(vm);
             }
-            ViewData["Hall_ID"] = new SelectList(_context.Halls, "Hall_ID", "Hall_ID", seat.Hall_ID);
-            return View(seat);
+
+            var seat = new Seat
+            {
+                Hall_ID = vm.Hall_ID,
+                RowNumber = vm.RowNumber,
+                SeatNumber = vm.SeatNumber,
+                SeatType = vm.SeatType,
+                Description = vm.Description,
+                SeatStatus = "Available",
+            };
+
+            _context.Add(seat);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Seats/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        [HttpGet("/admin/seat/edit/{id}")]
+        public async Task<IActionResult> Edit([FromRoute] long? id)
         {
             if (id == null)
             {
@@ -137,44 +227,62 @@ namespace Project02.Controllers
             {
                 return NotFound();
             }
-            ViewData["Hall_ID"] = new SelectList(_context.Halls, "Hall_ID", "Hall_ID", seat.Hall_ID);
-            return View(seat);
+            var vm = new SeatEditVm
+            {
+                Seat_ID = seat.Seat_ID,
+                Hall_ID = seat.Hall_ID,
+                RowNumber = seat.RowNumber,
+                SeatNumber = seat.SeatNumber,
+                SeatType = seat.SeatType,
+                Description = seat.Description,
+                Status = seat.SeatStatus,
+            };
+            PopulateDropdowns();
+            return View(vm);                    
         }
 
         // POST: Seats/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/seat/edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Seat_ID,Hall_ID,RowNumber,SeatNumber,SeatType")] Seat seat)
+        public async Task<IActionResult> Edit([FromRoute]long id, SeatEditVm vm)
         {
-            if (id != seat.Seat_ID)
+            if (id != vm.Seat_ID)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                  .Select(e => e.ErrorMessage)
+                                  .ToList();
+
+                // Debug hoặc log các lỗi
+                foreach (var error in errors)
                 {
-                    _context.Update(seat);
-                    await _context.SaveChangesAsync();
+                    Debug.WriteLine(error);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SeatExists(seat.Seat_ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                PopulateDropdowns();
+                return View(vm);
             }
-            ViewData["Hall_ID"] = new SelectList(_context.Halls, "Hall_ID", "Hall_ID", seat.Hall_ID);
-            return View(seat);
+
+            var seat = await _context.Seats.FindAsync(id);
+            if (seat == null)
+            {
+                return NotFound();
+            }
+            seat.Hall_ID = vm.Hall_ID;
+            seat.RowNumber = vm.RowNumber;
+            seat.SeatNumber = vm.SeatNumber;
+            seat.SeatType = vm.SeatType;
+            seat.Description = vm.Description;
+            seat.SeatStatus = vm.Status;
+            
+            _context.Update(seat);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Seats/Delete/5
