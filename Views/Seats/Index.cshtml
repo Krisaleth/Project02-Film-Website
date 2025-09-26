@@ -96,7 +96,7 @@
                         : seat.Status;  // Booked, Broken, Hold
 
                         <div class="seat @seatClass" title="@($"Seat {seat.RowNumber}{seat.SeatNumber} - {seat.Status}")">
-                            <a asp-action="Detail" asp-route-id="@seat.Seat_ID" style="color: inherit; text-decoration: none;">
+                            <a asp-action="Details" asp-route-id="@seat.Seat_ID" style="color: inherit; text-decoration: none;">
                                 @($"{seat.RowNumber}{seat.SeatNumber}")
                             </a>
                         </div>

@@ -148,7 +148,34 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-
+        [HttpGet("/admin/seat/details/{id}")]
+        public async Task<IActionResult> Details([FromRoute] long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var seat = await _context.Seats
+                .Include(s => s.Hall)
+                .ThenInclude(h => h.Cinema)
+                .FirstOrDefaultAsync(m => m.Seat_ID == id);
+            if (seat == null)
+            {
+                return NotFound();
+            }
+            var vm = new SeatDetailVm
+            {
+                Seat_ID = seat.Seat_ID,
+                Hall_ID = seat.Hall_ID,
+                RowNumber = seat.RowNumber,
+                SeatNumber = seat.SeatNumber,
+                SeatType = seat.SeatType,
+                Description = seat.Description,
+                Cinema_Name = seat.Hall.Cinema.Cinema_Name,
+                Status = seat.SeatStatus,
+            };
+            return View(vm);
+        }
 
         // GET: Seats/Create
         [HttpGet("/admin/seat/create")]
@@ -197,6 +224,51 @@ namespace Project02.Controllers
                 ViewBag.Hall_ID = hallList;
                 return View(vm);
             }
+
+            // Lấy số lượng ghế hiện có trong hall
+            int currentSeatCount = await _context.Seats
+                .CountAsync(s => s.Hall_ID == vm.Hall_ID);
+
+            // Lấy capacity phòng hall
+            int hallCapacity = await _context.Halls
+                .Where(h => h.Hall_ID == vm.Hall_ID)
+                .Select(h => h.Capacity)
+                .FirstOrDefaultAsync();
+
+            // Kiểm tra nếu số lượng ghế đã đạt capacity
+            if (currentSeatCount >= hallCapacity)
+            {
+                ModelState.AddModelError("", "Không thể thêm ghế mới. Số lượng ghế đã đạt giới hạn capacity của phòng.");
+                PopulateDropdowns();
+                return View(vm);
+            }
+
+            bool seatExists = await _context.Seats.AnyAsync(s =>
+            s.Hall_ID == vm.Hall_ID &&
+            s.RowNumber == vm.RowNumber &&
+            s.SeatNumber == vm.SeatNumber);
+
+            if (seatExists)
+            {
+                ModelState.AddModelError("", "Seat with this Row Number and Seat Number already exists in this hall.");
+
+                // Tạo lại dropdown trước khi trả về view
+                var hallList = _context.Halls
+                    .Include(h => h.Cinema)
+                    .Select(h => new SelectListItem
+                    {
+                        Value = h.Hall_ID.ToString(),
+                        Text = $"{h.Cinema.Cinema_Name} - Hall {h.Hall_ID}"
+                    }).ToList();
+                ViewBag.SeatType = new SelectList(new[]
+                {
+                new { Value = "Normal", Text = "Normal" },
+                new { Value = "VIP", Text = "VIP" },
+                new { Value = "Couple", Text = "Couple" }
+                }, "Value", "Text");
+                    ViewBag.Hall_ID = hallList;
+                    return View(vm);
+                }
 
             var seat = new Seat
             {
@@ -285,38 +357,18 @@ namespace Project02.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Seats/Delete/5
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var seat = await _context.Seats
-                .Include(s => s.Hall)
-                .FirstOrDefaultAsync(m => m.Seat_ID == id);
-            if (seat == null)
-            {
-                return NotFound();
-            }
-
-            return View(seat);
-        }
-
-        // POST: Seats/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("/admin/seat/delete/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> Delete([FromRoute]long id)
         {
-            var seat = await _context.Seats.FindAsync(id);
+            var seat = await _context.Seats.FirstOrDefaultAsync(i => i.Seat_ID == id);
             if (seat != null)
             {
                 _context.Seats.Remove(seat);
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { ok = true });
         }
 
         private bool SeatExists(long id)
