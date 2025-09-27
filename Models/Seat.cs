@@ -19,6 +19,9 @@ public partial class Seat
     [StringLength(2)]
     public string SeatNumber { get; set; } = null!;
 
+    [Column(TypeName = "decimal(19, 0)")]
+    public decimal SeatPrice { get; set; }
+
     [StringLength(10)]
     public string SeatType { get; set; } = null!;
 
@@ -33,5 +36,5 @@ public partial class Seat
     public virtual Hall Hall { get; set; } = null!;
 
     [InverseProperty("Seat")]
-    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+    public virtual ICollection<OrderSeat> OrderSeats { get; set; } = new List<OrderSeat>();
 }

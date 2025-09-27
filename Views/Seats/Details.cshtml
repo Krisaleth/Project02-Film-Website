@@ -41,6 +41,12 @@
                             @Html.DisplayFor(model => model.SeatType)
                         </dd>
                         <dt class="col-sm-4">
+                            Seat price
+                        </dt>
+                        <dd class="col-sm-8">
+                            @string.Format("{0:N0}", Model.Price) VND
+                        </dd>
+                        <dt class="col-sm-4">
                             Description
                         </dt>
                         <dd class="col-sm-8">

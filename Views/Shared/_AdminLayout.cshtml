@@ -3,6 +3,8 @@
     ViewData["Font"] = "https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3/index.css";
     ViewData["PopperJS"] = "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js";
     ViewData["Username"] = User.FindFirst(ClaimTypes.Name)?.Value;
+    ViewData["TempusDominusCSS"] = "https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.7.8/dist/css/tempus-dominus.min.css";
+    ViewData["TempusDominusJS"] = "https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.7.8/dist/js/tempus-dominus.min.js";
 }
 
 <!doctype html>
@@ -37,6 +39,11 @@
       href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css"
       crossorigin="anonymous"
     />
+    <!-- Tempus Dominus CSS -->
+    <link rel="stylesheet" href="@ViewData["TempusDominusCSS"]" />
+
+    <!-- Tempus Dominus JS -->
+    <script src="@ViewData["TempusDominusJS"]"></script>
     <!--end::Third Party Plugin(OverlayScrollbars)-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <!--begin::Third Party Plugin(Bootstrap Icons)-->
@@ -192,18 +199,18 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/admin/ticket" class="nav-link">
-                        <i class="nav-icon fa-solid fa-ticket"></i>
-                        <p>
-                            Ticket
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="/admin/hall" class="nav-link">
                         <i class="nav-icon fa-solid fa-ticket"></i>
                         <p>
                             Hall
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/showtime" class="nav-link">
+                        <i class="nav-icon fa-solid fa-ticket"></i>
+                        <p>
+                            Showtimes
                         </p>
                     </a>
                 </li>

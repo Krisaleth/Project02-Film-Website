@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Project02.Models;
 
-[Index("Cinema_Name", Name = "UQ__Cinemas__AE9CA787B2565DFA", IsUnique = true)]
+[Index("Cinema_Name", Name = "UQ__Cinemas__AE9CA787795326D4", IsUnique = true)]
 public partial class Cinema
 {
     [Key]
@@ -23,7 +23,4 @@ public partial class Cinema
 
     [InverseProperty("Cinema")]
     public virtual ICollection<Hall> Halls { get; set; } = new List<Hall>();
-
-    [InverseProperty("Cinema")]
-    public virtual ICollection<Showtime> Showtimes { get; set; } = new List<Showtime>();
 }

@@ -171,6 +171,7 @@ namespace Project02.Controllers
                 SeatNumber = seat.SeatNumber,
                 SeatType = seat.SeatType,
                 Description = seat.Description,
+                Price = seat.SeatPrice,
                 Cinema_Name = seat.Hall.Cinema.Cinema_Name,
                 Status = seat.SeatStatus,
             };
@@ -276,6 +277,13 @@ namespace Project02.Controllers
                 RowNumber = vm.RowNumber,
                 SeatNumber = vm.SeatNumber,
                 SeatType = vm.SeatType,
+                SeatPrice = vm.SeatType switch
+                {
+                    "Normal" => 60000m,
+                    "VIP" => 65000m,
+                    "Couple" => 95000m,
+                    _ => 60000m
+                },
                 Description = vm.Description,
                 SeatStatus = "Available",
             };
@@ -349,6 +357,13 @@ namespace Project02.Controllers
             seat.RowNumber = vm.RowNumber;
             seat.SeatNumber = vm.SeatNumber;
             seat.SeatType = vm.SeatType;
+            seat.SeatPrice = vm.SeatType switch
+            {
+                "Normal" => 60000m,
+                "VIP" => 65000m,
+                "Couple" => 95000m,
+                _ => 60000m
+            };
             seat.Description = vm.Description;
             seat.SeatStatus = vm.Status;
             

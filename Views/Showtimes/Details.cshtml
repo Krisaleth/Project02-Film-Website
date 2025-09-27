@@ -1,66 +1,77 @@
-﻿@model Project02.Models.Showtime
+﻿@using Project02.ViewModels.Showtime
+@model ShowtimeDetailsVm
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Showtime Details";
+    Layout = "_AdminLayout";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Showtime</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Start_Time)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Start_Time)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.End_Time)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.End_Time)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Language)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Language)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Format)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Format)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cinema)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cinema.Cinema_ID)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Hall)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Hall.Hall_ID)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Movie)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Movie.Movie_ID)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Showtime_ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="container mb-4">
+    <div class="row">
+        <div class="col-sm-7 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Showtime Details</h3>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            Movie Title
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.MovieTitle)
+                        </dd>
+                        <dt class="col-sm-4">
+                            Start Time
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.StartTime)
+                        </dd>
+                        <dt class="col-sm-4">
+                            End Time
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.EndTime)
+                        </dd>
+                        <dt class="col-sm-4">
+                            Language
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Language)
+                        </dd>
+                        <dt class="col-sm-4">
+                            Format
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Format)
+                        </dd>
+                        <dt class="col-sm-4">
+                            Cinema Name
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.CinemaName)
+                        </dd>
+                        <dt class="col-sm-4">
+                            Hall Name
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.HallName)
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <div class="float-start">
+                        <a asp-action="Edit" asp-route-id="@Model?.Showtime_ID" class="btn btn-sm btn-warning">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </a>
+                    </div>
+                    <div class="float-end">
+                        <a asp-action="Index" class="btn btn-sm btn-secondary">
+                            <i class="fa-solid fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

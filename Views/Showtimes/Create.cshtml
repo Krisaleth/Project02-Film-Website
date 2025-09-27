@@ -1,63 +1,61 @@
-﻿@model Project02.Models.Showtime
+﻿@using Project02.ViewModels.Showtime
+@model ShowtimeCreateVm
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "New Showtime";
+    Layout = "_AdminLayout";
 }
+<div class="container">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <form asp-action="Create">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            A Form to add new showtime
+                        </h3>
+                    </div>
 
-<h1>Create</h1>
-
-<h4>Showtime</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Movie_ID" class="control-label"></label>
-                <select asp-for="Movie_ID" class ="form-control" asp-items="ViewBag.Movie_ID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cinema_ID" class="control-label"></label>
-                <select asp-for="Cinema_ID" class ="form-control" asp-items="ViewBag.Cinema_ID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Hall_ID" class="control-label"></label>
-                <select asp-for="Hall_ID" class ="form-control" asp-items="ViewBag.Hall_ID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Start_Time" class="control-label"></label>
-                <input asp-for="Start_Time" class="form-control" />
-                <span asp-validation-for="Start_Time" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="End_Time" class="control-label"></label>
-                <input asp-for="End_Time" class="form-control" />
-                <span asp-validation-for="End_Time" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Language" class="control-label"></label>
-                <input asp-for="Language" class="form-control" />
-                <span asp-validation-for="Language" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Format" class="control-label"></label>
-                <input asp-for="Format" class="form-control" />
-                <span asp-validation-for="Format" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                    <div class="card-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label class="control-label my-1"><strong>Movie</strong></label>
+                            <select asp-for="Movie_ID" class="form-control" asp-items="ViewBag.Movie_ID"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label my-1"><strong>Hall</strong></label>
+                            <select asp-for="Hall_ID" class="form-select" asp-items="ViewBag.Hall_ID"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label my-1"><strong>Start Time</strong></label>
+                            <input asp-for="StartTime" class="form-control" />
+                            <span asp-validation-for="StartTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label my-1"><strong>End Time</strong></label>
+                            <input asp-for="EndTime" class="form-control" />
+                            <span asp-validation-for="EndTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label my-1"><strong>Language</strong></label>
+                            <input asp-for="Language" class="form-control" />
+                            <span asp-validation-for="Language" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label my-1"><strong>Format</strong></label>
+                            <input asp-for="Format" class="form-control" />
+                            <span asp-validation-for="Format" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                        <a asp-action="Index" class="btn btn-outline-secondary float-end">Back to List</a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
