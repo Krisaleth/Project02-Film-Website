@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Globalization;
 using System.Numerics;
 
 namespace Project02.ViewModels.Showtime
@@ -11,7 +12,9 @@ namespace Project02.ViewModels.Showtime
         public string CinemaName { get; set; } = default!;
         public long Hall_ID { get; set; }
         public DateTime StartTime { get; set; }
+        public string StartTimeFormatted => StartTime.ToString("dd/MM/yyyy h:mm tt", new CultureInfo("vi-VN"));
         public DateTime EndTime { get; set; }
+        public string EndTimeFormatted => EndTime.ToString("dd/MM/yyyy h:mm tt", new CultureInfo("vi-VN"));
     }
 
     public class ShowtimeIndexVm

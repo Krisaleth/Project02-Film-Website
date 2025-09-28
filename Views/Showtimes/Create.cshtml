@@ -29,12 +29,23 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label my-1"><strong>Start Time</strong></label>
-                            <input asp-for="StartTime" class="form-control" />
+                            <div class="input-group date" id="datetimepickerStart" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                <input type="text" name="StartTime" id="StartTime" class="form-control" data-td-target="#datetimepickerStart" />
+                                <span class="input-group-text" data-td-target="#datetimepickerStart" data-td-toggle="datetimepicker">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
                             <span asp-validation-for="StartTime" class="text-danger"></span>
                         </div>
+                        
                         <div class="form-group">
                             <label class="control-label my-1"><strong>End Time</strong></label>
-                            <input asp-for="EndTime" class="form-control" />
+                            <div class="input-group date" id="datetimepickerEnd" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                <input type="text" name="EndTime" id="EndTime" class="form-control" data-td-target="#datetimepickerEnd" />
+                                <span class="input-group-text" data-td-target="#datetimepickerEnd" data-td-toggle="datetimepicker">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
                             <span asp-validation-for="EndTime" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -44,7 +55,11 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label my-1"><strong>Format</strong></label>
-                            <input asp-for="Format" class="form-control" />
+                            <select asp-for="Format" class="form-select" required>
+                                <option value="" disabled selected>-- Chọn loại phim --</option>
+                                <option value="2D">2D</option>
+                                <option value="3D">3D</option>
+                            </select>
                             <span asp-validation-for="Format" class="text-danger"></span>
                         </div>
                     </div>
@@ -59,5 +74,52 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputStart = document.querySelector('input[name="StartTime"]');
+            inputStart.value = '@Model.StartTime.ToString("dd/MM/yyyy h:mm tt")';
+
+            const pickerStart = new tempusDominus.TempusDominus(document.getElementById('datetimepickerStart'), {
+                display: {
+                    components: {
+                      calendar: true,
+                      clock: true,
+                      date: true,
+                      hours: true,
+                      minutes: true,
+                      seconds: false
+                    }
+                }
+            });
+
+            const inputEnd = document.querySelector('input[name="EndTime"]');
+            inputEnd.value = '@Model.EndTime.ToString("dd/MM/yyyy h:mm tt")';
+
+            const pickerEnd = new tempusDominus.TempusDominus(document.getElementById('datetimepickerEnd'), {
+                display: {
+                  components: {
+                    calendar: true,
+                    clock: true,
+                    date: true,
+                    hours: true,
+                    minutes: true,
+                    seconds: false
+                  }
+                }
+            });
+
+            pickerStart.subscribe('change.td', (e) => {
+                console.log('Start Time chọn:', e.date);
+            });
+
+            pickerEnd.subscribe('change.td', (e) => {
+                console.log('End Time chọn:', e.date);
+            });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
 }

@@ -16,7 +16,7 @@ namespace Project02.Controllers
     {
         private readonly AppDbContext _context;
 
-        private async Task<SelectList> GetHallSelectListAsync()
+        private async Task<List<SelectListItem>> GetHallSelectListAsync()
         {
             var halls = await _context.Halls
                 .Include(h => h.Cinema)
@@ -43,9 +43,8 @@ namespace Project02.Controllers
                 }
             }
 
-            return new SelectList(selectListItems, "Value", "Text");
+            return selectListItems;
         }
-
 
         public ShowtimesController(AppDbContext context)
         {
@@ -170,8 +169,28 @@ namespace Project02.Controllers
         public async Task<IActionResult> Create()
         {
             var model = new ShowtimeCreateVm();
-            ViewBag.Hall_ID = await GetHallSelectListAsync();
-            ViewBag.Movie_ID = new SelectList(_context.Movies, "Movie_ID", "Movie_Name");
+            var movies = await _context.Movies.Select(m => new SelectListItem
+            {
+                Value = m.Movie_ID.ToString(),
+                Text = m.Movie_Name
+            }).ToListAsync();
+            movies.Insert(0, new SelectListItem
+            {
+                Value = "0",
+                Text = "-- Chọn phim --",
+                Disabled = true,
+                Selected = true
+            });
+            var halls = await GetHallSelectListAsync();
+            halls.Insert(0, new SelectListItem
+            {
+                Value = "0",
+                Text = "-- Chọn phòng chiếu --",
+                Disabled = true,
+                Selected = true
+            });
+            ViewBag.Hall_ID = halls;
+            ViewBag.Movie_ID = movies;
             return View(model);
         }
 
@@ -182,12 +201,35 @@ namespace Project02.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ShowtimeCreateVm vm)
         {
+            if (vm.EndTime <= vm.StartTime)
+            {
+                ModelState.AddModelError("EndTime", "Ngày giờ kết thúc phải lớn hơn ngày giờ bắt đầu.");
+            }
             if (!ModelState.IsValid)
             {
-                var model = new ShowtimeCreateVm();
-                ViewBag.Hall_ID = await GetHallSelectListAsync();
-                ViewBag.Movie_ID = new SelectList(_context.Movies, "Movie_ID", "Movie_Name");
-                return View(model);
+                var movies = await _context.Movies.Select(m => new SelectListItem
+                {
+                    Value = m.Movie_ID.ToString(),
+                    Text = m.Movie_Name
+                }).ToListAsync();
+                movies.Insert(0, new SelectListItem
+                {
+                    Value = "0",
+                    Text = "-- Chọn phim --",
+                    Disabled = true,
+                    Selected = true
+                });
+                var halls = await GetHallSelectListAsync();
+                halls.Insert(0, new SelectListItem
+                {
+                    Value = "0",
+                    Text = "-- Chọn phòng chiếu --",
+                    Disabled = true,
+                    Selected = true
+                });
+                ViewBag.Hall_ID = halls;
+                ViewBag.Movie_ID = movies;
+                return View(vm);
 
             }
             
@@ -207,93 +249,103 @@ namespace Project02.Controllers
         }
 
         // GET: Showtimes/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        [HttpGet("/admin/showtime/edit/{id}")]
+        public async Task<IActionResult> Edit([FromRoute]long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var showtime = await _context.Showtimes.FindAsync(id);
+            var showtime = await _context.Showtimes.Where(s => s.Showtime_ID == id).Select(s => new ShowtimeEditVm
+            {
+                Showtime_ID = s.Showtime_ID,
+                Movie_ID = s.Movie_ID,
+                Hall_ID = s.Hall_ID,
+                StartTime = s.Start_Time,
+                EndTime = s.End_Time,
+                Language = s.Language,
+                Format = s.Format
+            }).FirstOrDefaultAsync();
             if (showtime == null)
             {
                 return NotFound();
             }
-            ViewData["Hall_ID"] = new SelectList(_context.Halls, "Hall_ID", "Hall_ID", showtime.Hall_ID);
-            ViewData["Movie_ID"] = new SelectList(_context.Movies, "Movie_ID", "Movie_ID", showtime.Movie_ID);
+            var movies = await _context.Movies.Select(m => new SelectListItem
+            {
+                Value = m.Movie_ID.ToString(),
+                Text = m.Movie_Name
+            }).ToListAsync();
+            var halls = await GetHallSelectListAsync();
+            ViewBag.Hall_ID = halls;
+            ViewBag.Movie_ID = movies;
             return View(showtime);
         }
 
         // POST: Showtimes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/showtime/edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Showtime_ID,Movie_ID,Cinema_ID,Hall_ID,Start_Time,End_Time,Language,Format,Price")] Showtime showtime)
+        public async Task<IActionResult> Edit([FromRoute]long id, ShowtimeEditVm vm)
         {
-            if (id != showtime.Showtime_ID)
+            if (id != vm.Showtime_ID)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (vm.EndTime <= vm.StartTime)
             {
-                try
-                {
-                    _context.Update(showtime);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ShowtimeExists(showtime.Showtime_ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["Hall_ID"] = new SelectList(_context.Halls, "Hall_ID", "Hall_ID", showtime.Hall_ID);
-            ViewData["Movie_ID"] = new SelectList(_context.Movies, "Movie_ID", "Movie_ID", showtime.Movie_ID);
-            return View(showtime);
-        }
-
-        // GET: Showtimes/Delete/5
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
+                ModelState.AddModelError("EndTime", "Ngày giờ kết thúc phải lớn hơn ngày giờ bắt đầu.");
             }
 
-            var showtime = await _context.Showtimes
-                .Include(s => s.Hall)
-                .Include(s => s.Movie)
-                .FirstOrDefaultAsync(m => m.Showtime_ID == id);
+            if (!ModelState.IsValid)
+            {
+                var movies = await _context.Movies.Select(m => new SelectListItem
+                {
+                    Value = m.Movie_ID.ToString(),
+                    Text = m.Movie_Name
+                }).ToListAsync();
+                var halls = await GetHallSelectListAsync();
+                ViewBag.Hall_ID = halls;
+                ViewBag.Movie_ID = movies;
+                return View(vm);
+            }
+
+            var showtime = await _context.Showtimes.FirstOrDefaultAsync(s => s.Showtime_ID == id);
+
             if (showtime == null)
             {
                 return NotFound();
             }
 
-            return View(showtime);
-        }
-
-        // POST: Showtimes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
-        {
-            var showtime = await _context.Showtimes.FindAsync(id);
-            if (showtime != null)
-            {
-                _context.Showtimes.Remove(showtime);
-            }
+            showtime.Movie_ID = vm.Movie_ID;
+            showtime.Hall_ID = vm.Hall_ID;
+            showtime.Start_Time = vm.StartTime;
+            showtime.End_Time = vm.EndTime;
+            showtime.Language = vm.Language;
+            showtime.Format = vm.Format;
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+
+        }
+
+        // POST: Showtimes/Delete/5
+        [HttpPost("/admin/showtime/delete/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed([FromRoute]long id)
+        {
+            var showtime = await _context.Showtimes.FirstOrDefaultAsync(s => s.Showtime_ID == id);
+            if (showtime == null)
+            {
+                return Json(new { ok = false, message = "Not Found" });
+            }
+
+            _context.Showtimes.Remove(showtime);
+            await _context.SaveChangesAsync();
+
+            return Json(new { ok = true });
         }
 
         private bool ShowtimeExists(long id)

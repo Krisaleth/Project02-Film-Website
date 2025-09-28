@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="ViewModels\Order\" />
     <Folder Include="ViewModels\Payment\" />
     <Folder Include="wwwroot\uploads\posters\" />
   </ItemGroup>

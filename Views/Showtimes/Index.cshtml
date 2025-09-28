@@ -65,10 +65,10 @@
                                             @Html.DisplayFor(modelItem => item.MovieTitle)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.StartTime)
+                                            @Html.DisplayFor(modelItem => item.StartTimeFormatted)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.EndTime)
+                                            @Html.DisplayFor(modelItem => item.EndTimeFormatted)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.CinemaName)
@@ -142,7 +142,7 @@
 
         const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
 
-        const url = `/admin/showtime/delete/${encodeURIComponent(slug)}`;
+        const url = `/admin/showtime/delete/${encodeURIComponent(id)}`;
 
         const res = await fetch(url, {
             method: 'post',
@@ -150,7 +150,6 @@
             credentials: 'same-origin',
             body: new URLSearchParams({
                 '__RequestVerificationToken': token,
-                'rowVersionBase64': rv
             })
         });
 
