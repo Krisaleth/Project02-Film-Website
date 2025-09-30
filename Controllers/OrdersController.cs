@@ -245,17 +245,124 @@ namespace Project02.Controllers
         // POST: Orders/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/order/create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Order_ID,User_ID,OrderDate,TotalAmount,Status")] Order order)
+        public async Task<IActionResult> Create(OrderCreateVm vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(order);
+                var users = await _context.Users
+                .Select(u => new { u.User_ID, u.User_Name, u.User_Phone, u.User_Email })
+                .ToListAsync();
+                var halls = await _context.Halls
+                            .Include(h => h.Cinema)
+                            .OrderBy(h => h.Cinema_ID)
+                            .ThenBy(h => h.Hall_ID)
+                            .ToListAsync();
+
+                var hallDtos = halls
+                    .GroupBy(h => h.Cinema_ID)
+                    .SelectMany(group =>
+                        group.Select((hall, idx) => new
+                        {
+                            Hall_ID = hall.Hall_ID,
+                            Hall_Name = hall.Cinema.Cinema_Name + " " + (idx + 1)
+                        })
+                    ).ToList();
+                var cinemaHalls = await _context.Cinemas
+                                .Include(c => c.Halls)
+                                .ToListAsync();
+
+                var hallIdToCount = new Dictionary<long, int>();
+                foreach (var cinema in cinemaHalls)
+                {
+                    var sortedHalls = cinema.Halls.OrderBy(h => h.Hall_ID).ToList();
+                    for (int i = 0; i < sortedHalls.Count; i++)
+                    {
+                        hallIdToCount[sortedHalls[i].Hall_ID] = i + 1;
+                    }
+                }
+
+                var showtimes = await _context.Showtimes
+                    .Include(s => s.Movie)
+                    .Include(s => s.Hall)
+                    .ThenInclude(s => s.Cinema)
+                    .ToListAsync();
+
+                var finalShowtimeList = showtimes.Select(s => new
+                {
+                    Showtime_ID = s.Showtime_ID,
+                    Showtime_Name = s.Movie.Movie_Name
+                        + " | " + s.Hall.Cinema.Cinema_Name
+                        + " | Phòng " + hallIdToCount[s.Hall_ID]
+                        + " | " + s.Start_Time.ToString("dd/MM/yyyy HH:mm")
+                }).ToList();
+
+                ViewBag.Showtimes = new SelectList(finalShowtimeList, "Showtime_ID", "Showtime_Name");
+                ViewBag.Users = new SelectList(users, "User_ID", "User_Name");
+                ViewBag.Halls = new SelectList(hallDtos, "Hall_ID", "Hall_Name");
+                ViewBag.UsersData = users;
+                return View();
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Tạo Order mới
+                var order = new Order
+                {
+                    User_ID = vm.User_ID,
+                    Showtime_ID = vm.Showtime_ID,
+                    OrderDate = DateTime.Now,
+                    TotalAmount = vm.TotalAmount,
+                    Status = "Pending"
+                };
+
+                _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
+
+                // Lấy danh sách seat đã chọn, dạng string "1,2,3", tách ra
+                var seatIdsStr = vm.SelectedSeats; // Ví dụ: "1,2,3"
+                var seatIds = seatIdsStr.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                       .Select(s => long.Parse(s))
+                                       .ToList();
+
+                // Lấy giá từng seat từ db (giả sử SeatPrice trong table Seats)
+                var seats = await _context.Seats.Where(s => seatIds.Contains(s.Seat_ID)).ToListAsync();
+
+                // Tạo các OrderSeat
+                var orderSeats = seats.Select(seat => new OrderSeat
+                {
+                    Order_ID = order.Order_ID,
+                    Seat_ID = seat.Seat_ID,
+                    Price = seat.SeatPrice
+                }).ToList();
+
+                _context.OrderSeats.AddRange(orderSeats);
+                await _context.SaveChangesAsync();
+
+                var tickets = orderSeats.Select(os => new Ticket
+                {
+                    OrderSeat_ID = os.OrderSeat_ID,
+                    Showtime_ID = order.Showtime_ID,
+                    Status = "available",
+                    BookingTime = DateTime.Now
+                }).ToList();
+
+                _context.Tickets.AddRange(tickets);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                ModelState.AddModelError("", "Lỗi khi tạo order: " + ex.Message);
+                // Tải lại ViewBag nếu cần
+                return View(vm);
+            }
         }
 
         // GET: Orders/Edit/5

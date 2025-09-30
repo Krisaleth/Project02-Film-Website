@@ -10,9 +10,7 @@ namespace Project02.ViewModels.Order
         public DateTime OrderDate { get; set; }
         public string OrderDateString => OrderDate.ToString("dd/MM/yyyy h:mm tt", new CultureInfo("vi-VN"));
         public decimal TotalAmount { get; set; }
-
         public string Status { get; set; } = null!;
-
         public List<OrderSeatVm> OrderSeats { get; set; } = new List<OrderSeatVm>();
     }
 
