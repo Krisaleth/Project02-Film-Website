@@ -38,7 +38,7 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C93156D3E8");
+            entity.HasKey(e => e.Account_ID).HasName("PK__Account__B19E45C9A7DA3B9A");
 
             entity.Property(e => e.Create_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Password_Algo).HasDefaultValue("PBKDF2");
@@ -48,17 +48,17 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Cinema>(entity =>
         {
-            entity.HasKey(e => e.Cinema_ID).HasName("PK__Cinemas__89C6DAE174B20D86");
+            entity.HasKey(e => e.Cinema_ID).HasName("PK__Cinemas__89C6DAE1614C700D");
         });
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A200686D184D8");
+            entity.HasKey(e => e.Genre_ID).HasName("PK__Genres__964A2006356F6D84");
         });
 
         modelBuilder.Entity<Hall>(entity =>
         {
-            entity.HasKey(e => e.Hall_ID).HasName("PK__Halls__927F7126FEB45E52");
+            entity.HasKey(e => e.Hall_ID).HasName("PK__Halls__927F7126F015F2AC");
 
             entity.HasOne(d => d.Cinema).WithMany(p => p.Halls)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -67,7 +67,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Movie>(entity =>
         {
-            entity.HasKey(e => e.Movie_ID).HasName("PK__Movies__7A88040500F68EC2");
+            entity.HasKey(e => e.Movie_ID).HasName("PK__Movies__7A880405C3FC6043");
 
             entity.Property(e => e.Movie_Created_At).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.Movie_Producer).HasDefaultValue("Unknown");
@@ -96,14 +96,22 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.Order_ID).HasName("PK__Orders__F1E4639B90E90911");
+            entity.HasKey(e => e.Order_ID).HasName("PK__Orders__F1E4639BD776D77E");
 
             entity.Property(e => e.Status).HasDefaultValue("Pending");
+
+            entity.HasOne(d => d.Showtime).WithMany(p => p.Orders)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Orders_Showtime");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Orders)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Orders_User");
         });
 
         modelBuilder.Entity<OrderSeat>(entity =>
         {
-            entity.HasKey(e => e.OrderSeat_ID).HasName("PK__OrderSea__5DF03B34BB1553AD");
+            entity.HasKey(e => e.OrderSeat_ID).HasName("PK__OrderSea__5DF03B34BF918713");
 
             entity.Property(e => e.Status).HasDefaultValue("Booked");
 
@@ -118,7 +126,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Seat>(entity =>
         {
-            entity.HasKey(e => e.Seat_ID).HasName("PK__Seats__8B2CE7B69B385435");
+            entity.HasKey(e => e.Seat_ID).HasName("PK__Seats__8B2CE7B6BAD901D0");
 
             entity.HasOne(d => d.Hall).WithMany(p => p.Seats)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -127,7 +135,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Showtime>(entity =>
         {
-            entity.HasKey(e => e.Showtime_ID).HasName("PK__Showtime__7C7A908920FFC3D7");
+            entity.HasKey(e => e.Showtime_ID).HasName("PK__Showtime__7C7A90896D09888F");
 
             entity.HasOne(d => d.Hall).WithMany(p => p.Showtimes)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -140,7 +148,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.Ticket_ID).HasName("PK__Tickets__ED7260D929A0D17B");
+            entity.HasKey(e => e.Ticket_ID).HasName("PK__Tickets__ED7260D9A515EDFA");
 
             entity.Property(e => e.Status).HasDefaultValue("Available");
 
@@ -151,7 +159,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.User_ID).HasName("PK__Users__206D919014699D07");
+            entity.HasKey(e => e.User_ID).HasName("PK__Users__206D919031E7A3D2");
 
             entity.Property(e => e.RowsVersion)
                 .IsRowVersion()

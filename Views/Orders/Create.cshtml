@@ -1,44 +1,293 @@
-﻿@model Project02.Models.Order
+﻿@using Project02.ViewModels.Order
+@model OrderCreateVm
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "New Order";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Create</h1>
+<div class="d-flex justify-content-center mt-3">
+    <div class="col-md-10">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white py-2">
+                <h5 class="mb-0">Create New Order</h5>
+            </div>
+            <div class="card-body py-2">
+                <form asp-action="Create" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-1"></div>
 
-<h4>Order</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="User_ID" class="control-label"></label>
-                <input asp-for="User_ID" class="form-control" />
-                <span asp-validation-for="User_ID" class="text-danger"></span>
+                    <div class="mb-2">
+                        <label asp-for="User_ID" class="form-label small fw-semibold">Select User</label>
+                        @Html.DropDownListFor(m => m.User_ID, (SelectList)ViewBag.Users, "-- Select User --", new { @class = "form-select form-select-sm", id = "userSelect" })
+                        <span asp-validation-for="User_ID" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col">
+                            <label class="form-label small fw-semibold">User Name</label>
+                            <input id="userName" type="text" class="form-control form-control-sm bg-light" readonly />
+                        </div>
+                        <div class="col">
+                            <label class="form-label small fw-semibold">Phone</label>
+                            <input id="userPhone" type="text" class="form-control form-control-sm bg-light" readonly />
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label small fw-semibold">Email</label>
+                        <input id="userEmail" type="email" class="form-control form-control-sm bg-light" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="hallSelect">Chọn Hall</label>
+                        @Html.DropDownList("Hall_ID", (SelectList)ViewBag.Halls, "-- Chọn Hall --", new { @class = "form-select", id = "hallSelect" })
+                    </div>
+
+                    <div class="mb-3" id="showtimeDiv" style="display:none;">
+                        <label for="showtimeSelect">Chọn suất chiếu</label>
+                        <select id="showtimeSelect" class="form-select" name="Showtime_ID">
+                            <option value="">-- Chọn suất chiếu --</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" id="selectedSeats" name="SelectedSeats" value="" />
+
+                    <div id="seatMap"></div>
+
+                    <style>
+                        .seat-row {
+                            display: flex;
+                            margin-bottom: 6px;
+                        }
+
+                        .seat {
+                            width: 40px;
+                            height: 40px;
+                            margin-right: 4px;
+                            text-align: center;
+                            line-height: 40px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            user-select: none;
+                            font-size: 12px;
+                        }
+
+                        .seat.booked {
+                            background-color: #dc3545;
+                            cursor: not-allowed;
+                        }
+
+                        .seat.available {
+                            background-color: #0d6efd;
+                            color: white;
+                        }
+
+                        .seat.selected {
+                            background-color: #198754;
+                        }
+
+                        .seat-label {
+                            width: 20px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin-right: 8px;
+                            font-weight: bold;
+                        }
+                    </style>
+
+
+                    <div class="mb-3">
+                        <label for="ticketQuantity" class="form-label">Số lượng vé</label>
+                        <input type="number" id="ticketQuantity" min="1" class="form-control" value="1" />
+                    </div>
+
+                    <div>
+                        <strong>Tổng tiền:</strong> <span id="totalAmount">0 đ</span>
+                    </div>
+
+                    <button id="submitOrder" class="btn btn-primary mt-3" disabled>Tạo Order</button>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="OrderDate" class="control-label"></label>
-                <input asp-for="OrderDate" class="form-control" />
-                <span asp-validation-for="OrderDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TotalAmount" class="control-label"></label>
-                <input asp-for="TotalAmount" class="form-control" />
-                <span asp-validation-for="TotalAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+
+        <div class="mt-2 text-center">
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Back to List</a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            var usersData = @Html.Raw(Json.Serialize(ViewBag.UsersData));
+
+            // Cập nhật thông tin user khi chọn user
+            $('#userSelect').change(function () {
+                var selectedUserId = $(this).val();
+                var user = usersData.find(u => u.user_ID.toString() === selectedUserId);
+                if (user) {
+                    $('#userName').val(user.user_Name);
+                    $('#userPhone').val(user.user_Phone);
+                    $('#userEmail').val(user.user_Email);
+                } else {
+                    $('#userName').val('');
+                    $('#userPhone').val('');
+                    $('#userEmail').val('');
+                }
+            });
+            $('#userSelect').trigger('change');
+
+            // Khi thay đổi số lượng vé, bỏ chọn ghế, tính lại và validate
+            $('#ticketQuantity').on('input change', function () {
+                var quantity = parseInt($(this).val());
+                if (quantity < 1) {
+                    $(this).val(1);
+                    quantity = 1;
+                }
+                // Bỏ chọn hết ghế
+                $('.seat.selected').removeClass('selected');
+                updateSelectedSeats();
+                $('#seatMap').fadeIn();
+            });
+
+            // Thay đổi hall, lấy showtime và seat
+            $('#hallSelect').change(function () {
+                var hallId = $(this).val();
+                $('#showtimeSelect').empty().append('<option value="">-- Chọn suất chiếu --</option>');
+
+                if (!hallId) {
+                    $('#showtimeDiv').hide();
+                    $('#seatMap').empty();
+                    return;
+                }
+
+                $.ajax({
+                    url: `/admin/order/getshowtime/${hallId}`,
+                    method: 'GET',
+                    data: { hallId: hallId },
+                    success: function (data) {
+                        $('#showtimeSelect').empty().append('<option value="">-- Chọn suất chiếu --</option>');
+                        if (data.length > 0) {
+                            $.each(data, function (i, showtime) {
+                                $('#showtimeSelect').append($('<option>', {
+                                    value: showtime.showtime_ID,
+                                    text: showtime.showtimeInfo
+                                }));
+                            });
+                            $('#showtimeDiv').show();
+                        } else {
+                            $('#showtimeDiv').hide();
+                        }
+                    },
+                    error: function () {
+                        console.error('Lỗi Load Showtimes');
+                        $('#showtimeDiv').hide();
+                    }
+                });
+
+                $.ajax({
+                    url: `/admin/order/getseats/${hallId}`,
+                    method: 'GET',
+                    success: function (data) {
+                        console.log('Danh sách ghế: ', data);
+                        renderSeats(data);
+                    },
+                    error: function () {
+                        console.error('Lỗi tải danh sách ghế');
+                        $('#seatMap').empty();
+                    }
+                });
+            });
+            $('#hallSelect').trigger('change');
+
+            // Hàm render ghế
+            function renderSeats(seats) {
+                var seatMap = $('#seatMap');
+                seatMap.empty();
+
+                var grouped = {};
+                seats.forEach(function(seat) {
+                    var rowKey = seat.rowNumber || 'Unknown';
+                    if (!grouped[rowKey]) grouped[rowKey] = [];
+                    grouped[rowKey].push(seat);
+                });
+
+                for (const row in grouped) {
+                    var rowDiv = $('<div class="seat-row"></div>');
+                    var label = $('<div class="seat-label"></div>').text(row);
+                    rowDiv.append(label);
+
+                    grouped[row].forEach(function(seat) {
+                        var cssClass = seat.seatStatus === 'booked' ? 'seat booked' : 'seat available';
+                        var seatBtn = $('<button>', {
+                            type: 'button',
+                            class: cssClass,
+                            text: seat.seatName,
+                            'data-seatid': seat.seat_ID,
+                            'data-price': seat.seatPrice,
+                            disabled: seat.seatStatus === 'booked'
+                        });
+
+                        seatBtn.on('click', function () {
+                            if ($(this).hasClass('selected')) {
+                                $(this).removeClass('selected');
+                            } else {
+                                var quantity = parseInt($('#ticketQuantity').val());
+                                var countSelected = $('.seat.selected').length;
+                                if (countSelected >= quantity) {
+                                    alert('Bạn chỉ được chọn đúng ' + quantity + ' ghế.');
+                                    return;
+                                }
+                                $(this).addClass('selected');
+                            }
+                            updateSelectedSeats();
+                        });
+
+                        rowDiv.append(seatBtn);
+                    });
+
+                    seatMap.append(rowDiv);
+                }
+            }
+
+            // Cập nhật dữ liệu ghế chọn, tổng tiền, và bật nút submit
+            function updateSelectedSeats() {
+                var selectedSeatIds = [];
+                $('.seat.selected').each(function() {
+                    selectedSeatIds.push($(this).data('seatid'));
+                });
+                var quantity = parseInt($('#ticketQuantity').val());
+
+                console.log('Selected seats:', selectedSeatIds);
+                console.log('Ticket quantity:', quantity);
+
+                $('#selectedSeats').val(selectedSeatIds.join(','));
+                $('#submitOrder').prop('disabled', selectedSeatIds.length !== quantity);
+
+                // Cập nhật tổng tiền
+                updateTotalAmount();
+            }
+
+            // Tính tổng tiền
+            function updateTotalAmount() {
+                let total = 0;
+                $('.seat.selected').each(function() {
+                    total += parseFloat($(this).data('price'));
+                });
+                $('#totalAmount').text(total.toLocaleString('vi-VN') + ' đ');
+            }
+
+            // Log giá trị selectedSeats khi submit form để debug
+            $('form').submit(function () {
+                console.log('SelectedSeats khi submit:', $('#selectedSeats').val());
+            });
+        });
+
+
+
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -32,4 +32,7 @@ public partial class Showtime
     [ForeignKey("Movie_ID")]
     [InverseProperty("Showtimes")]
     public virtual Movie Movie { get; set; } = null!;
+
+    [InverseProperty("Showtime")]
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

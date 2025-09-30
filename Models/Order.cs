@@ -13,6 +13,8 @@ public partial class Order
 
     public long User_ID { get; set; }
 
+    public long Showtime_ID { get; set; }
+
     [Column(TypeName = "datetime")]
     public DateTime OrderDate { get; set; }
 
@@ -25,4 +27,12 @@ public partial class Order
 
     [InverseProperty("Order")]
     public virtual ICollection<OrderSeat> OrderSeats { get; set; } = new List<OrderSeat>();
+
+    [ForeignKey("Showtime_ID")]
+    [InverseProperty("Orders")]
+    public virtual Showtime Showtime { get; set; } = null!;
+
+    [ForeignKey("User_ID")]
+    [InverseProperty("Orders")]
+    public virtual User User { get; set; } = null!;
 }

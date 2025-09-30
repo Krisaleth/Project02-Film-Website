@@ -30,4 +30,7 @@ public partial class User
     [ForeignKey("Account_ID")]
     [InverseProperty("Users")]
     public virtual Account? Account { get; set; }
+
+    [InverseProperty("User")]
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

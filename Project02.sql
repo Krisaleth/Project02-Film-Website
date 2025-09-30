@@ -155,9 +155,13 @@ CREATE TABLE dbo.Orders
 (
     Order_ID BIGINT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
     [User_ID] BIGINT NOT NULL,
+    Showtime_ID BIGINT NOT NULL,
     OrderDate DATETIME NOT NULL,
     TotalAmount DECIMAL(19, 0) NOT NULL,
     [Status] VARCHAR(20) NOT NULL DEFAULT 'Pending'
+    CONSTRAINT FK_Orders_User FOREIGN KEY ([User_ID]) REFERENCES dbo.Users([User_ID]),
+    CONSTRAINT FK_Orders_Showtime FOREIGN KEY (Showtime_ID) REFERENCES dbo.Showtimes(Showtime_ID),
+    CONSTRAINT CK_Orders_Status CHECK ([Status] IN (N'Pending', N'Completed', N'Cancelled'))
 );
 
 CREATE TABLE OrderSeats (
