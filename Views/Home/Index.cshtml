@@ -1,6 +1,6 @@
-﻿﻿@{
-Layout = "_Layout"; // layout dành cho user
-ViewData["Title"] = "Movies";
+﻿@{
+    Layout = "_Layout"; // layout dành cho user
+    ViewData["Title"] = "Movies";
 }
 
 <!-- Navbar đẹp mắt + thanh tìm kiếm góc phải -->
@@ -10,36 +10,36 @@ ViewData["Title"] = "Movies";
             aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon text-white"><i class="fa-solid fa-caret-down"></i></span>
     </button>
-        <div class="navbar-collapse collapse navbar-dark">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Thể loại</a></li>
-                <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Tất cả film</a></li>
-                <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Điều khoản </a></li>
-                <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Về chúng tôi</a></li>
-                <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Trang cá nhân</a></li>
-            </ul>
-            <form class="navbar-search d-flex" method="get" action="#">
-                <input type="text" class="form-control me-2" name="q" placeholder="Tìm kiếm phim..." />
-                <button type="submit" aria-label="Tìm kiếm">
-                    <span class="search-icon btn btn-secondary">&#128269;</span>
-                </button>
-            </form>
-        </div>
 
+    <div class="navbar-collapse collapse navbar-dark">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Thể loại</a></li>
+            <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Tất cả film</a></li>
+            <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Điều khoản</a></li>
+            <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Về chúng tôi</a></li>
+            <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Trang cá nhân</a></li>
+        </ul>
+
+        <form class="navbar-search d-flex" method="get" action="#">
+            <input type="text" class="form-control me-2" name="q" placeholder="Tìm kiếm phim..." />
+            <button type="submit" aria-label="Tìm kiếm">
+                <span class="search-icon btn btn-secondary">&#128269;</span>
+            </button>
+        </form>
+    </div>
 </nav>
 
 <div class="container py-5">
     <h1 class="mb-4 fw-bold text-left" style="color: #fff;">🎬 Khám Phá Phim</h1>
+
     <!-- Banner Carousel với chấm tròn -->
     <div id="bannerCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
         <!-- Chấm tròn -->
         <div class="carousel-indicators">
-            <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-            <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
-            <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
+            @for (int i = 0; i < 6; i++)
+            {
+                <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></button>
+            }
         </div>
 
         <div class="carousel-inner">
@@ -63,7 +63,7 @@ ViewData["Title"] = "Movies";
             </div>
         </div>
 
-        <!-- Nút prev/next (vẫn giữ nếu muốn) -->
+        <!-- Nút prev/next -->
         <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span>
         </button>
@@ -72,11 +72,13 @@ ViewData["Title"] = "Movies";
         </button>
     </div>
 
+    <!-- Phim đề cử -->
     <h3 class="movie-label">Phim đề cử</h3>
     <div class="movie-wrapper">
-        <!-- Nút mũi tên trái -->
         <button class="arrow left" onclick="scrollLeftFn()">&#10094;</button>
         <div class="movie-container">
+
+            @* Movie Card Example *@
             <div class="movie-card">
                 <div class="movie-img">
                     <img src="poster1.jpg" alt="Nhiệm Vụ Bất Khả Thi">
@@ -92,76 +94,25 @@ ViewData["Title"] = "Movies";
                 </div>
             </div>
 
-            <div class="movie-card">
-                <div class="movie-img">
-                    <img src="poster2.jpg" alt="Na Tra 2">
-                    <div class="movie-overlay">
-                        <button class="btn-detail">Xem chi tiết</button>
-                        <button class="btn-ticket">Mua vé</button>
-                    </div>
-                    <span class="badge badge-hd">Full HD</span>
-                </div>
-                <div class="movie-info">
-                    <h3 class="title-vi">Na Tra 2: Ma Đồng Náo Hải</h3>
-                    <p class="title-en">Ne Zha 2 (2025)</p>
-                </div>
-            </div>
-
-            <div class="movie-card">
-                <div class="movie-img">
-                    <img src="poster3.jpg" alt="Cưới Ma Giải Hạn">
-                    <div class="movie-overlay">
-                        <button class="btn-detail">Xem chi tiết</button>
-                        <button class="btn-ticket">Mua vé</button>
-                    </div>
-                    <span class="badge badge-hd">Full HD</span>
-                </div>
-                <div class="movie-info">
-                    <h3 class="title-vi">Cưới Ma Giải Hạn</h3>
-                    <p class="title-en">The Red Envelope (2025)</p>
-                </div>
-            </div>
-
-            <div class="movie-card">
-                <div class="movie-img">
-                    <img src="poster4.jpg" alt="Film 4">
-                    <div class="movie-overlay">
-                        <button class="btn-detail">Xem chi tiết</button>
-                        <button class="btn-ticket">Mua vé</button>
-                    </div>
-                    <span class="badge badge-hd">Full HD</span>
-                </div>
-                <div class="movie-info">
-                    <h3 class="title-vi">Film 4</h3>
-                    <p class="title-en">Film 4 ENG</p>
-                </div>
-            </div>
-
-            <div class="movie-card">
-                <div class="movie-img">
-                    <img src="poster5.jpg" alt="Film 5">
-                    <div class="movie-overlay">
-                        <button class="btn-detail">Xem chi tiết</button>
-                        <button class="btn-ticket">Mua vé</button>
-                    </div>
-                    <span class="badge badge-hd">Full HD</span>
-                </div>
-                <div class="movie-info">
-                    <h3 class="title-vi">Film 5</h3>
-                    <p class="title-en">Film 5 ENG</p>
-                </div>
-            </div>
-            <!-- Thêm các card khác ở đây -->
+            @* Thêm các movie-card khác tương tự *@
         </div>
-        <!-- Nút mũi tên phải -->
         <button class="arrow right" onclick="scrollRightFn()">&#10095;</button>
     </div>
+
+    <!-- Grid tất cả phim -->
+    <h3 class="movie-label mt-5">Tất cả phim</h3>
     <div class="row g-4">
         @for (int i = 0; i < 12; i++)
         {
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="film-card">
-                    <div class="film-poster">Poster</div>
+                    <div class="film-poster">
+                        Poster
+                        <div class="film-overlay">
+                            <button class="btn-detail">Xem chi tiết</button>
+                            <button class="btn-ticket">Mua vé</button>
+                        </div>
+                    </div>
                     <div class="film-info">
                         <p class="film-title">Tên phim</p>
                         <p class="film-year">2025</p>
@@ -171,75 +122,68 @@ ViewData["Title"] = "Movies";
         }
     </div>
 </div>
-@* Hàm bấm sang trái và phải của "Phim đề cử" *@
+
+<!-- Scripts -->
 <script>
     function scrollLeftFn() {
         const container = document.querySelector('.movie-container');
         container.scrollBy({ left: -300, behavior: 'smooth' });
     }
+
     function scrollRightFn() {
         const container = document.querySelector('.movie-container');
         container.scrollBy({ left: 300, behavior: 'smooth' });
     }
-</script>
-@* Loop vô tận cho "Phim đề cử" *@
-<script>
+
+    // Loop vô tận cho "Phim đề cử"
     document.addEventListener('DOMContentLoaded', () => {
-      const container = document.querySelector('.movie-container');
-      const leftBtn = document.querySelector('.arrow.left');
-      const rightBtn = document.querySelector('.arrow.right');
+        const container = document.querySelector('.movie-container');
+        const leftBtn = document.querySelector('.arrow.left');
+        const rightBtn = document.querySelector('.arrow.right');
 
-      // Tính khoảng cuộn bằng width + gap
-      const firstCard = container.querySelector('.movie-card');
-      const style = getComputedStyle(container);
-      const gap = parseInt(style.gap) || 15;
-      const cardWidth = firstCard.offsetWidth;
-      const scrollAmount = cardWidth + gap;
+        const firstCard = container.querySelector('.movie-card');
+        const style = getComputedStyle(container);
+        const gap = parseInt(style.gap) || 15;
+        const cardWidth = firstCard.offsetWidth;
+        const scrollAmount = cardWidth + gap;
 
-      rightBtn.addEventListener('click', () => {
-        if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
-          // đang ở cuối ➝ quay lại đầu
-          container.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        }
-      });
+        rightBtn.addEventListener('click', () => {
+            if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
+                container.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        });
 
-      leftBtn.addEventListener('click', () => {
-        if (container.scrollLeft <= 0) {
-          // đang ở đầu ➝ quay về cuối
-          container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
-        } else {
-          container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-        }
-      });
+        leftBtn.addEventListener('click', () => {
+            if (container.scrollLeft <= 0) {
+                container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            }
+        });
     });
 </script>
+
+<!-- Styles -->
 <style>
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: #8E0E00;
-        background: -webkit-linear-gradient(to right, #8E0E00, orange);
-        background: linear-gradient(to right, #8E0E00, orange);
+        background: #141414;
         min-height: 100vh;
         margin: 0;
-        color: #333;
+        color: #fff;
     }
-    /*Movie Label*/
-    .movie-label {
-        text-align: center;
-        color: white;
-    }
-    /* Navbar đẹp */
+
+    /* Navbar */
     .simple-navbar {
         width: 100%;
-        background: rgba(30,30,30,0.97);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+        background: rgba(20, 20, 20, 0.97);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         margin-bottom: 16px;
         min-height: 56px;
         padding: 0 16px;
     }
-
 
         .simple-navbar li a {
             color: #fff;
@@ -249,14 +193,13 @@ ViewData["Title"] = "Movies";
             letter-spacing: 0.5px;
             padding: 8px 18px;
             border-radius: 4px;
-            transition: background 0.2s, color 0.2s;
+            transition: background 0.2s;
         }
 
             .simple-navbar li a:hover {
-                background: #8E0E00;
+                background: #e50914;
                 color: #fff;
             }
-
 
     .navbar-search button {
         background: none;
@@ -264,56 +207,25 @@ ViewData["Title"] = "Movies";
         color: #fff;
         font-size: 20px;
         cursor: pointer;
-        padding: 0 8px;
     }
 
-    .search-icon {
-        vertical-align: middle;
-    }
-
-    /* Card phim */
-    .film-card {
+    /* Banner */
+    .banner-img {
+        width: 100%;
+        max-width: 1600px;
+        aspect-ratio: 1600 / 735;
+        object-fit: cover;
         border-radius: 12px;
-        overflow: hidden;
-        background: #fff;
-        transition: transform 0.3s, box-shadow 0.3s;
-        cursor: pointer;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        display: block;
+        margin: 0 auto;
+        transition: transform 0.3s ease;
     }
 
-        .film-card:hover {
-            transform: translateY(-6px) scale(1.03);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
-            background: #f5f5f5;
+        .banner-img:hover {
+            transform: scale(1.02);
         }
 
-    .film-poster {
-        width: 100%;
-        aspect-ratio: 2/3;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #9ca3af;
-        font-size: 14px;
-    }
-
-    .film-info {
-        padding: .25rem;
-        text-align: center;
-    }
-
-    .film-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #111827;
-        margin: 0;
-    }
-
-    .film-year {
-        font-size: .875rem;
-        color: #6b7280;
-    }
-    /*movie*/
+    /* Movie Wrapper */
     .movie-wrapper {
         position: relative;
         max-width: 100%;
@@ -325,17 +237,17 @@ ViewData["Title"] = "Movies";
         gap: 15px;
         padding: 20px;
         overflow-x: auto;
-        scroll-behavior: smooth; /* trượt mượt */
+        scroll-behavior: smooth;
     }
 
         .movie-container::-webkit-scrollbar {
-            display: none; /* ẩn thanh cuộn ngang */
+            display: none;
         }
 
     .movie-card {
         width: 200px;
         flex-shrink: 0;
-        background: black;
+        background: #1c1c1c;
         border-radius: 6px;
         overflow: hidden;
         cursor: pointer;
@@ -357,23 +269,64 @@ ViewData["Title"] = "Movies";
             display: block;
         }
 
+    .movie-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .movie-img:hover .movie-overlay {
+        opacity: 1;
+    }
+
+    .movie-overlay button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        transition: transform 0.2s;
+    }
+
+    .btn-detail {
+        background-color: #e50914;
+        color: #fff;
+    }
+
+    .btn-ticket {
+        background-color: #b81d24;
+        color: #fff;
+    }
+
+    .movie-overlay button:hover {
+        transform: scale(1.1);
+    }
+
     .badge {
         position: absolute;
         top: 8px;
         left: 8px;
-        background: red;
         padding: 3px 6px;
         font-size: 12px;
         font-weight: bold;
         border-radius: 3px;
+        color: #fff;
     }
 
     .badge-4k {
-        background: #ff9800;
+        background: #b81d24;
     }
 
     .badge-hd {
-        background: #b71c1c;
+        background: #e50914;
     }
 
     .movie-info {
@@ -390,16 +343,17 @@ ViewData["Title"] = "Movies";
     .title-en {
         font-size: 12px;
         margin: 4px 0 0;
-        color: #7dd3fc; /* xanh dương nhạt */
+        color: #b3b3b3;
     }
 
+    /* Scroll Arrows */
     .arrow {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0,0,0,0.6);
         border: none;
-        color: darkgoldenrod;
+        color: #e50914;
         font-size: 24px;
         padding: 10px;
         cursor: pointer;
@@ -409,7 +363,7 @@ ViewData["Title"] = "Movies";
     }
 
         .arrow:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.2);
         }
 
         .arrow.left {
@@ -420,73 +374,69 @@ ViewData["Title"] = "Movies";
             right: 0;
         }
 
-    /* Banner tối ưu responsive */
-    .banner-img {
-        width: 100%; /* full chiều ngang màn hình */
-        max-width: 1600px; /* không vượt quá 1600px */
-        aspect-ratio: 1600 / 735; /* giữ đúng tỷ lệ 1600x735 */
-        height: auto; /* để aspect-ratio quản lý */
-        object-fit: cover; /* cắt ảnh vừa khung */
+    /* Film Cards */
+    .film-card {
         border-radius: 12px;
-        display: block;
-        margin: 0 auto; /* căn giữa */
-        transition: transform 0.3s ease;
+        overflow: hidden;
+        background: #1c1c1c;
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
     }
 
-        .banner-img:hover {
-            transform: scale(1.02);
+        .film-card:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            background: #2a2a2a;
         }
 
-    /* Overlay khi hover */
-    .movie-img {
+    .film-poster {
         position: relative;
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         overflow: hidden;
     }
 
-    .movie-overlay {
+    .film-overlay {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.6); /* nền tối mờ */
+        inset: 0;
+        background: rgba(0,0,0,0.7);
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
         gap: 10px;
         opacity: 0;
         transition: opacity 0.3s ease;
     }
 
-    .movie-img:hover .movie-overlay {
+    .film-poster:hover .film-overlay {
         opacity: 1;
     }
 
-    /* Nút */
-    .movie-overlay button {
+    .film-overlay button {
         padding: 8px 16px;
-        border: none;
         border-radius: 6px;
-        cursor: pointer;
         font-weight: bold;
         font-size: 14px;
-        transition: transform 0.2s;
     }
 
-    .btn-detail {
-        background-color: #ff9800;
+    .film-info {
+        padding: 8px;
+        text-align: center;
+    }
+
+    .film-title {
+        font-size: 1rem;
+        font-weight: 600;
         color: #fff;
+        margin: 0;
     }
 
-    .btn-ticket {
-        background-color: #b71c1c;
-        color: #fff;
+    .film-year {
+        font-size: .875rem;
+        color: #b3b3b3;
     }
-
-    .movie-overlay button:hover {
-        transform: scale(1.1);
-    }
-
-
 </style>
