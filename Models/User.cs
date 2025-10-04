@@ -32,8 +32,5 @@ public partial class User
     public virtual Account? Account { get; set; }
 
     [InverseProperty("User")]
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
-
-    [InverseProperty("User")]
-    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

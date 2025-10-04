@@ -1,42 +1,148 @@
-﻿@model Project02.Models.Seat
+﻿@using Project02.ViewModels.Seat
+@model SeatDetailVm
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Seat Detail";
+    Layout = "_AdminLayout";
 }
 
-<h1>Details</h1>
+<form id="antiForgeryForm" method="post">@Html.AntiForgeryToken()</form>
+<div class="container mb-4">
+    <div class="row">
+        <div class="col-sm-7 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Seat Details</h3>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            Cinema Name
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Cinema_Name)
+                        </dd>
+                        <dt class="col-sm-4">
+                            Row Number
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.RowNumber)
+                        </dd>
+                        <dt class="col-sm-4">
+                            Seat Number
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.SeatNumber)
+                        </dd>
+                        <dt class="col-sm-4">
+                            Seat type
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.SeatType)
+                        </dd>
+                        <dt class="col-sm-4">
+                            Seat price
+                        </dt>
+                        <dd class="col-sm-8">
+                            @string.Format("{0:N0}", Model.Price) VND
+                        </dd>
+                        <dt class="col-sm-4">
+                            Description
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Description)
+                        </dd>
+                        <dt class="col-sm-4">
+                            Status
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span class="badge
+                                @(Model.Status == "Booked" ? "bg-danger" :
+                                Model.Status == "Available" ? "bg-success" :
+                                Model.Status == "Broken" ? "bg-secondary" : "bg-warning")">
+                                @Model.Status
+                            </span>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <div class="float-start">
+                        <a asp-action="Edit" asp-route-id="@Model?.Seat_ID" class="btn btn-primary me-2">Edit</a>
+                        <button type="button" data-id="@Model.Seat_ID" class="btn btn-danger btn-delete">
+                            Delete
+                        </button>
+                    </div>
+                    <div class="float-end">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<div>
-    <h4>Seat</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RowNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RowNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SeatNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SeatNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SeatType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SeatType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Hall)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Hall.Hall_ID)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Seat_ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<script>
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest(".btn-delete");
+
+        if (!btn) return;
+
+        e.preventDefault();
+
+        const id = btn.dataset.id;
+
+        const ok = await Swal.fire ({
+            title: "Xác nhận xoá",
+            text: `Bạn có chắc muốn xoá ghế này?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xoá',
+            cancelButtonText: 'Huỷ'
+        }).then(r => r.isConfirmed);
+
+        if (!ok) {
+            return;
+        }
+
+        const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
+        const url = `/admin/seat/delete/${encodeURIComponent(id)}`;
+
+        const res = await fetch(url, {
+            method: 'post',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset="utf-8" '},
+            credentials: 'same-origin',
+            body: new URLSearchParams({
+                '__RequestVerificationToken': token,
+            })
+        });
+
+        const raw = await res.text();
+        let json;
+        try {
+            json = raw && res.headers.get('content-type')?.includes('application/json')
+            ? JSON.parse(raw)
+            : null;
+        } catch {
+            json = null;
+        }
+
+        if (!json) {
+            console.error('Non-JSON response', res.status, raw);
+            Swal.fire({ icon:'error', title:`HTTP ${res.status}`, text:'Máy chủ trả về non-JSON.' });
+            return;
+        }
+
+
+        if (json.ok) {
+            const row = document.getElementById(`${id}`);
+            row?.remove();
+            Swal.fire ({ icon:'success', title:'Đã xoá', timer: 1200, showConfirmButton:false });
+            setTimeout(() => {
+                window.location.href = '/admin/seat';
+            }, 1200);
+        } else {
+            Swal.fire ({ icon:'error', title:'Lỗi', text: json.message || "Không xoá được" });
+        }
+    });
+</script>

@@ -13,8 +13,6 @@ public partial class Showtime
 
     public long Movie_ID { get; set; }
 
-    public long Cinema_ID { get; set; }
-
     public long Hall_ID { get; set; }
 
     public DateTime Start_Time { get; set; }
@@ -27,13 +25,6 @@ public partial class Showtime
     [StringLength(20)]
     public string Format { get; set; } = null!;
 
-    [Column(TypeName = "decimal(19, 0)")]
-    public decimal Price { get; set; }
-
-    [ForeignKey("Cinema_ID")]
-    [InverseProperty("Showtimes")]
-    public virtual Cinema Cinema { get; set; } = null!;
-
     [ForeignKey("Hall_ID")]
     [InverseProperty("Showtimes")]
     public virtual Hall Hall { get; set; } = null!;
@@ -43,5 +34,5 @@ public partial class Showtime
     public virtual Movie Movie { get; set; } = null!;
 
     [InverseProperty("Showtime")]
-    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

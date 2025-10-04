@@ -43,7 +43,6 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>Slug</th>
                                 <th>Name</th>
                                 <th>Poster</th>
                                 <th>Year</th>
@@ -58,7 +57,7 @@
                             @if (Model.Items.Count == 0)
                             {
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted">No movies found</td>
+                                    <td colspan="8" class="text-center text-muted">No movies found</td>
                                 </tr>
                             }
                             else
@@ -68,7 +67,6 @@
                                     var rv = "";
                                     
                                     <tr>
-                                        <td>@item.Movie_Slug</td>
                                         <td>@item.Movie_Name</td>
                                         <td>
                                             <img src="@item.Movie_Poster" alt="Poster @item.Movie_Name"
@@ -130,7 +128,6 @@
                             </nav>
                         }
                     </div>
-
                 </div>
             </div>
         </div>
@@ -141,6 +138,8 @@
         const btn = e.target.closest(".btn-delete");
 
         if (!btn) return;
+
+        e.preventDefault();
 
         const slug = btn.dataset.id;
         const id = btn.dataset.rowId;
@@ -195,7 +194,9 @@
             const row = document.getElementById(`row-${id}`);
             row?.remove();
             Swal.fire ({ icon:'success', title:'Đã xoá', timer: 1200, showConfirmButton:false });
-            location.reload();
+            setTimeout(() => {
+                location.reload();
+            }, 1200);
         } else {
             Swal.fire ({ icon:'error', title:'Lỗi', text: json.message || "Không xoá được" });
         }
