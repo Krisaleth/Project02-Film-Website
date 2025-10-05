@@ -208,6 +208,7 @@ VALUES
 INSERT INTO dbo.Movies
 (Movie_Slug, Movie_Name, Movie_Description, Movie_Duration, Movie_Status, Movie_Poster, Movie_Producer, Movie_Year)
 VALUES
+
 -- 1
 ('interstellar-2014', N'Interstellar',
  N'A team of explorers travel through a wormhole in space to ensure humanity''s survival.',
@@ -236,7 +237,232 @@ VALUES
 ('joker-2019', N'Joker',
  N'An origin story of the infamous DC villain Arthur Fleck.',
  122, N'Unpublish', N'/uploads/posters/joker-2019.jpg', 
- N'Warner Bros. Pictures', 2019);
+ N'Warner Bros. Pictures', 2019),
+
+ -- 6
+('the-dark-knight-2008', N'The Dark Knight',
+ N'Batman battles the Joker to save Gotham City.',
+ 152, N'Publish', N'/uploads/posters/the-dark-knight-2008.jpg', N'Warner Bros.', 2008),
+
+-- 7
+('the-lord-of-the-rings-the-return-of-the-king-2003', N'The Lord of the Rings: The Return of the King',
+ N'Gondor is overrun as Frodo and Sam approach Mount Doom to destroy the One Ring.',
+ 201, N'Publish', N'/uploads/posters/the-lord-of-the-rings-the-return-of-the-king-2003.jpg', N'New Line Cinema', 2003),
+
+-- 8
+('the-lord-of-the-rings-the-fellowship-of-the-ring-2001', N'The Lord of the Rings: The Fellowship of the Ring',
+ N'A hobbit and companions set out to destroy the One Ring.',
+ 178, N'Publish', N'/uploads/posters/the-lord-of-the-rings-the-fellowship-of-the-ring-2001.jpg', N'New Line Cinema', 2001),
+
+-- 9
+('the-lord-of-the-rings-the-two-towers-2002', N'The Lord of the Rings: The Two Towers',
+ N'The Fellowship is divided but fights Sauron in different ways.',
+ 179, N'Publish', N'/uploads/posters/the-lord-of-the-rings-the-two-towers-2002.jpg', N'New Line Cinema', 2002),
+
+-- 10
+('harry-potter-and-the-sorcerers-stone-2001', N'Harry Potter and the Sorcerer''s Stone',
+ N'A boy discovers he''s a wizard and attends Hogwarts.',
+ 152, N'Publish', N'/uploads/posters/harry-potter-and-the-sorcerers-stone-2001.jpg', N'Warner Bros.', 2001),
+
+-- 11
+('harry-potter-and-the-chamber-of-secrets-2002', N'Harry Potter and the Chamber of Secrets',
+ N'Harry and friends face new danger at Hogwarts.',
+ 161, N'Publish', N'/uploads/posters/harry-potter-and-the-chamber-of-secrets-2002.jpg', N'Warner Bros.', 2002),
+
+-- 12
+('harry-potter-and-the-prisoner-of-azkaban-2004', N'Harry Potter and the Prisoner of Azkaban',
+ N'Harry learns about Sirius Black and time-turners.',
+ 142, N'Publish', N'/uploads/posters/harry-potter-and-the-prisoner-of-azkaban-2004.jpg', N'Warner Bros.', 2004),
+
+-- 13
+('avatar-2009', N'Avatar',
+ N'A marine on an alien planet switches sides in a conflict.',
+ 162, N'Publish', N'/uploads/posters/avatar-2009.jpg', N'20th Century Fox', 2009),
+
+-- 14
+('star-wars-the-force-awakens-2015', N'Star Wars: The Force Awakens',
+ N'A new threat rises and Rey discovers her destiny.',
+ 138, N'Publish', N'/uploads/posters/star-wars-the-force-awakens-2015.jpg', N'Lucasfilm', 2015),
+
+-- 15
+('mad-max-fury-road-2015', N'Mad Max: Fury Road',
+ N'Max and Furiosa flee from a warlord across the wasteland.',
+ 120, N'Publish', N'/uploads/posters/mad-max-fury-road-2015.jpg', N'Village Roadshow', 2015),
+
+-- 16
+('black-panther-2018', N'Black Panther',
+ N'T''Challa becomes king of Wakanda but faces enemies.',
+ 134, N'Publish', N'/uploads/posters/black-panther-2018.jpg', N'Marvel Studios', 2018),
+
+-- 17
+('la-la-land-2016', N'La La Land',
+ N'Aspiring actress and jazz musician fall in love in Los Angeles.',
+ 128, N'Publish', N'/uploads/posters/la-la-land-2016.jpg', N'Summit Entertainment', 2016),
+
+-- 18
+('parasite-2019', N'Parasite',
+ N'A poor family infiltrates a rich household in Korea.',
+ 132, N'Publish', N'/uploads/posters/parasite-2019.jpg', N'CJ Entertainment', 2019),
+
+-- 19
+('1917-2019', N'1917',
+ N'Soldiers race against time to deliver a critical message during World War I.',
+ 119, N'Publish', N'/uploads/posters/1917-2019.jpg', N'Universal Pictures', 2019),
+
+-- 20
+('ford-v-ferrari-2019', N'Ford v Ferrari',
+ N'Ford challenges Ferrari at Le Mans in the 1960s.',
+ 152, N'Publish', N'/uploads/posters/ford-v-ferrari-2019.jpg', N'20th Century Fox', 2019),
+
+-- 21
+('dune-2021', N'Dune',
+ N'A young noblemen leads his people on a desert planet.',
+ 155, N'Publish', N'/uploads/posters/dune-2021.jpg', N'Legendary Pictures', 2021),
+
+-- 22
+('no-time-to-die-2021', N'No Time To Die',
+ N'James Bond comes out of retirement for one last mission.',
+ 163, N'Publish', N'/uploads/posters/no-time-to-die-2021.jpg', N'Eon Productions', 2021),
+
+-- 23
+('spider-man-no-way-home-2021', N'Spider-Man: No Way Home',
+ N'Spider-Man''s life is turned upside down after his identity is revealed.',
+ 148, N'Publish', N'/uploads/posters/spider-man-no-way-home-2021.jpg', N'Marvel Studios', 2021),
+
+-- 24
+('spotlight-2015', N'Spotlight',
+ N'Reporters investigate a decades-long cover-up of sexual abuse inside the Catholic Church.',
+ 129, N'Publish', N'/uploads/posters/spotlight-2015.jpg', N'Participant Media', 2015),
+
+-- 25
+('whiplash-2014', N'Whiplash',
+ N'A young drummer faces abusive mentorship in pursuit of greatness.',
+ 107, N'Publish', N'/uploads/posters/whiplash-2014.jpg', N'Bold Films', 2014),
+
+-- 26
+('inside-out-2015', N'Inside Out',
+ N'Teenage girl''s emotions struggle to guide her through life.',
+ 95, N'Publish', N'/uploads/posters/inside-out-2015.jpg', N'Pixar Animation Studios', 2015),
+
+-- 27
+('coco-2017', N'Coco',
+ N'A boy journeys to the Land of the Dead on Día de los Muertos.',
+ 105, N'Publish', N'/uploads/posters/coco-2017.jpg', N'Pixar Animation Studios', 2017),
+
+-- 28
+('frozen-2013', N'Frozen',
+ N'Anna sets out to find her sister Elsa, whose powers have trapped their kingdom in eternal winter.',
+ 102, N'Publish', N'/uploads/posters/frozen-2013.jpg', N'Walt Disney Pictures', 2013),
+
+-- 29
+('the-social-network-2010', N'The Social Network',
+ N'Story about founding Facebook and its legal battles.',
+ 120, N'Publish', N'/uploads/posters/the-social-network-2010.jpg', N'Columbia Pictures', 2010),
+
+-- 30
+('the-shape-of-water-2017', N'The Shape of Water',
+ N'A mute woman falls in love with a mysterious aquatic creature.',
+ 123, N'Publish', N'/uploads/posters/the-shape-of-water-2017.jpg', N'Fox Searchlight', 2017),
+
+-- 31
+('moonlight-2016', N'Moonlight',
+ N'Chronicles the life of a young black man grappling with his identity.',
+ 111, N'Publish', N'/uploads/posters/moonlight-2016.jpg', N'A24', 2016),
+
+-- 32
+('arrival-2016', N'Arrival',
+ N'A linguist attempts to communicate with mysterious extraterrestrials.',
+ 116, N'Publish', N'/uploads/posters/arrival-2016.jpg', N'Paramount Pictures', 2016),
+
+-- 33
+('knives-out-2019', N'Knives Out',
+ N'A detective investigates the death of a wealthy patriarch.',
+ 130, N'Publish', N'/uploads/posters/knives-out-2019.jpg', N'Lionsgate', 2019),
+
+-- 34
+('get-out-2017', N'Get Out',
+ N'A black man uncovers disturbing secrets when visiting his girlfriend''s family.',
+ 104, N'Publish', N'/uploads/posters/get-out-2017.jpg', N'Blumhouse Productions', 2017),
+
+-- 35
+('capernaum-2018', N'Capernaum',
+ N'A Lebanese boy sues his parents for the crime of giving him life.',
+ 126, N'Publish', N'/uploads/posters/capernaum-2018.jpg', N'Roadside Attractions', 2018),
+
+-- 36
+('shoplifters-2018', N'Shoplifters',
+ N'A non-biological family survives by shoplifting in Tokyo.',
+ 121, N'Publish', N'/uploads/posters/shoplifters-2018.jpg', N'GAGA', 2018),
+
+-- 37
+('soul-2020', N'Soul',
+ N'A jazz musician gets a second chance at life.',
+ 100, N'Publish', N'/uploads/posters/soul-2020.jpg', N'Pixar Animation Studios', 2020),
+
+-- 38
+('the-gran-budapest-hotel-2014', N'The Grand Budapest Hotel',
+ N'Mischief and murder unfold at a lavish hotel between world wars.',
+ 99, N'Publish', N'/uploads/posters/the-gran-budapest-hotel-2014.jpg', N'Fox Searchlight', 2014),
+
+-- 39
+('her-2013', N'Her',
+ N'A lonely man falls in love with an AI assistant.',
+ 126, N'Publish', N'/uploads/posters/her-2013.jpg', N'Annapurna Pictures', 2013),
+
+-- 40
+('gravity-2013', N'Gravity',
+ N'Two astronauts attempt to survive after their shuttle is destroyed.',
+ 91, N'Publish', N'/uploads/posters/gravity-2013.jpg', N'Warner Bros.', 2013),
+
+-- 41
+('up-2009', N'Up',
+ N'An old man ties thousands of balloons to his house and flies to South America.',
+ 96, N'Publish', N'/uploads/posters/up-2009.jpg', N'Pixar Animation Studios', 2009),
+
+-- 42
+('the-avengers-2012', N'The Avengers',
+ N'Earth''s mightiest heroes must unite to stop an alien invasion.',
+ 143, N'Publish', N'/uploads/posters/the-avengers-2012.jpg', N'Marvel Studios', 2012),
+
+-- 43
+('skyfall-2012', N'Skyfall',
+ N'James Bond investigates an attack on MI6.',
+ 143, N'Publish', N'/uploads/posters/skyfall-2012.jpg', N'Eon Productions', 2012),
+
+-- 44
+('the-wolf-of-wall-street-2013', N'The Wolf of Wall Street',
+ N'Based on Jordan Belfort''s rise and fall as a stockbroker.',
+ 180, N'Publish', N'/uploads/posters/the-wolf-of-wall-street-2013.jpg', N'Paramount Pictures', 2013),
+
+-- 45
+('the-martian-2015', N'The Martian',
+ N'An astronaut is left behind and must survive on Mars.',
+ 144, N'Publish', N'/uploads/posters/the-martian-2015.jpg', N'20th Century Fox', 2015),
+
+-- 46
+('the-revenant-2015', N'The Revenant',
+ N'A frontiersman fights for survival after being mauled by a bear.',
+ 156, N'Publish', N'/uploads/posters/the-revenant-2015.jpg', N'Regency Enterprises', 2015),
+
+-- 47
+('logan-2017', N'Logan',
+ N'An aging Wolverine and a young mutant must survive together.',
+ 137, N'Publish', N'/uploads/posters/logan-2017.jpg', N'20th Century Fox', 2017),
+
+-- 48
+('guardians-of-the-galaxy-2014', N'Guardians of the Galaxy',
+ N'A group of intergalactic criminals must save the universe.',
+ 121, N'Publish', N'/uploads/posters/guardians-of-the-galaxy-2014.jpg', N'Marvel Studios', 2014),
+
+-- 49
+('doctor-strange-2016', N'Doctor Strange',
+ N'A surgeon discovers the world of mystic arts after an accident.',
+ 115, N'Publish', N'/uploads/posters/doctor-strange-2016.jpg', N'Marvel Studios', 2016),
+
+-- 50
+('wonder-woman-2017', N'Wonder Woman',
+ N'Diana, an Amazonian princess, discovers her powers and destiny.',
+ 141, N'Publish', N'/uploads/posters/wonder-woman-2017.jpg', N'DC Films', 2017);
 
 -- Interstellar: Sci-Fi, Adventure, Drama
 INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES

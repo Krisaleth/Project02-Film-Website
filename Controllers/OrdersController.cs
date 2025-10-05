@@ -386,35 +386,94 @@ namespace Project02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Order_ID,User_ID,OrderDate,TotalAmount,Status")] Order order)
+        public async Task<IActionResult> Edit(long id, OrderEditVm model)
         {
-            if (id != order.Order_ID)
+            if (id != model.Order_ID)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
+                return View(model);
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var order = await _context.Orders
+                    .Include(o => o.OrderSeats)
+                    .FirstOrDefaultAsync(o => o.Order_ID == id);
+
+                if (order == null)
                 {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+
+                // Cập nhật thông tin order
+                order.User_ID = model.User_ID;
+                order.Showtime_ID = model.Showtime_ID;
+                order.TotalAmount = model.TotalAmount;
+                order.Status = model.OrderStatus;
+
+                // Xử lý update OrderSeats
+                var seatIds = model.SelectedSeatIds; // List<long>
+
+                // Xoá các orderSeat không còn trong selected
+                var toRemove = order.OrderSeats.Where(os => !seatIds.Contains(os.Seat_ID)).ToList();
+                _context.OrderSeats.RemoveRange(toRemove);
+
+                // Thêm mới OrderSeat cho các seat chưa có
+                var existingSeatIds = order.OrderSeats.Select(os => os.Seat_ID).ToList();
+                var toAddSeatIds = seatIds.Except(existingSeatIds);
+                foreach (var seatId in toAddSeatIds)
                 {
-                    if (!OrderExists(order.Order_ID))
+                    order.OrderSeats.Add(new OrderSeat
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                        Seat_ID = seatId,
+                        
+                    });
                 }
+
+                await _context.SaveChangesAsync();
+
+                // Cập nhật Ticket tương ứng
+                var orderSeatIds = order.OrderSeats.Select(os => os.OrderSeat_ID).ToList();
+                var existingTickets = await _context.Tickets.Where(t => orderSeatIds.Contains(t.OrderSeat_ID)).ToListAsync();
+
+                // Xoá ticket không còn tương ứng với orderSeat
+                var ticketOrderSeatIds = existingTickets.Select(t => t.OrderSeat_ID).ToList();
+                var ticketsToRemove = existingTickets.Where(t => !orderSeatIds.Contains(t.OrderSeat_ID)).ToList();
+                _context.Tickets.RemoveRange(ticketsToRemove);
+
+                // Thêm mới ticket với seat mới
+                var seatsNew = order.OrderSeats.Where(os => !ticketOrderSeatIds.Contains(os.OrderSeat_ID));
+                foreach (var os in seatsNew)
+                {
+                    _context.Tickets.Add(new Ticket
+                    {
+                        OrderSeat_ID = os.OrderSeat_ID,
+                        Showtime_ID = order.Showtime_ID,
+                        Status = "available",
+                        BookingTime = DateTime.Now
+                    });
+                }
+
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                ModelState.AddModelError("", "Lỗi khi cập nhật order: " + ex.Message);
+                return View(model);
+            }
         }
+
 
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(long? id)
