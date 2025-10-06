@@ -1,0 +1,172 @@
+﻿@model Project02.Models.User
+
+<div class="user-profile container py-5">
+
+    <style>
+        body {
+            background: #141414;
+            color: #fff;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .btn-outline-light {
+            border-color: #FFD580;
+            color: #FFD580;
+            border-radius: 30px;
+        }
+
+            .btn-outline-light:hover {
+                background-color: #FFD580;
+                color: #111;
+            }
+
+        .nav-tabs .nav-link {
+            color: #FFD580;
+        }
+
+            .nav-tabs .nav-link.active {
+                background-color: #1c1c1c;
+                color: #fff;
+            }
+
+        .table {
+            color: #fff;
+            background: transparent;
+        }
+
+            .table th, .table td {
+                border-color: #333;
+                color: #fff;
+            }
+
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .table-striped > tbody > tr:nth-of-type(even) {
+            background-color: rgba(255,255,255,0.02);
+        }
+    </style>
+
+    <!-- Header -->
+    <div class="profile-header d-flex align-items-center gap-3 mb-3">
+        <div>
+            <h3>@Model.User_Name</h3>
+            <p>@Model.User_Email | @Model.User_Phone</p>
+        </div>
+        <a href="/logout" class="btn btn-outline-light ms-auto">Đăng xuất</a>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" id="profileTab" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#personalInfo">Thông tin cá nhân</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#ticketHistory">Lịch sử vé</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#payments">Thanh toán</button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-4">
+
+        <!-- Personal Info -->
+        <div class="tab-pane fade show active" id="personalInfo">
+            <table class="table table-borderless">
+                <tr><th>Username:</th><td>@Model.User_Name</td></tr>
+                <tr><th>Email:</th><td>@Model.User_Email</td></tr>
+                <tr><th>Phone:</th><td>@Model.User_Phone</td></tr>
+            </table>
+            <a href="/user/edit" class="btn btn-outline-light">Cập nhật thông tin</a>
+        </div>
+
+        <!-- Ticket History -->
+        <div class="tab-pane fade" id="ticketHistory">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Phim</th>
+                        <th>Rạp / Phòng</th>
+                        <th>Ghế</th>
+                        <th>Ngày giờ chiếu</th>
+                        <th>Giá vé</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Tickets?.Any() ?? false)
+                    {
+                        foreach (var t in Model.Tickets)
+                        {
+                            <tr>
+                                <td>@t.Showtime.Movie.Movie_Name</td>
+                                <td>@t.Showtime.Cinema.Cinema_Name / @t.Showtime.Hall.Hall_ID</td>
+                                <td>@t.Seat.RowNumber@t.Seat.SeatNumber</td>
+                                <td>@t.Showtime.Start_Time.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@t.Price.ToString("N0") ₫</td>
+                                <td>@t.Status</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">Chưa có vé nào</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Payments -->
+        <div class="tab-pane fade" id="payments">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Số tiền</th>
+                        <th>Phương thức</th>
+                        <th>Trạng thái</th>
+                        <th>Thời gian</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Tickets?.Any() ?? false)
+                    {
+                        foreach (var t in Model.Tickets)
+                        {
+                            foreach (var p in t.Payments)
+                            {
+                                <tr>
+                                    <td>@p.Amount.ToString("N0") ₫</td>
+                                    <td>@p.PaymentMethod</td>
+                                    <td>@p.PaymentStatus</td>
+                                    <td>@p.PaymentTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">Chưa có thanh toán nào</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    var triggerTabList = [].slice.call(document.querySelectorAll('#profileTab button'))
+    triggerTabList.forEach(function (triggerEl) {
+        var tabTrigger = new bootstrap.Tab(triggerEl)
+        triggerEl.addEventListener('click', function (event) {
+            event.preventDefault()
+            tabTrigger.show()
+        })
+    })
+</script>
