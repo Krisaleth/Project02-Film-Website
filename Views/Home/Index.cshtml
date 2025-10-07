@@ -13,7 +13,18 @@
 
     <div class="navbar-collapse collapse navbar-dark">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item mx-2"><a href="#" class="nav-link">Thể loại</a></li>
+            <li class="nav-item dropdown mx-2">
+                <a href="#" class="nav-link dropdown-toggle" id="genreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Thể loại
+                </a>
+                <ul class="dropdown-menu bg-dark" aria-labelledby="genreDropdown">
+                    <li><a class="dropdown-item text-white" href="#">Hành động</a></li>
+                    <li><a class="dropdown-item text-white" href="#">Hài hước</a></li>
+                    <li><a class="dropdown-item text-white" href="#">Kinh dị</a></li>
+                    <li><a class="dropdown-item text-white" href="#">Tình cảm</a></li>
+                    <li><a class="dropdown-item text-white" href="#">Viễn tưởng</a></li>
+                </ul>
+            </li>
             <li class="nav-item mx-2"><a href="#" class="nav-link">Tất cả phim</a></li>
             <li class="nav-item mx-2"><a href="#" class="nav-link">Điều khoản</a></li>
             <li class="nav-item mx-2"><a href="#" class="nav-link">Về chúng tôi</a></li>
@@ -406,5 +417,34 @@
         footer a:hover {
             color: #fff;
         }
+    /* Navbar dropdown */
+    .navbar-nav .dropdown:hover .dropdown-menu {
+        display: block; /* hover là hiện dropdown ngay */
+    }
+
+    .navbar-nav .dropdown-toggle {
+        cursor: pointer; /* con trỏ chuột khi hover */
+        transition: color 0.2s;
+    }
+
+        .navbar-nav .dropdown-toggle:hover {
+            color: #e50914; /* đổi màu khi hover */
+        }
+
+    .dropdown-menu {
+        background: #1c1c1c; /* màu dropdown match theme */
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .dropdown-item {
+        transition: background 0.2s, color 0.2s;
+    }
+
+        .dropdown-item:hover {
+            background: #e50914;
+            color: #fff;
+        }
+
 
 </style>
