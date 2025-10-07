@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TKT Cinema - Hóa đơn đặt vé</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Tổng thể */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1F1C18, #8E0E00);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            width: 100%;
+            background: #141414;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        }
+
+            .navbar span {
+                color: #ff2a2a;
+            }
+
+        /* Container hóa đơn */
+        .bill-container {
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 30px 40px;
+            width: 90%;
+            max-width: 450px;
+            margin-top: 60px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        
+@@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+        .bill-title {
+            text-align: center;
+            font-size: 26px;
+            color: #ff2a2a;
+            margin-bottom: 25px;
+        }
+
+        .bill-info {
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+            .bill-info strong {
+                color: #ff5555;
+            }
+
+        .total {
+            text-align: right;
+            font-size: 18px;
+            margin-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 10px;
+        }
+
+        /* Nút hành động */
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .btn {
+            width: 48%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .btn-confirm {
+            background: #ff2a2a;
+            color: #fff;
+        }
+
+            .btn-confirm:hover {
+                background: #d92020;
+            }
+
+        .btn-back {
+            background: #333;
+            color: #fff;
+        }
+
+            .btn-back:hover {
+                background: #555;
+            }
+
+        /* Popup */
+        .popup {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background: #1c1c1c;
+            border: 1px solid #ff2a2a;
+            padding: 25px 40px;
+            border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+            .popup-content h3 {
+                color: #ff2a2a;
+                margin-bottom: 10px;
+            }
+
+            .popup-content p {
+                color: #ddd;
+                font-size: 15px;
+            }
+
+            .popup-content button {
+                margin-top: 15px;
+                padding: 8px 20px;
+                border: none;
+                border-radius: 5px;
+                background: #ff2a2a;
+                color: #fff;
+                cursor: pointer;
+            }
+
+                .popup-content button:hover {
+                    background: #d92020;
+                }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        🎬 <span>TKT Cinema</span>
+    </div>
+
+    <div class="bill-container">
+        <h2 class="bill-title">Hóa đơn đặt vé</h2>
+
+        <div class="bill-info">
+            <p><strong>Phim:</strong> Interstellar</p>
+            <p><strong>Rạp:</strong> TKT Galaxy Cinema</p>
+            <p><strong>Ghế:</strong> A01 (VIP)</p>
+            <p><strong>Suất chiếu:</strong> 14:00 - 16:00 | 22/09/2025</p>
+            <p><strong>Giá vé:</strong> 100,000 VND</p>
+        </div>
+
+        <div class="total">
+            <strong>Tổng cộng:</strong> 100,000 VND
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+            <button class="btn btn-confirm" onclick="showPopup()"><i class="fa-solid fa-check"></i> Xác nhận</button>
+        </div>
+    </div>
+
+    <!-- Popup xác nhận -->
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <h3><i class="fa-solid fa-circle-check"></i> Thanh toán thành công!</h3>
+            <p>Cảm ơn bạn đã đặt vé tại TKT Cinema 🎬</p>
+            <button onclick="closePopup()">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+        function showPopup() {
+            document.getElementById('popup').style.display = 'flex';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
