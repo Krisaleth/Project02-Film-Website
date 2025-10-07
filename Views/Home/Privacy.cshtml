@@ -17,6 +17,7 @@
             box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
         }
 
+        /* Poster */
         .poster-wrapper img {
             border-radius: 16px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
@@ -27,6 +28,7 @@
                 transform: scale(1.03);
             }
 
+        /* Movie info */
         .movie-title {
             font-size: 2.3rem;
             font-weight: 700;
@@ -52,6 +54,7 @@
             color: #FFD580;
         }
 
+        /* Buttons */
         .btn {
             border-radius: 30px;
             font-weight: 500;
@@ -79,6 +82,7 @@
                 color: #111;
             }
 
+        /* Showtimes table */
         .showtimes {
             margin-top: 30px;
             overflow-x: auto;
@@ -119,6 +123,7 @@
                 background-color: #b81d24;
             }
 
+        /* Seat Map */
         .seat-map {
             background: #1c1c1c;
             border-radius: 12px;
@@ -210,7 +215,33 @@
                 display: inline-block;
                 border-radius: 6px;
             }
+
+        /* Back Button */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: transparent;
+            color: #FFD580;
+            border: 2px solid #FFD580;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+
+            .btn-back:hover {
+                background-color: #FFD580;
+                color: #111;
+            }
     </style>
+
+    <!-- ===== Nút Quay lại ===== -->
+    <a href="javascript:history.back()" class="btn-back">
+        <i class="fa fa-arrow-left"></i> Quay lại
+    </a>
 
     <!-- ===== Movie Detail Info ===== -->
     <div class="row align-items-start g-4">
@@ -245,7 +276,6 @@
     <!-- ===== Showtimes Table ===== -->
     <div class="showtimes mt-5">
         <h4 class="mb-3">Suất chiếu hiện có</h4>
-
         <table class="table table-striped align-middle" id="showtimeTable">
             <thead>
                 <tr>
@@ -286,19 +316,16 @@
         <h4 class="text-white mb-3">Chọn ghế</h4>
 
         <div class="screen mb-3">MÀN HÌNH</div>
-
-        <div class="seats" id="seatContainer">
-            Chọn suất chiếu để hiện ghế
-        </div>
+        <div class="seats" id="seatContainer">Chọn suất chiếu để hiện ghế</div>
 
         <div class="mt-3 d-flex gap-3 justify-content-center align-items-center">
             <button id="resetSeats" class="btn btn-outline-light">Đặt lại</button>
             <div class="text-white">
-                <strong>Tổng tiền: </strong><span id="totalPrice">0</span> ₫
+                <strong>Tổng tiền:</strong> <span id="totalPrice">0</span> ₫
             </div>
         </div>
 
-        <!-- Không còn "Đang chọn" -->
+        <!-- Ghi chú -->
         <div class="seat-legend text-white">
             <div><span class="seat vip"></span> VIP</div>
             <div><span class="seat standard"></span> Phổ thông</div>
@@ -306,7 +333,7 @@
         </div>
     </div>
 
-    <!-- ===== JS ===== -->
+    <!-- ===== JavaScript ===== -->
     <script>
         const seatContainer = document.getElementById('seatContainer');
         const totalPriceEl = document.getElementById('totalPrice');
@@ -315,6 +342,7 @@
         let selectedSeats = [];
         let seatPrice = 0;
 
+        // Tạo ghế
         function generateSeats(showtimeId, price) {
             seatContainer.innerHTML = '';
             selectedSeats = [];
@@ -343,7 +371,6 @@
 
                     div.addEventListener('click', () => {
                         if (div.classList.contains('sold')) return;
-
                         div.classList.toggle('selected');
 
                         if (div.classList.contains('selected')) {
@@ -362,6 +389,7 @@
             }
         }
 
+        // Chọn suất chiếu
         document.querySelectorAll('.select-showtime').forEach(btn => {
             btn.addEventListener('click', e => {
                 e.preventDefault();
@@ -371,6 +399,7 @@
             });
         });
 
+        // Nút đặt lại
         resetBtn.addEventListener('click', () => {
             document.querySelectorAll('.seat.selected').forEach(s => s.classList.remove('selected'));
             selectedSeats = [];
