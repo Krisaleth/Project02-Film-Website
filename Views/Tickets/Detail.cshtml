@@ -1,0 +1,57 @@
+﻿@model Project02.ViewModels.Ticket.TicketRowVm
+
+@{
+    ViewData["Title"] = "Detail Ticket";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<table class="table table-bordered w-50">
+    <tr>
+        <th>Mã vé</th>
+        <td>@Model.Ticket_ID</td>
+    </tr>
+    <tr>
+        <th>Phim</th>
+        <td>@Model.Movie_Name</td>
+    </tr>
+    <tr>
+        <th>Thời gian chiếu</th>
+        <td>@Model.Start_Time.ToString("dd/MM/yyyy HH:mm")</td>
+    </tr>
+    <tr>
+        <th>Ghế</th>
+        <td>@Model.SeatNumber</td>
+    </tr>
+    <tr>
+        <th>Thời gian đặt</th>
+        <td>@Model.BookingTime.ToString("dd/MM/yyyy HH:mm")</td>
+    </tr>
+    <tr>
+        <th>Trạng thái</th>
+        <td>
+            @switch (Model.Status?.ToLower())
+            {
+                case "available":
+                    <span class="badge bg-success">Available</span>
+                    break;
+                case "booked":
+                    <span class="badge bg-primary">Booked</span>
+                    break;
+                case "expired":
+                    <span class="badge bg-secondary">Expired</span>
+                    break;
+                case "used":
+                    <span class="badge bg-info text-white">Used</span>
+                    break;
+                case "cancelled":
+                    <span class="badge bg-danger">Cancelled</span>
+                    break;
+                default:
+                    <span class="badge bg-light text-dark">@Model.Status</span>
+                    break;
+            }
+        </td>
+    </tr>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Quay lại danh sách vé</a>

@@ -123,6 +123,8 @@
 
         if (!btn) return;
 
+        e.preventDefault();
+
         const id = btn.dataset.id;
         const name = btn.dataset.name;
 
@@ -141,7 +143,7 @@
 
         const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
 
-        const url = `/admin/hall/delete/${encodeURIComponent(slug)}`;
+        const url = `/admin/hall/delete/${encodeURIComponent(id)}`;
 
         const res = await fetch(url, {
             method: 'post',
@@ -170,10 +172,12 @@
 
 
         if (json.ok) {
-            const row = document.getElementById(`row-${id}`);
+            const row = document.getElementById(`${id}`);
             row?.remove();
             Swal.fire ({ icon:'success', title:'Đã xoá', timer: 1200, showConfirmButton:false });
-            location.reload();
+            setTimeout(() => {
+                location.reload();
+            }, 1200);
         } else {
             Swal.fire ({ icon:'error', title:'Lỗi', text: json.message || "Không xoá được" });
         }

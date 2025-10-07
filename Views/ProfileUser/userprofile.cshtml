@@ -1,4 +1,5 @@
-﻿@model Project02.Models.User
+﻿@model Project02.Models.Ticket
+
 
 @{
     Layout = "_Layout"; // Layout chung của trang (bạn có thể đổi tùy theo project)
@@ -9,8 +10,8 @@
     <!-- Header -->
     <div class="profile-header d-flex align-items-center gap-3 mb-3">
         <div>
-            <h3>@User.Identity?.Name ?? "Nguyễn Văn Khải"</h3>
-            <p>mizu@example.com | 0987654321</p>
+            <h3>Test</h3>
+            <p>Test2</p>
         </div>
         <a href="@Url.Action("Logout", "Account")" class="btn btn-outline-light ms-auto">
             <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
@@ -34,9 +35,9 @@
         <!-- Thông tin cá nhân -->
         <div class="tab-pane fade show active" id="personalInfo">
             <table class="table table-borderless">
-                <tr><th>Username:</th><td>@User.Identity?.Name ?? "User 1"</td></tr>
-                <tr><th>Email:</th><td>ABC@example.com</td></tr>
-                <tr><th>Phone:</th><td>0987654321</td></tr>
+                <tr><th>Username:</th><td>Test</td></tr>
+                <tr><th>Email:</th><td>Test</td></tr>
+                <tr><th>Phone:</th><td>Test</td></tr>
             </table>
             <a href="@Url.Action("EditProfile", "User")" class="btn btn-outline-light">Cập nhật thông tin</a>
         </div>
@@ -55,22 +56,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Interstellar</td>
-                        <td>TKT Galaxy / Phòng 1</td>
-                        <td>A01</td>
-                        <td>22/09/2025 14:00</td>
-                        <td>100,000 ₫</td>
-                        <td>Đã thanh toán</td>
-                    </tr>
-                    <tr>
-                        <td>Dune: Part Two</td>
-                        <td>TKT Galaxy / Phòng 2</td>
-                        <td>B05</td>
-                        <td>25/09/2025 19:00</td>
-                        <td>120,000 ₫</td>
-                        <td>Đang chờ</td>
-                    </tr>
+                            <tr>
+                        <td>Test</td>
+                        <td>TestTest</td>
+                        <td>Test</td>
+                                <td>60.000₫</td>
+                                <td>Còn</td>
+                            </tr>
+                        }
+                    }
+
                 </tbody>
             </table>
         </div>
@@ -87,18 +82,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>100,000 ₫</td>
-                        <td>Ví Momo</td>
-                        <td>Thành công</td>
-                        <td>22/09/2025 13:55</td>
-                    </tr>
-                    <tr>
-                        <td>120,000 ₫</td>
-                        <td>Thẻ Visa</td>
-                        <td>Thành công</td>
-                        <td>25/09/2025 18:50</td>
-                    </tr>
+
+                                <tr>
+                                    <td>60.000 ₫</td>
+                                    <td>10/10/2005</td>
+                                </tr>
+
                 </tbody>
             </table>
         </div>

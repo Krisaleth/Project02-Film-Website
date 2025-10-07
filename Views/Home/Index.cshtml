@@ -1,49 +1,10 @@
-﻿@{
-    Layout = "_Layout";
-    ViewData["Title"] = "Movies";
+﻿@model Project02.ViewModels.Customer.UserDashBoardVm
+@{
+    Layout = "_Layout"; // layout dành cho user
+    ViewData["Title"] = "Trang chủ";
 }
 
-<!-- ===== NAVBAR ===== -->
-<nav class="simple-navbar navbar navbar-expand-lg navbar-dark fixed-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="#">🎬 TKT Cinema</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
-                aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon text-white"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarMenu">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item dropdown mx-2">
-                    <a href="#" class="nav-link dropdown-toggle" id="genreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Thể loại
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Hành động</a></li>
-                        <li><a class="dropdown-item" href="#">Hài hước</a></li>
-                        <li><a class="dropdown-item" href="#">Kinh dị</a></li>
-                        <li><a class="dropdown-item" href="#">Tình cảm</a></li>
-                        <li><a class="dropdown-item" href="#">Viễn tưởng</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item mx-2"><a href="#" class="nav-link">Tất cả phim</a></li>
-                <li class="nav-item mx-2"><a href="#" class="nav-link">Điều khoản</a></li>
-                <li class="nav-item mx-2"><a href="#" class="nav-link">Về chúng tôi</a></li>
-                <li class="nav-item mx-2"><a href="#" class="nav-link">Trang cá nhân</a></li>
-            </ul>
-
-            <form class="navbar-search d-flex" method="get" action="#">
-                <input type="text" class="form-control me-2" name="q" placeholder="Tìm kiếm phim..." />
-                <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center justify-content-center">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-            </form>
-        </div>
-    </div>
-</nav>
-
-<!-- ===== MAIN CONTENT ===== -->
-<div class="container py-5 mt-5">
+<div class="container py-5">
 
     <h1 class="mb-4 fw-bold text-white text-left">🎬 Khám Phá Phim</h1>
 
@@ -92,11 +53,22 @@
                             <button class="btn-detail">🎬 Xem chi tiết</button>
                             <button class="btn-ticket">🎟 Mua vé</button>
                         </div>
+
+            @foreach (var movie in Model.RandomMovies)
+            {
+                @* Movie Card Example *@
+                <div class="movie-card">
+                    <div class="movie-img">
+                        <img src="@movie.MoviePoster" alt="@movie.MovieName">
+                        <div class="movie-overlay">
+                            <button class="btn-detail">Xem chi tiết</button>
+                            <button class="btn-ticket">Mua vé</button>
+                        </div>
                         <span class="badge badge-4k">4K</span>
                     </div>
                     <div class="movie-info">
-                        <h3 class="title-vi">Phim Đề Cử @(i)</h3>
-                        <p class="title-en">Recommended Movie @(i)</p>
+                        <h3 class="title-vi">@movie.MovieName</h3>
+                        <p class="title-en">@movie.MovieYear</p>
                     </div>
                 </div>
             }
@@ -105,24 +77,22 @@
         <button class="arrow right">&#10095;</button>
     </div>
 
-    <!-- ===== TẤT CẢ PHIM ===== -->
-    <h3 class="movie-label mt-5">Tất cả phim</h3>
-
-    <div class="row g-4">
-        @for (int i = 0; i < 12; i++)
+    <h3 class="movie-label mt-5 ">Tất cả phim</h3>
+    <div class="row g-4 justify-content-center">
+        @foreach (var movie in Model.Movies)
         {
-            <div class="col-6 col-md-4 col-lg-3">
+            <div class="col-6 col-md-4 col-lg-3 d-flex justify-content-center">
                 <div class="film-card">
                     <div class="film-poster">
-                        Poster @(i + 1)
+                        <img src="@movie.MoviePoster" alt="Poster" class="img-fluid" />
                         <div class="film-overlay">
                             <button class="btn-detail">🎬 Xem chi tiết</button>
                             <button class="btn-ticket">🎟 Mua vé</button>
                         </div>
                     </div>
                     <div class="film-info">
-                        <p class="film-title">Tên phim @(i + 1)</p>
-                        <p class="film-year">2025</p>
+                        <p class="film-title">@movie.MovieName</p>
+                        <p class="film-year">@movie.MovieYear</p>
                     </div>
                 </div>
             </div>
@@ -161,13 +131,75 @@
             </div>
         </div>
 
-        <hr class="border-secondary my-4" />
-        <div class="text-center text-muted small">
-            © 2025 <span class="text-danger fw-bold">TKT Team</span> — All rights reserved.
-        </div>
-    </div>
-</footer>
+        leftBtn.addEventListener('click', () => {
+            if (container.scrollLeft <= 0) {
+                container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            }
+        });
+    });
 
+        let autoCarouselInterval;
+
+    function scrollLeftFn() {
+        const container = document.querySelector('.movie-container');
+        container.scrollBy({ left: -300, behavior: 'smooth' });
+        resetAutoCarousel(); // đảm bảo không cuộn khi người dùng vừa click
+    }
+    function scrollRightFn() {
+        const container = document.querySelector('.movie-container');
+        container.scrollBy({ left: 300, behavior: 'smooth' });
+        resetAutoCarousel();
+    }
+
+    function autoCarousel() {
+        scrollRightFn();
+    }
+
+    function resetAutoCarousel() {
+        clearInterval(autoCarouselInterval);
+        autoCarouselInterval = setInterval(autoCarousel, 4000); // auto slide mỗi 4 giây
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.querySelector('.movie-container');
+        const leftBtn = document.querySelector('.arrow.left');
+        const rightBtn = document.querySelector('.arrow.right');
+
+        const firstCard = container.querySelector('.movie-card');
+        const style = getComputedStyle(container);
+        const gap = parseInt(style.gap) || 15;
+        const cardWidth = firstCard.offsetWidth;
+        const scrollAmount = cardWidth + gap;
+
+        rightBtn.addEventListener('click', () => {
+            if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
+                container.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+            resetAutoCarousel();
+        });
+
+        leftBtn.addEventListener('click', () => {
+            if (container.scrollLeft <= 0) {
+                container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            }
+            resetAutoCarousel();
+        });
+
+        // Tự động chạy sau mỗi 4 giây
+        autoCarouselInterval = setInterval(autoCarousel, 4000);
+
+        // Khi rê chuột vào carousel thì dừng tự động
+        container.addEventListener('mouseenter', () => clearInterval(autoCarouselInterval));
+        container.addEventListener('mouseleave', resetAutoCarousel);
+    });
+
+</script>
 
 <!-- ===== CSS ===== -->
 <style>
@@ -185,21 +217,31 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
-    .navbar-brand {
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 2rem;
-        color: #e50914 !important;
-        letter-spacing: 1px;
-        text-shadow: 0 0 10px rgba(229, 9, 20, 0.6);
+    .simple-navbar li a {
+        color: #fff;
+        font-size: 16px;
+        text-decoration: none;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        padding: 8px 18px;
+        border-radius: 4px;
+        transition: background 0.2s;
     }
 
-    .nav-link:hover {
+    .simple-navbar li a:hover {
         background: #e50914;
-        border-radius: 6px;
-        transition: 0.3s;
+        color: #fff;
     }
 
-    /* ===== BANNER ===== */
+    .navbar-search button {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    /* Banner */
     .banner-img {
         width: 100%;
         height: 480px;
@@ -207,7 +249,11 @@
         border-radius: 12px;
     }
 
-    /* ===== PHIM ĐỀ CỬ ===== */
+    .banner-img:hover {
+        transform: scale(1.02);
+    }
+
+    /* Movie Wrapper */
     .movie-wrapper {
         position: relative;
         overflow: hidden;
@@ -224,9 +270,9 @@
         -ms-overflow-style: none; /* IE 10+ */
     }
 
-        .movie-container::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Edge */
-        }
+    .movie-container::-webkit-scrollbar {
+        display: none;
+    }
 
     .movie-card {
         flex: 0 0 auto;
@@ -238,10 +284,9 @@
         position: relative;
     }
 
-        .movie-card:hover {
-            transform: scale(1.07);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-        }
+    .movie-card:hover {
+        transform: scale(1.05);
+    }
 
     .movie-img {
         position: relative;
@@ -249,11 +294,12 @@
         overflow: hidden;
     }
 
-        .movie-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    .movie-img img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        display: block;
+    }
 
     /* Overlay */
     .movie-overlay {
@@ -343,36 +389,53 @@
         z-index: 2;
     }
 
-        .arrow.left {
-            left: 5px;
-        }
+    .arrow:hover {
+        background: rgba(255,255,255,0.2);
+    }
 
-        .arrow.right {
-            right: 5px;
-        }
+    .arrow.left {
+        left: 0;
+    }
+
+    .arrow.right {
+        right: 0;
+    }
 
     /* ===== TẤT CẢ PHIM ===== */
     .film-card {
-        background: #1c1c1c;
-        border-radius: 10px;
-        text-align: center;
-        transition: transform 0.3s, background 0.3s;
+        width: 220px;
+        height: 370px;
+        border-radius: 1rem;
+        overflow: hidden;
+        background: #222;
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        margin: 0 auto;
     }
 
-        .film-card:hover {
-            transform: scale(1.05);
-            background: #2a2a2a;
-        }
+
+
+    .film-card:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        background: #2a2a2a;
+    }
 
     .film-poster {
         position: relative;
-        aspect-ratio: 2 / 3;
-        overflow: hidden;
-        background: #333;
-        color: #ccc;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        width: 100%;
+        height: 300px;
+        text-align: center;
+    }
+
+    .film-poster img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .film-overlay {
@@ -393,106 +456,29 @@
     }
 
     .film-info {
-        padding: 10px;
+        width: 100%;
+        height: 70px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     .film-title {
-        font-weight: 600;
         margin: 0;
+        font-weight: bold;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 90%;
     }
 
-    /* ===== FOOTER ===== */
-    footer a {
-        color: #ccc;
-        text-decoration: none;
+    .film-year {
+        margin: 0;
+        font-size: 0.95em;
+        color: #bbbbbb;
     }
-
-        footer a:hover {
-            color: #fff;
-        }
-    /* Navbar dropdown */
-    .navbar-nav .dropdown:hover .dropdown-menu {
-        display: block; /* hover là hiện dropdown ngay */
-    }
-
-    .navbar-nav .dropdown-toggle {
-        cursor: pointer; /* con trỏ chuột khi hover */
-        transition: color 0.2s;
-    }
-
-        .navbar-nav .dropdown-toggle:hover {
-            color: #e50914; /* đổi màu khi hover */
-        }
-
-    .dropdown-menu {
-        background: #1c1c1c; /* màu dropdown match theme */
-        border: none;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-
-    .dropdown-item {
-        transition: background 0.2s, color 0.2s;
-    }
-
-        .dropdown-item:hover {
-            background: #e50914;
-            color: #fff;
-        }
-    /* ===== FOOTER ===== */
-    .footer {
-        color: #ccc;
-        font-size: 16px; /* to hơn một chút */
-        line-height: 1.8;
-        padding-top: 60px;
-        padding-bottom: 60px;
-    }
-
-        .footer h5 {
-            font-size: 22px;
-            color: #e50914;
-            letter-spacing: 0.5px;
-            margin-bottom: 20px;
-        }
-
-        .footer h6 {
-            font-size: 18px;
-            color: #fff;
-            margin-bottom: 15px;
-        }
-
-        .footer a.footer-link {
-            color: #ddd;
-            text-decoration: none;
-            font-size: 15px;
-            transition: color 0.3s, text-decoration 0.3s;
-        }
-
-            .footer a.footer-link:hover {
-                color: #fff;
-                text-decoration: underline;
-            }
-
-        .footer ul li {
-            margin-bottom: 8px;
-        }
-
-        .footer p {
-            color: #aaa;
-            font-size: 15px;
-        }
-
-        .footer hr {
-            border-color: #333;
-            opacity: 0.7;
-        }
-
-        .footer .text-center {
-            font-size: 15px;
-            color: #aaa;
-            margin-top: 10px;
-        }
-
 </style>
-<!-- ===== FONT AWESOME ===== -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600&display=swap" rel="stylesheet">

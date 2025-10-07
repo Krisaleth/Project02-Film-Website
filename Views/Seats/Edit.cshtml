@@ -1,47 +1,58 @@
-﻿@model Project02.Models.Seat
-
+﻿@using Project02.ViewModels.Seat
+@model SeatEditVm
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Seat";
+    Layout = "_AdminLayout";
 }
 
-<h1>Edit</h1>
-
-<h4>Seat</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Seat_ID" />
-            <div class="form-group">
-                <label asp-for="Hall_ID" class="control-label"></label>
-                <select asp-for="Hall_ID" class="form-control" asp-items="ViewBag.Hall_ID"></select>
-                <span asp-validation-for="Hall_ID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RowNumber" class="control-label"></label>
-                <input asp-for="RowNumber" class="form-control" />
-                <span asp-validation-for="RowNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SeatNumber" class="control-label"></label>
-                <input asp-for="SeatNumber" class="form-control" />
-                <span asp-validation-for="SeatNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SeatType" class="control-label"></label>
-                <input asp-for="SeatType" class="form-control" />
-                <span asp-validation-for="SeatType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <form asp-action="Edit" method="post" asp-route-id="@Model.Seat_ID">
+                @Html.AntiForgeryToken()
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            Edit Seat
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Seat_ID" />
+                        <input asp-for="RowNumber" type="hidden" />
+                        <input type="hidden" asp-for="SeatNumber" />
+                        <div class="form-group">
+                            <label class="control-label">Hall</label>
+                            <select asp-for="Hall_ID" class="form-select" asp-items="ViewBag.Hall_ID"></select>
+                            <span asp-validation-for="Hall_ID" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Seat Type</label>
+                            <select asp-for="SeatType" asp-items="(SelectList)ViewBag.SeatType" class="form-control"></select>
+                            <span asp-validation-for="SeatType" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Description</label>
+                            <textarea class="form-control" asp-for="Description" rows="5" cols="40"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Status" class="control-label"></label>
+                            <select asp-for="Status" asp-items="(SelectList)ViewBag.SeatStatus" class="form-select"></select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <a asp-action="Index" class="btn btn-outline-secondary float-end">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

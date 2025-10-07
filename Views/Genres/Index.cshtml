@@ -123,6 +123,8 @@
 
         if (!btn) return;
 
+        e.preventDefault();
+
         const slug = btn.dataset.id;
         const id = btn.dataset.rowId;
         const name = btn.dataset.name;
@@ -174,7 +176,9 @@
             const row = document.getElementById(`row-${id}`);
             row?.remove();
             Swal.fire ({ icon:'success', title:'Đã xoá', timer: 1200, showConfirmButton:false });
-            location.reload();
+            setTimeout(() => {
+                location.reload();
+            }, 1200);
         } else {
             Swal.fire ({ icon:'error', title:'Lỗi', text: json.message || "Không xoá được" });
         }

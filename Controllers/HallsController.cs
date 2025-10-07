@@ -102,114 +102,114 @@ namespace Project02.Controllers
         }
 
         // GET: Halls/Create
+        [HttpGet("/admin/hall/create")]
         public IActionResult Create()
         {
-            ViewData["Cinema_ID"] = new SelectList(_context.Cinemas, "Cinema_ID", "Cinema_ID");
+            ViewData["Cinema_ID"] = new SelectList(_context.Cinemas, "Cinema_ID", "Cinema_Name");
             return View();
         }
 
         // POST: Halls/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/hall/create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Hall_ID,Cinema_ID,Capacity")] Hall hall)
+        public async Task<IActionResult> Create(HallCreateVm vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(hall);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(vm);
             }
-            ViewData["Cinema_ID"] = new SelectList(_context.Cinemas, "Cinema_ID", "Cinema_ID", hall.Cinema_ID);
-            return View(hall);
+            var hall = new Hall
+            {
+                Cinema_ID = vm.Cinema_ID,
+                Capacity = vm.Capacity
+            };
+            _context.Add(hall);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Halls/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        [HttpGet("/admin/hall/edit/{id}")]
+        public async Task<IActionResult> Edit([FromRoute] long? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var hall = await _context.Halls.FindAsync(id);
+            var hall = await _context.Halls.Where(h => h.Hall_ID == id).Select(n => new HallEditVm
+            {
+                Hall_ID = n.Hall_ID,
+                Cinema_ID = n.Cinema_ID,
+                Capacity = n.Capacity
+            }).FirstOrDefaultAsync();
+
             if (hall == null)
             {
                 return NotFound();
             }
-            ViewData["Cinema_ID"] = new SelectList(_context.Cinemas, "Cinema_ID", "Cinema_ID", hall.Cinema_ID);
+            ViewData["Cinema_ID"] = new SelectList(_context.Cinemas, "Cinema_ID", "Cinema_Name", hall.Cinema_ID);
             return View(hall);
         }
 
         // POST: Halls/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("/admin/hall/edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Hall_ID,Cinema_ID,Capacity")] Hall hall)
+        public async Task<IActionResult> Edit([FromRoute]long id, HallEditVm vm)
         {
-            if (id != hall.Hall_ID)
+            if (id != vm.Hall_ID)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(hall);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!HallExists(hall.Hall_ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                ViewData["Cinema_ID"] = new SelectList(_context.Cinemas, "Cinema_ID", "Cinema_Name", vm.Cinema_ID);
+                return View(vm);
             }
-            ViewData["Cinema_ID"] = new SelectList(_context.Cinemas, "Cinema_ID", "Cinema_ID", hall.Cinema_ID);
-            return View(hall);
-        }
-
-        // GET: Halls/Delete/5
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var hall = await _context.Halls
-                .Include(h => h.Cinema)
-                .FirstOrDefaultAsync(m => m.Hall_ID == id);
+            var hall = await _context.Halls.FindAsync(id);
             if (hall == null)
             {
                 return NotFound();
             }
+            hall.Cinema_ID = vm.Cinema_ID;
+            hall.Capacity = vm.Capacity;
 
-            return View(hall);
+            try {                
+                _context.Update(hall);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!HallExists(hall.Hall_ID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         // POST: Halls/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("/admin/hall/delete/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var hall = await _context.Halls.FindAsync(id);
+            var hall = await _context.Halls.FirstOrDefaultAsync(h => h.Hall_ID == id);
             if (hall != null)
             {
                 _context.Halls.Remove(hall);
+                
+                
             }
-
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { ok = true, message = "Deleted successfully" });
         }
 
         private bool HallExists(long id)

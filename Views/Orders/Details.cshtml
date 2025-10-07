@@ -1,0 +1,48 @@
+﻿@using Project02.ViewModels.Order
+@model OrderDetailVm
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Order Details</h2>
+
+<div>
+    <p><strong>Order ID:</strong> @Model.Order_ID</p>
+    <p><strong>User ID:</strong> @Model.User_ID</p>
+    <p><strong>User Name:</strong> @Model.UserName</p>
+    <p><strong>Order Date:</strong> @Model.OrderDateString</p>
+    <p><strong>Total Amount:</strong> @Model.TotalAmount.ToString("N0") đ</p>
+    <p><strong>Status:</strong> @Model.Status</p>
+</div>
+
+<h3>Seats in this Order</h3>
+
+@if (Model.OrderSeats != null && Model.OrderSeats.Count > 0)
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Order Seat ID</th>
+                <th>Seat ID</th>
+                <th>Price</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var seat in Model.OrderSeats)
+            {
+                <tr>
+                    <td>@seat.OrderSeat_ID</td>
+                    <td>@seat.Seat_ID</td>
+                    <td>@seat.Price.ToString("N0") đ</td>
+                    <td>@seat.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No seats found in this order.</p>
+}
