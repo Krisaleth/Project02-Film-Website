@@ -33,7 +33,7 @@ namespace Project02.Controllers
             })
             .ToListAsync();
 
-            var recommend = await _ctx.Movies.OrderBy(f => Guid.NewGuid()).Take(12).Select(m => new MovieShowVm
+            var recommend = await _ctx.Movies.OrderBy(f => Guid.NewGuid()).Take(16).Select(m => new MovieShowVm
             {
                 MovieId = m.Movie_ID,
                 MovieName = m.Movie_Name,
