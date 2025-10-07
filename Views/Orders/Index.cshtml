@@ -68,22 +68,25 @@
                                             @Html.DisplayFor(modelItem => item.OrderDateString)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.TotalAmount)
+                                            @{
+                                                decimal totalAmount = item.TotalAmount;
+                                            }
+                                            @totalAmount.ToString("N0", new System.Globalization.CultureInfo("vi-VN")) đ
                                         </td>
                                         <td>
                                             @switch (item.Status?.ToLower())
                                             {
                                                 case "pending":
-                                                    <span class="badge badge-warning">Pending</span>
+                                                    <span class="badge bg-warning text-dark">Pending</span>
                                                     break;
                                                 case "completed":
-                                                    <span class="badge badge-success">Completed</span>
+                                                    <span class="badge bg-success">Completed</span>
                                                     break;
                                                 case "cancelled":
-                                                    <span class="badge badge-danger">Cancelled</span>
+                                                    <span class="badge bg-danger">Cancelled</span>
                                                     break;
                                                 default:
-                                                    <span class="badge badge-secondary">@item.Status</span>
+                                                    <span class="badge bg-secondary">@item.Status</span>
                                                     break;
                                             }
                                         </td>
@@ -185,7 +188,7 @@
 
 
         if (json.ok) {
-            const row = document.getElementById(`row-${id}`);
+            const row = document.getElementById(`${id}`);
             row?.remove();
             Swal.fire ({ icon:'success', title:'Đã xoá', timer: 1200, showConfirmButton:false });
             setTimeout(() => {

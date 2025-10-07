@@ -1,0 +1,30 @@
+﻿@model Project02.ViewModels.Ticket.TicketRowVm
+
+@{
+    ViewData["Title"] = "Edit Ticket";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Ticket_ID" />
+
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label">Trạng thái vé</label>
+        <select asp-for="Status" class="form-select w-auto">
+            <option value="Available" selected="@(Model.Status == "Available")">Available</option>
+            <option value="Booked" selected="@(Model.Status == "Booked")">Booked</option>
+            <option value="Expired" selected="@(Model.Status == "Expired")">Expired</option>
+            <option value="Used" selected="@(Model.Status == "Used")">Used</option>
+            <option value="Cancelled" selected="@(Model.Status == "Cancelled")">Cancelled</option>
+        </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+    <a asp-action="Detail" asp-route-id="@Model.Ticket_ID" class="btn btn-secondary ms-2">Hủy</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
