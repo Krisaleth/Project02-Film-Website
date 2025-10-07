@@ -260,23 +260,21 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var show in Model.Showtimes)
-                {
+
                     <tr>
-                        <td>@show.Cinema.Cinema_Name</td>
-                        <td>@show.Hall.Hall_ID</td>
-                        <td>@show.Start_Time.ToString("HH:mm dd/MM/yyyy")</td>
-                        <td>@show.End_Time.ToString("HH:mm dd/MM/yyyy")</td>
-                        <td>@show.Language</td>
-                        <td>@show.Format</td>
-                        <td>@show.Price.ToString("N0") ₫</td>
+                    <td>Privacy</td>
+                    <td>Privacy</td>
+                        <td>01/10/2005</td>
+                        <td>01/01/2004</td>
+                        <td>Vietnamese</td>
+                        <td>3D</td>
                         <td>
                             <a href="#" class="btn btn-sm btn-danger select-showtime"
-                               data-showtime-id="@show.Showtime_ID"
-                               data-price="@show.Price">Chọn</a>
+                               data-showtime-id=""
+                               data-price="">Chọn</a>
                         </td>
                     </tr>
-                }
+                
             </tbody>
         </table>
     </div>

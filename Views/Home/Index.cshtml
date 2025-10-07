@@ -1,33 +1,63 @@
-﻿@{
+﻿@model Project02.ViewModels.Customer.UserDashBoardVm
+@{
     Layout = "_Layout"; // layout dành cho user
     ViewData["Title"] = "Movies";
 }
+<style>
+    .film-card {
+        width: 220px; /* hoặc 100%, tuỳ theo grid */
+        height: 370px; /* đủ chứa poster + info + padding */
+        background: #222;
+        border-radius: 1rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        margin: 0 auto;
+    }
 
-<!-- Navbar đẹp mắt + thanh tìm kiếm góc phải -->
-<nav class="simple-navbar navbar navbar-expand-lg navbar-dark">
-    <a class="navbar-brand" href="#">TKT Team</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-            aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon text-white"><i class="fa-solid fa-caret-down"></i></span>
-    </button>
+    .film-poster {
+        width: 100%;
+        height: 300px;
+        position: relative;
+        text-align: center;
+    }
 
-    <div class="navbar-collapse collapse navbar-dark">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Thể loại</a></li>
-            <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Tất cả film</a></li>
-            <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Điều khoản</a></li>
-            <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Về chúng tôi</a></li>
-            <li class="text-white nav-item mx-2"><a href="#" class="nav-link">Trang cá nhân</a></li>
-        </ul>
+        .film-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-        <form class="navbar-search d-flex" method="get" action="#">
-            <input type="text" class="form-control me-2" name="q" placeholder="Tìm kiếm phim..." />
-            <button type="submit" aria-label="Tìm kiếm">
-                <span class="search-icon btn btn-secondary">&#128269;</span>
-            </button>
-        </form>
-    </div>
-</nav>
+    .film-info {
+        width: 100%;
+        height: 70px; /* Cố định info, tránh dài-ngắn */
+        padding-top: 8px;
+        padding-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .film-title {
+        margin: 0;
+        font-weight: bold;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 90%;
+    }
+
+    .film-year {
+        margin: 0;
+        font-size: 0.95em;
+        color: #bbbbbb;
+    }
+
+</style>
 
 <div class="container py-5">
     <h1 class="mb-4 fw-bold text-left" style="color: #fff;">🎬 Khám Phá Phim</h1>
@@ -78,21 +108,24 @@
         <button class="arrow left" onclick="scrollLeftFn()">&#10094;</button>
         <div class="movie-container">
 
-            @* Movie Card Example *@
-            <div class="movie-card">
-                <div class="movie-img">
-                    <img src="poster1.jpg" alt="Nhiệm Vụ Bất Khả Thi">
-                    <div class="movie-overlay">
-                        <button class="btn-detail">Xem chi tiết</button>
-                        <button class="btn-ticket">Mua vé</button>
+            @foreach (var movie in Model.RandomMovies)
+            {
+                @* Movie Card Example *@
+                <div class="movie-card">
+                    <div class="movie-img">
+                        <img src="@movie.MoviePoster" alt="@movie.MovieName">
+                        <div class="movie-overlay">
+                            <button class="btn-detail">Xem chi tiết</button>
+                            <button class="btn-ticket">Mua vé</button>
+                        </div>
+                        <span class="badge badge-4k">4K</span>
                     </div>
-                    <span class="badge badge-4k">4K</span>
+                    <div class="movie-info">
+                        <h3 class="title-vi">@movie.MovieName</h3>
+                        <p class="title-en">@movie.MovieYear</p>
+                    </div>
                 </div>
-                <div class="movie-info">
-                    <h3 class="title-vi">Nhiệm Vụ Bất Khả Thi: Nghiệp Báo Cuối Cùng</h3>
-                    <p class="title-en">Mission: Impossible – The ...</p>
-                </div>
-            </div>
+            }
 
             @* Thêm các movie-card khác tương tự *@
         </div>
@@ -102,20 +135,20 @@
     <!-- Grid tất cả phim -->
     <h3 class="movie-label mt-5">Tất cả phim</h3>
     <div class="row g-4">
-        @for (int i = 0; i < 12; i++)
+        @foreach (var movie in Model.Movies)
         {
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="film-card">
                     <div class="film-poster">
-                        Poster
+                        <img src="@movie.MoviePoster" alt="Poster" class="img-fluid" style="object-fit:cover;" />
                         <div class="film-overlay">
                             <button class="btn-detail">Xem chi tiết</button>
                             <button class="btn-ticket">Mua vé</button>
                         </div>
                     </div>
                     <div class="film-info">
-                        <p class="film-title">Tên phim</p>
-                        <p class="film-year">2025</p>
+                        <p class="film-title">@movie.MovieName</p>
+                        <p class="film-year">@movie.MovieYear</p>
                     </div>
                 </div>
             </div>

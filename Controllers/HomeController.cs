@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Project02.Data;
 using Project02.Models;
+
+using Project02.ViewModels.Customer;
 
 namespace Project02.Controllers
 {
@@ -10,16 +14,43 @@ namespace Project02.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly AppDbContext _ctx;
+
+        public HomeController(ILogger<HomeController> logger, AppDbContext ctx)
         {
             _logger = logger;
+            _ctx = ctx;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var movies = await _ctx.Movies.Select(m => new MovieShowVm
+            {
+                MovieId = m.Movie_ID,
+                MovieName = m.Movie_Name,
+                MovieYear = m.Movie_Year,
+                MoviePoster = m.Movie_Poster,
+            })
+            .ToListAsync();
+
+            var recommend = await _ctx.Movies.OrderBy(f => Guid.NewGuid()).Take(12).Select(m => new MovieShowVm
+            {
+                MovieId = m.Movie_ID,
+                MovieName = m.Movie_Name,
+                MovieYear = m.Movie_Year,
+                MoviePoster = m.Movie_Poster,
+            }).ToListAsync();
+
+            var vm = new UserDashBoardVm
+            {
+                Movies = movies,
+                RandomMovies = recommend,
+            };
+
+            return View(vm);
         }
 
+        [HttpGet("/privacy")]
         public IActionResult Privacy()
         {
             // T?o d? li?u test Movie
@@ -47,26 +78,22 @@ namespace Project02.Controllers
                     new Showtime
                     {
                         Showtime_ID = 1,
-                        Cinema = new Cinema { Cinema_Name = "Galaxy Cinema" },
                         Hall_ID = 1,
                         Hall = new Hall { Hall_ID = 1 },
                         Start_Time = DateTime.Now.AddHours(1),
                         End_Time = DateTime.Now.AddHours(3),
                         Language = "English",
                         Format = "2D",
-                        Price = 120000
                     },
                     new Showtime
                     {
                         Showtime_ID = 2,
-                        Cinema = new Cinema { Cinema_Name = "BHD Star" },
                         Hall_ID = 2,
                         Hall = new Hall { Hall_ID = 2 },
                         Start_Time = DateTime.Now.AddHours(4),
                         End_Time = DateTime.Now.AddHours(6),
                         Language = "Vietnamese",
                         Format = "3D",
-                        Price = 150000
                     }
                 }
             };
