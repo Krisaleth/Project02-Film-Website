@@ -1,61 +1,21 @@
 ﻿@model Project02.Models.Ticket
 
 
+@{
+    Layout = "_Layout"; // Layout chung của trang (bạn có thể đổi tùy theo project)
+    ViewData["Title"] = "Hồ sơ người dùng - TKT Cinema";
+}
+
 <div class="user-profile container py-5">
-
-    <style>
-        body {
-            background: #141414;
-            color: #fff;
-            font-family: "Poppins", sans-serif;
-        }
-
-        .btn-outline-light {
-            border-color: #FFD580;
-            color: #FFD580;
-            border-radius: 30px;
-        }
-
-            .btn-outline-light:hover {
-                background-color: #FFD580;
-                color: #111;
-            }
-
-        .nav-tabs .nav-link {
-            color: #FFD580;
-        }
-
-            .nav-tabs .nav-link.active {
-                background-color: #1c1c1c;
-                color: #fff;
-            }
-
-        .table {
-            color: #fff;
-            background: transparent;
-        }
-
-            .table th, .table td {
-                border-color: #333;
-                color: #fff;
-            }
-
-        .table-striped > tbody > tr:nth-of-type(odd) {
-            background-color: rgba(255,255,255,0.05);
-        }
-
-        .table-striped > tbody > tr:nth-of-type(even) {
-            background-color: rgba(255,255,255,0.02);
-        }
-    </style>
-
     <!-- Header -->
     <div class="profile-header d-flex align-items-center gap-3 mb-3">
         <div>
             <h3>Test</h3>
             <p>Test2</p>
         </div>
-        <a href="/logout" class="btn btn-outline-light ms-auto">Đăng xuất</a>
+        <a href="@Url.Action("Logout", "Account")" class="btn btn-outline-light ms-auto">
+            <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+        </a>
     </div>
 
     <!-- Tabs -->
@@ -72,18 +32,17 @@
     </ul>
 
     <div class="tab-content mt-4">
-
-        <!-- Personal Info -->
+        <!-- Thông tin cá nhân -->
         <div class="tab-pane fade show active" id="personalInfo">
             <table class="table table-borderless">
                 <tr><th>Username:</th><td>Test</td></tr>
                 <tr><th>Email:</th><td>Test</td></tr>
                 <tr><th>Phone:</th><td>Test</td></tr>
             </table>
-            <a href="/user/edit" class="btn btn-outline-light">Cập nhật thông tin</a>
+            <a href="@Url.Action("EditProfile", "User")" class="btn btn-outline-light">Cập nhật thông tin</a>
         </div>
 
-        <!-- Ticket History -->
+        <!-- Lịch sử vé -->
         <div class="tab-pane fade" id="ticketHistory">
             <table class="table table-striped">
                 <thead>
@@ -111,7 +70,7 @@
             </table>
         </div>
 
-        <!-- Payments -->
+        <!-- Thanh toán -->
         <div class="tab-pane fade" id="payments">
             <table class="table table-striped">
                 <thead>
@@ -132,17 +91,96 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 </div>
 
-<script>
-    var triggerTabList = [].slice.call(document.querySelectorAll('#profileTab button'))
-    triggerTabList.forEach(function (triggerEl) {
-        var tabTrigger = new bootstrap.Tab(triggerEl)
-        triggerEl.addEventListener('click', function (event) {
-            event.preventDefault()
-            tabTrigger.show()
+@section Styles {
+    <style>
+        body {
+            background: #141414;
+            color: #fff;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .btn-outline-light {
+            border-color: #FFD580;
+            color: #FFD580;
+            border-radius: 30px;
+            transition: 0.3s;
+        }
+
+            .btn-outline-light:hover {
+                background-color: #FFD580;
+                color: #111;
+            }
+
+        .nav-tabs .nav-link {
+            color: #FFD580;
+        }
+
+            .nav-tabs .nav-link.active {
+                background-color: #1c1c1c;
+                color: #fff;
+            }
+
+        .table {
+            color: #f0f0f0;
+            background: transparent;
+        }
+
+            .table thead th {
+                color: #FFD580;
+                border-color: #333;
+                background: rgba(255, 255, 255, 0.08);
+            }
+
+            .table td, .table th {
+                border-color: #333;
+            }
+
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.06);
+        }
+
+        .table-striped > tbody > tr:nth-of-type(even) {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .table-striped > tbody > tr:hover {
+            background-color: rgba(255, 213, 128, 0.15);
+            transition: 0.2s;
+        }
+
+        .user-profile {
+            max-width: 900px;
+            margin: 60px auto;
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .profile-header {
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+
+            .profile-header h3 {
+                color: #FFD580;
+            }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var triggerTabList = [].slice.call(document.querySelectorAll('#profileTab button'))
+        triggerTabList.forEach(function (triggerEl) {
+            var tabTrigger = new bootstrap.Tab(triggerEl)
+            triggerEl.addEventListener('click', function (event) {
+                event.preventDefault()
+                tabTrigger.show()
+            })
         })
-    })
-</script>
+    </script>
+}
