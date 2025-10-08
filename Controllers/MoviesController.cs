@@ -30,7 +30,6 @@ namespace Project02.Controllers
 
         // GET: Movies
         [HttpGet("/admin/movie")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string? q, string? sortOrder, int page = 1, int pageSize = 10)
         {
             if (page < 1) page = 1;

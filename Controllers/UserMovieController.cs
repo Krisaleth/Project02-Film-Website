@@ -50,19 +50,31 @@ namespace Project02.Controllers
 
             var genres = await _context.Genres.OrderBy(g => g.Genre_Name).ToListAsync();
 
-            var viewModel = new MovieListVm
+            // Lấy danh sách phim cùng trạng thái có lịch chiếu
+            var movieSlugs = moviePage.Select(m => m.Movie_Slug).ToList();
+
+            // Truy vấn showtimes các phim trong trang để biết phim nào có showtimes
+            var showtimeMovies = await _context.Showtimes
+                .Where(s => movieSlugs.Contains(s.Movie.Movie_Slug))
+                .Select(s => s.Movie.Movie_Slug)
+                .Distinct()
+                .ToListAsync();
+
+            // Truyền data vào ViewModel hoặc ViewBag
+            var movieListVm = new MovieListVm
             {
                 Movies = moviePage,
                 CurrentPage = page,
                 PageSize = pageSize,
                 TotalItems = totalItems,
                 SearchKeyword = search ?? "",
-                Genres = genres,
+                Genres = await _context.Genres.OrderBy(g => g.Genre_Name).ToListAsync(),
                 SelectedGenreSlug = genreSlug,
+                ShowtimeMovies = showtimeMovies // mới thêm
             };
 
-            ViewBag.Genres = new SelectList(_context.Genres.OrderBy(g => g.Genre_Name), "Genre_Slug", "Genre_Name", viewModel.SelectedGenreSlug);
-            return View(viewModel);
+            ViewBag.Genres = new SelectList(_context.Genres.OrderBy(g => g.Genre_Name), "Genre_Slug", "Genre_Name", movieListVm.SelectedGenreSlug);
+            return View(movieListVm);
         }
 
 
@@ -100,6 +112,9 @@ namespace Project02.Controllers
                     Genres = selectedGenres
                 },
             };
+
+            var showtimesExist = await _context.Showtimes.AnyAsync(s => s.Movie.Movie_Slug == id);
+            ViewBag.HasShowtimes = showtimesExist;
 
             return View(vm);
         }

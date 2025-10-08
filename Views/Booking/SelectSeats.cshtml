@@ -1,0 +1,174 @@
+﻿@model Project02.ViewModels.Customer.SeatLayoutVm
+
+@{
+    ViewData["Title"] = "Chọn ghế";
+}
+
+<style>
+    .seat {
+        width: 40px;
+        height: 40px;
+        margin: 3px;
+        text-align: center;
+        line-height: 40px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        user-select: none;
+    }
+
+    .Normal {
+        background-color: #4CAF50; /* Xanh lá cho ghế thường */
+        color: white;
+    }
+
+    .VIP {
+        background-color: #FFD700; /* Vàng cho ghế VIP */
+        color: black;
+    }
+
+    .Couple {
+        background-color: #FF69B4; /* Hồng cho ghế đôi */
+        color: white;
+    }
+
+    .Booked {
+        background-color: #f44336; /* Đỏ khi đã đặt */
+        color: white;
+    }
+
+    .Broken {
+        background-color: #9E9E9E; /* Xám khi hỏng */
+        color: white;
+    }
+
+    .Hold {
+        background-color: #FF9800; /* Cam khi hold */
+        color: white;
+    }
+    .Selected {
+        background-color: #f4a460;
+        color: white;
+    }
+
+    .seat-row {
+        margin-bottom: 10px;
+    }
+
+    .seat {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        height: 40px; /* chiều cao cố định để các ghế đều nhau */
+        width: 40px; /* chiều rộng bằng chiều cao để button vuông */
+        padding: 0; /* bỏ padding mặc định */
+        text-align: center;
+        font-weight: 600; /* chữ đậm hơn dễ đọc */
+        user-select: none; /* tránh chọn nhầm chữ khi click */
+    }
+
+
+</style>
+
+<div class="container mt-5 pt-5">
+    <span class="text-white fw-bold mb-3 d-block">
+        <h3>Sơ đồ ghế phòng @Model.DisplayHallName</h3>
+    </span>
+
+    @foreach (var rowGroup in Model.Seats.GroupBy(s => s.RowNumber).OrderBy(g => g.Key))
+    {
+        <div class="seat-row d-flex justify-content-center">
+            @foreach (var seat in rowGroup.OrderBy(s => s.SeatNumber))
+            {
+                    string seatClass = seat.SeatStatus == "Available" ? seat.SeatType : seat.SeatStatus;
+
+                    <button type="button" class="seat btn @seatClass mx-1"
+                            title="@($"Seat {seat.RowNumber}{seat.SeatNumber} - {seat.SeatStatus}")"
+                            data-price="@seat.SeatPrice"
+                            data-seatid="@seat.Seat_ID"
+                            onclick="toggleSeat(this)"
+                        @(seat.SeatStatus == "Booked" ? "disabled" : "")>
+                        @($"{seat.RowNumber}{seat.SeatNumber}")
+                    </button>
+            }
+        </div>
+        }
+
+    <div class="d-flex align-items-center mb-3">
+        <span class="d-inline-block me-2" style="width: 20px; height: 20px; background-color: #4CAF50; border-radius: 4px;"></span>
+        <small class="text-muted">Ghế trống</small>
+
+        <span class="d-inline-block me-2 ms-3" style="width: 20px; height: 20px; background-color: #f4a460; border-radius: 4px;"></span>
+        <small class="text-muted">Ghế đã chọn</small>
+
+        <span class="d-inline-block me-2 ms-3" style="width: 20px; height: 20px; background-color: #f44336; border-radius: 4px;"></span>
+        <small class="text-muted">Ghế đã đặt</small>
+
+        <span class="d-inline-block me-2 ms-3" style="width: 20px; height: 20px; background-color: #FFD700; border-radius: 4px;"></span>
+        <small class="text-muted">Ghế VIP</small>
+
+        <span class="d-inline-block me-2 ms-3" style="width: 20px; height: 20px; background-color: #FF69B4; border-radius: 4px;"></span>
+        <small class="text-muted">Ghế đôi</small>
+    </div>
+    <form id="seatForm" action="/confirm-order" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="ShowtimeId" value="@Model.ShowtimeId" />
+        <input type="hidden" id="selectedSeatsCount" name="selectedSeatsCount" value="0">
+        <input type="hidden" id="totalPrice" name="totalPrice" value="0">
+        <input type="hidden" id="selectedSeats" name="selectedSeats" value="">
+
+
+        <div class="mb-2">
+            <strong>Số ghế đã chọn:</strong> <span id="seatCountDisplay" class="text-primary">0</span>
+        </div>
+        <div class="mb-3">
+            <strong>Tổng tiền:</strong> <span id="priceDisplay" class="text-danger">0 VND</span>
+        </div>
+
+        <button type="submit" class="btn btn-danger btn-lg w-100" id="submitButton" disabled>Đặt vé</button>
+    </form>
+    </div>
+        
+        <!-- JavaScript cập nhật thông tin -->
+        <script>
+            let selectedSeats = [];
+            let totalPrice = 0;
+
+            function toggleSeat(button) {
+                const seatId = button.getAttribute('data-seatid');
+                const price = parseInt(button.getAttribute('data-price'), 10);
+
+                const index = selectedSeats.findIndex(s => s.seatId === seatId);
+                if (index === -1) {
+                // Chọn ghế: thêm vào danh sách, tăng tổng giá
+                selectedSeats.push({ seatId, price });
+                totalPrice += price;
+                button.classList.remove('btn-outline-success', 'btn-outline-primary', 'btn-outline-warning');
+                button.classList.add('Selected');
+                } else {
+                // Bỏ chọn ghế: xóa khỏi danh sách, giảm tổng giá
+                selectedSeats.splice(index, 1);
+                totalPrice -= price;
+                button.classList.remove('Selected');
+                button.classList.add('btn-outline-success'); // trả về trạng thái ban đầu
+                }
+
+                // Cập nhật số lượng ghế và tổng tiền trong form ẩn và hiển thị
+                document.getElementById('selectedSeatsCount').value = selectedSeats.length;
+                document.getElementById('totalPrice').value = totalPrice;
+
+                    // Đưa chuỗi danh sách ghế đã chọn vào input ẩn, ngăn cách bằng dấu phẩy
+                const selectedSeatIds = selectedSeats.map(s => s.seatId);
+                document.getElementById('selectedSeats').value = selectedSeatIds.join(',');
+
+                document.getElementById('seatCountDisplay').innerText = selectedSeats.length;
+                document.getElementById('priceDisplay').innerText = totalPrice.toLocaleString('vi-VN') + ' VND';
+
+                // Bật tắt nút đặt vé dựa trên số ghế đã chọn
+                document.getElementById('submitButton').disabled = selectedSeats.length === 0;
+            }
+
+        </script>
+
+</div>

@@ -32,7 +32,10 @@
                     <td>@showtime.Language</td>
                     <td>@showtime.Format</td>
                     <td>
-                        <a asp-controller="Booking" asp-action="SelectSeats" asp-route-showtimeId="@showtime.Showtime_ID" class="btn btn-primary btn-sm">
+                        @{
+                            var encodedId = Convert.ToBase64String(BitConverter.GetBytes(showtime.Showtime_ID));
+                        }
+                        <a href="/booking/@encodedId" class="btn btn-primary btn-sm">
                             Chọn ghế
                         </a>
                     </td>

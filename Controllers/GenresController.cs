@@ -24,7 +24,6 @@ namespace Project02.Controllers
 
         // GET: Genres
         [HttpGet("admin/genre")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string? search, string? sortOrder, int page = 1, int pageSize = 10)
         {
             if (page < 1) page = 1;
@@ -76,7 +75,6 @@ namespace Project02.Controllers
 
         // GET: Genres/Create
         [HttpGet("/admin/genre/create")]
-        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();

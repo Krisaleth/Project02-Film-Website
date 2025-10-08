@@ -65,15 +65,23 @@ namespace Project02.Controllers
                 return View(vm);
             }
 
+            var userProfile = _ctx.Users.Where(a => a.Account_ID == user.Account_ID).FirstOrDefault();
+
+            if (userProfile == null)
+            {
+                ModelState.AddModelError("", "Dữ liệu người dùng không hợp lệ.");
+                return View(vm);
+            }
+
             // Tạo claim và đăng nhập
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Account_ID.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, userProfile.User_ID.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Role, user.Role),
             };
 
-            var identify = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var identify = new ClaimsIdentity(claims, "UserScheme");
             var principal = new ClaimsPrincipal(identify);
 
             var authProps = new AuthenticationProperties

@@ -97,12 +97,20 @@
     <div class="row row-cols-1 row-cols-md-4 g-4">
         @foreach (var movie in Model.Movies)
         {
+            var hasShowtime = Model.ShowtimeMovies.Contains(movie.Movie_Slug);
             <div class="col">
                 <div class="card h-100 bg-dark text-white movie-card">
                     <img src="@movie.Movie_Poster" alt="@movie.Movie_Name" class="card-img-top" style="height:320px;object-fit:cover" />
                     <div class="movie-overlay d-flex flex-column justify-content-center align-items-center">
                         <a asp-action="Details" asp-controller="UserMovie" asp-route-id="@movie.Movie_Slug" class="btn btn-detail text-white mb-2">Xem chi tiết</a>
-                        <button class="btn-ticket">Mua vé</button>
+                        @if (hasShowtime)
+                        {
+                            <a href="/showtime/@movie.Movie_Slug" class="btn btn-ticket">Mua vé</a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-ticket" disabled style="cursor: not-allowed;" title="Chưa có lịch chiếu">Mua vé</button>
+                        }
                     </div>
                     <div class="card-body position-relative">
                         <h5 class="card-title">@movie.Movie_Name</h5>

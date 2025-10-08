@@ -29,6 +29,11 @@ namespace Project02.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var moviesWithShowtime = await _ctx.Showtimes
+                .Select(s => s.Movie.Movie_Slug)
+                .Distinct()
+                .ToListAsync();
+
             var movies = await _ctx.Movies.Select(m => new MovieShowVm
             {
                 MovieSlug = m.Movie_Slug,
@@ -50,6 +55,7 @@ namespace Project02.Controllers
             {
                 Movies = movies,
                 RandomMovies = recommend,
+                MoviesWithShowtime = moviesWithShowtime
             };
 
             return View(vm);

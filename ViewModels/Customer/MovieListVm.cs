@@ -9,6 +9,7 @@
         public int PageSize { get; set; } = 12;
         public int TotalItems { get; set; }
         public string? SearchKeyword { get; set; }
+        public List<string> ShowtimeMovies { get; set; }
         public int TotalPages
         {
             get

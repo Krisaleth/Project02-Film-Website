@@ -25,7 +25,6 @@ namespace Project02.Controllers
 
         // GET: Users
         [HttpGet("/admin/user")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string? search, string? sortOrder, int page = 1, int pageSize = 10)
         {
             if (page == 1) page = 1;
@@ -97,7 +96,6 @@ namespace Project02.Controllers
         }
 
         [HttpGet("admin/user/detail/{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -125,7 +123,6 @@ namespace Project02.Controllers
         }
 
         [HttpGet("/admin/user/create")]
-        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -135,7 +132,6 @@ namespace Project02.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("admin/user/create")]
-        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserCreateVm vm)
         {
@@ -184,7 +180,6 @@ namespace Project02.Controllers
         }
 
         [HttpGet("/admin/edit/{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit([FromRoute]long? id)
         {
             if (id == null)
@@ -275,7 +270,6 @@ namespace Project02.Controllers
         // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(long id, string rowVersionBase64)
         {
             var user = await _ctx.Users.FirstOrDefaultAsync(m => m.User_ID == id);

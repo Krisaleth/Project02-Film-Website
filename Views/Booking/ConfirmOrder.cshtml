@@ -1,0 +1,84 @@
+﻿@model Project02.ViewModels.Customer.ConfirmOrderVm
+
+@{
+    ViewData["Title"] = "Xác nhận đặt vé";
+}
+
+<style>
+    body {
+        background-color: #141414;
+        color: #fff;
+        font-family: "Poppins", sans-serif;
+        padding: 30px;
+    }
+
+    .confirm-box {
+        background-color: #1c1c1c;
+        border-radius: 15px;
+        padding: 25px;
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    }
+
+    h2 {
+        color: #FFD580;
+        margin-bottom: 20px;
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .total-price {
+        margin-top: 20px;
+        font-weight: 700;
+        font-size: 1.3rem;
+        color: #e50914;
+    }
+
+    .btn-confirm {
+        margin-top: 25px;
+        width: 100%;
+        background-color: #e50914;
+        border-radius: 30px;
+        padding: 12px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-confirm:hover {
+            background-color: #b81d24;
+        }
+</style>
+
+<div class="confirm-box mt-5">
+    <h2>Xác nhận đơn đặt vé</h2>
+
+    <p><strong>Số ghế đã chọn: </strong> @Model.SelectedSeatsCount</p>
+
+    <p><strong>Danh sách ghế:</strong></p>
+    <ul>
+        @foreach (var seat in Model.SelectedSeats)
+        {
+            <li>@($"{seat.RowNumber}{seat.SeatNumber}")</li>
+        }
+    </ul>
+
+    <p class="total-price">Tổng tiền: @Model.TotalPrice.ToString("N0") VND</p>
+
+    <form method="post" asp-action="Checkout">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="showtimeId" value="@Model.ShowtimeId"/>
+        <input type="hidden" name="selectedSeatsCount" value="@Model.SelectedSeatsCount" />
+        <input type="hidden" name="totalAmount" value="@Model.TotalPrice" />
+        <input type="hidden" name="selectedSeats" value="@string.Join(',', Model.SelectedSeats.Select(s => s.SeatId))" />
+        <button type="submit" class="btn-confirm">Tiến hành thanh toán</button>
+    </form>
+    <a href="/movie" class="btn btn-secondary mt-3 w-100">Huỷ</a>
+</div>
