@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace Project02.Middleware;
 public class AdminMiddleware
@@ -23,16 +24,16 @@ public class AdminMiddleware
                 await _next(context);
                 return;
             }
-            var user = context.User;
 
-            // Nếu chưa đăng nhập
-            if (!user.Identity?.IsAuthenticated ?? true)
+            var result = await context.AuthenticateAsync("AdminScheme");
+            var user = result.Principal;
+
+            if (user == null || !user.Identity.IsAuthenticated)
             {
                 context.Response.Redirect("/admin/login");
                 return;
             }
 
-            // Nếu không có role Admin
             if (!user.IsInRole("Admin"))
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;

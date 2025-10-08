@@ -1,7 +1,11 @@
 ﻿@model Project02.ViewModels.RegisterViewModel
 @{
     ViewData["Title"] = "Register";
+    Layout = null;
 }
+<head>
+    <title>Register</title>
+</head>
 
 <div class="register-container">
     <h2>Register</h2>
@@ -13,6 +17,10 @@
         <div class="form-group">
             <input asp-for="FullName" type="text" placeholder="Name" required />
             <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input asp-for="UserName" type="text" placeholder="Username" required />
+            <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
         <div class="form-group">
             <input asp-for="PhoneNumber" type="tel" placeholder="Phone Number" required />

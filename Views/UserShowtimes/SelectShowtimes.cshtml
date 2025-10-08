@@ -1,0 +1,46 @@
+﻿@model Project02.ViewModels.Customer.ShowtimeShowVm;
+
+@{
+    ViewData["Title"] = "Chọn lịch chiếu";
+}
+
+<div class="container mt-5 py-4">
+    <h2 class="mb-4 text-white">Chọn lịch chiếu cho phim @Model.MovieName</h2>
+
+    <table class="table table-bordered table-hover table-striped align-middle bg-dark text-white">
+        <thead class="table-light text-dark">
+            <tr>
+                <th scope="col">Phòng chiếu</th>
+                <th scope="col">Bắt đầu</th>
+                <th scope="col">Kết thúc</th>
+                <th scope="col">Ngôn ngữ</th>
+                <th scope="col">Định dạng</th>
+                <th scope="col">Chọn</th>
+            </tr>
+        </thead>
+        <tbody class="table-light text-dark">
+            @foreach (var showtime in Model.Showtimes)
+            {
+                var cinemaId = showtime.Hall.Cinema.Cinema_ID;
+                var hallsSorted = Model.HallsGroupedByCinema[cinemaId];
+                var hallIndex = hallsSorted.FindIndex(h => h.Hall_ID == showtime.Hall.Hall_ID) + 1;
+
+                <tr>
+                    <td>@($"{showtime.Hall.Cinema.Cinema_Name} - Phòng số {hallIndex}")</td>
+                    <td>@showtime.Start_Time.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@showtime.End_Time.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@showtime.Language</td>
+                    <td>@showtime.Format</td>
+                    <td>
+                        <a asp-controller="Booking" asp-action="SelectSeats" asp-route-showtimeId="@showtime.Showtime_ID" class="btn btn-primary btn-sm">
+                            Chọn ghế
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+</div>

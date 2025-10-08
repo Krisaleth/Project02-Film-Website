@@ -1,0 +1,6 @@
+﻿@model IEnumerable<Project02.Models.Genre>
+
+@foreach (var genre in Model)
+{
+    <li><a href="@Url.Action("Index", "UserMovie", new { genreSlug = genre.Genre_Slug })" class="dropdown-item text-secondary">@genre.Genre_Name</a></li>
+}

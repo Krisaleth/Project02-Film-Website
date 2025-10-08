@@ -1,22 +1,27 @@
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using Project02.Data;
+using Project02.Models;
+using Project02.ViewModels;
+using Project02.ViewModels.Customer;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Project02.Data;
-using Project02.Models;
-
-using Project02.ViewModels.Customer;
+using System.Security.Claims;
 
 namespace Project02.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 
         private readonly AppDbContext _ctx;
 
-        public HomeController(ILogger<HomeController> logger, AppDbContext ctx)
+        public HomeController(ILogger<HomeController> logger, AppDbContext ctx) : base(ctx)
         {
             _logger = logger;
             _ctx = ctx;
@@ -26,7 +31,7 @@ namespace Project02.Controllers
         {
             var movies = await _ctx.Movies.Select(m => new MovieShowVm
             {
-                MovieId = m.Movie_ID,
+                MovieSlug = m.Movie_Slug,
                 MovieName = m.Movie_Name,
                 MovieYear = m.Movie_Year,
                 MoviePoster = m.Movie_Poster,
@@ -35,7 +40,7 @@ namespace Project02.Controllers
 
             var recommend = await _ctx.Movies.OrderBy(f => Guid.NewGuid()).Take(16).Select(m => new MovieShowVm
             {
-                MovieId = m.Movie_ID,
+                MovieSlug = m.Movie_Slug,
                 MovieName = m.Movie_Name,
                 MovieYear = m.Movie_Year,
                 MoviePoster = m.Movie_Poster,
@@ -49,6 +54,7 @@ namespace Project02.Controllers
 
             return View(vm);
         }
+
 
         [HttpGet("/privacy")]
         public IActionResult Privacy()
@@ -72,7 +78,7 @@ namespace Project02.Controllers
                     new Genre { Genre_Name = "Thriller" }
                 },
 
-                // Showtimes test v?i Cinema v� Hall ??y ??
+                // Showtimes test v?i Cinema và Hall ??y ??
                 Showtimes = new List<Showtime>
                 {
                     new Showtime

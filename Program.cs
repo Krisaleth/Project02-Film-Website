@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Project02.Binder;
 using Project02.Data;
@@ -18,13 +18,23 @@ internal class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
         builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = "UserScheme";
+            options.DefaultSignInScheme = "UserScheme";
+            options.DefaultAuthenticateScheme = "UserScheme";
+        }).AddCookie("AdminScheme", options =>
         {
             options.LoginPath = "/admin/login";
             options.LogoutPath = "/admin/logout";
             options.AccessDeniedPath = "/admin/login";
             options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
             options.SlidingExpiration = true;
+        }).
+        AddCookie("UserScheme", options =>
+        {
+            options.LoginPath = "/login";
+            options.LogoutPath = "/logout";
         });
         builder.Services.AddAuthorization();
         builder.Services.AddScoped<IFileStorage, FileStorage>();

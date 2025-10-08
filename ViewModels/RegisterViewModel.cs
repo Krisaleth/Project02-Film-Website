@@ -5,6 +5,8 @@ namespace Project02.ViewModels
     public class RegisterViewModel
     {
         [Required]
+        public string UserName { get; set; }
+        [Required]
         public string FullName { get; set; }
 
         [Required]

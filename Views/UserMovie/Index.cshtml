@@ -1,0 +1,127 @@
+﻿@model Project02.ViewModels.Customer.MovieListVm
+@{
+    ViewData["Title"] = "Tất cả phim";
+}
+
+<style>
+    .card-title {
+        white-space: nowrap; /* Không xuống dòng */
+        overflow: hidden; /* Ẩn phần dư */
+        text-overflow: ellipsis; /* Hiện dấu ... */
+        max-width: 100%; /* Giới hạn chiều ngang */
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #e50914; /* màu đỏ */
+        color: white !important;
+        border-color: #e50914;
+    }
+
+    .pagination .page-item .page-link {
+        background-color: white;
+        color: black;
+        border-color: #ddd;
+    }
+
+    .pagination .page-item .page-link:hover {
+        background-color: #e50914;
+        color: white !important;
+        border-color: #e50914;
+    }
+
+    .movie-card {
+        position: relative;
+    }
+
+    .movie-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6); /* làm mờ nền */
+        opacity: 0;
+        transition: opacity 0.25s ease-in-out;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .movie-card:hover .movie-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .movie-overlay .btn-detail,
+    .movie-overlay .btn-ticket {
+        width: 140px;
+        padding: 10px 0;
+        font-weight: 600;
+        font-size: 1.1rem;
+        border-radius: 30px;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .movie-overlay .btn-detail {
+        background-color: #e50914;
+        color: white;
+        margin-bottom: 10px;
+    }
+
+        .movie-overlay .btn-detail:hover {
+            background-color: #b81d24;
+        }
+
+    .movie-overlay .btn-ticket {
+        background-color: white;
+        color: #e50914;
+    }
+
+        .movie-overlay .btn-ticket:hover {
+            background-color: #f7f7f7;
+        }
+
+</style>
+
+<div class="container py-5 mt-5">
+    <h2 class="mt-4 fw-bold text-left">Danh sách phim</h2>
+
+    <form method="get" asp-action="Index" class="mb-4 d-flex gap-2">
+        <input type="text" name="search" class="form-control" placeholder="Nhập tên phim..." value="@Model.SearchKeyword" />
+        <select name="genreSlug" class="form-select" asp-items="ViewBag.Genres" onchange="this.form.submit()">
+            <option value="">-- Chọn thể loại --</option>
+        </select>
+        <button type="submit" class="btn btn-danger"><i class="fa fa-search"></i></button>
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        @foreach (var movie in Model.Movies)
+        {
+            <div class="col">
+                <div class="card h-100 bg-dark text-white movie-card">
+                    <img src="@movie.Movie_Poster" alt="@movie.Movie_Name" class="card-img-top" style="height:320px;object-fit:cover" />
+                    <div class="movie-overlay d-flex flex-column justify-content-center align-items-center">
+                        <a asp-action="Details" asp-controller="UserMovie" asp-route-id="@movie.Movie_Slug" class="btn btn-detail text-white mb-2">Xem chi tiết</a>
+                        <button class="btn-ticket">Mua vé</button>
+                    </div>
+                    <div class="card-body position-relative">
+                        <h5 class="card-title">@movie.Movie_Name</h5>
+                        <small>@movie.Movie_Year</small>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { search = Model.SearchKeyword, page = i, pageSize = Model.PageSize })">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

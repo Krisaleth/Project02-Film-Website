@@ -1,0 +1,268 @@
+﻿/* ===== BANNER ===== */
+.banner-img {
+    width: 100%;
+    max-width: 1600px;
+    height: 480px;
+    aspect-ratio: 1600 / 735;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    margin: 0 auto;
+    transition: transform 0.3s ease;
+}
+
+.banner-img:hover {
+    transform: scale(1.02);
+}
+
+/* ===== PHIM ĐỀ CỬ ===== */
+.movie-wrapper {
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    padding: 10px 0;
+}
+
+.movie-container {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+}
+
+.movie-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
+.movie-card {
+    flex-shrink: 0;
+    width: 190px;
+    background: #1c1c1c;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+}
+
+    .movie-card:hover {
+        transform: scale(1.07);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+
+.movie-img {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+}
+
+    .movie-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+/* Overlay */
+.movie-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,0,0,0.7);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.movie-img:hover .movie-overlay {
+    opacity: 1;
+}
+
+.movie-overlay button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: transform 0.2s;
+    color: #fff;
+}
+
+.btn-detail {
+    background-color: #e50914;
+}
+
+.btn-ticket {
+    background-color: #b81d24;
+}
+
+.movie-overlay button:hover {
+    transform: scale(1.1);
+}
+
+.badge-4k {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #e50914;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Info */
+.movie-info {
+    padding: 10px;
+    text-align: center;
+}
+
+.title-vi {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #fff;
+}
+
+.title-en {
+    font-size: 13px;
+    color: #aaa;
+}
+
+/* Scroll Arrows */
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.6);
+    border: none;
+    color: #e50914;
+    font-size: 24px;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+    .arrow:hover {
+        background: rgba(255,255,255,0.2);
+    }
+
+    .arrow.left {
+        left: 5px;
+    }
+
+    .arrow.right {
+        right: 5px;
+    }
+
+/* ===== TẤT CẢ PHIM - GRID ===== */
+.film-card {
+    width: 220px;
+    height: 370px;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #222;
+    text-align: center;
+    transition: transform 0.3s, background 0.3s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0 auto;
+}
+
+    .film-card:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        background: #2a2a2a;
+    }
+
+.film-poster {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    text-align: center;
+}
+
+    .film-poster img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.film-overlay {
+    opacity: 0;
+    background: rgba(0,0,0,0.7);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: opacity 0.3s ease;
+}
+
+.film-poster:hover .film-overlay {
+    opacity: 1;
+}
+
+.film-overlay button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    border: none;
+    color: #fff;
+}
+
+.film-info {
+    width: 100%;
+    height: 70px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.film-title {
+    margin: 0;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%;
+    color: #fff;
+}
+
+.film-year {
+    margin: 0;
+    font-size: 0.95em;
+    color: #bbbbbb;
+}
+
+/* Badge general */
+.badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 3px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 3px;
+    color: #fff;
+}

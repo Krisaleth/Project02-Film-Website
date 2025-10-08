@@ -1,44 +1,32 @@
 ﻿@model Project02.ViewModels.Customer.UserDashBoardVm
 @{
-    Layout = "_Layout"; // layout dành cho user
     ViewData["Title"] = "Trang chủ";
 }
-
+<link rel="stylesheet" href="~/css/MovieIndex.css"/>
 <div class="container py-5">
-    <h1 class="mb-4 fw-bold text-left" style="color: #fff;">🎬 Khám Phá Phim</h1>
+    <h1 class="mt-4 fw-bold text-left" style="color: #fff;">🎬 Khám Phá Phim</h1>
 
     <!-- Banner Carousel với chấm tròn -->
-    <div id="bannerCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
-        <!-- Chấm tròn -->
+    <div id="bannerCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="3500">
         <div class="carousel-indicators">
             @for (int i = 0; i < 6; i++)
             {
-                <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></button>
+                <button type="button"
+                        data-bs-target="#bannerCarousel"
+                        data-bs-slide-to="@i"
+                        class="@(i == 0 ? "active" : "")"
+                        aria-label="Slide @(i + 1)"></button>
             }
         </div>
 
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="~/Banner/poster-mua-do (1).jpg" class="d-block banner-img" alt="Banner 1">
-            </div>
-            <div class="carousel-item">
-                <img src="/Banner/poster-film-5.jpg" class="d-block banner-img" alt="Banner 2">
-            </div>
-            <div class="carousel-item">
-                <img src="~/Banner/poster-film-6 (1).jpg" class="d-block banner-img" alt="Banner 3">
-            </div>
-            <div class="carousel-item">
-                <img src="~/Banner/poster-mua-do (1).jpg" class="d-block banner-img" alt="Banner 4">
-            </div>
-            <div class="carousel-item">
-                <img src="/Banner/bannerADS2.jpg" class="d-block banner-img" alt="Banner 5">
-            </div>
-            <div class="carousel-item">
-                <img src="/Banner/bannerADS3.png" class="d-block banner-img" alt="Banner 6">
-            </div>
+        <div class="carousel-inner rounded-3 shadow-lg overflow-hidden">
+            <div class="carousel-item active"><img src="~/Banner/poster-mua-do (1).jpg" class="d-block w-100 banner-img" alt="Banner 1" /></div>
+            <div class="carousel-item"><img src="~/Banner/poster-film-5.jpg" class="d-block w-100 banner-img" alt="Banner 2" /></div>
+            <div class="carousel-item"><img src="~/Banner/poster-film-6 (1).jpg" class="d-block w-100 banner-img" alt="Banner 3" /></div>
+            <div class="carousel-item"><img src="~/Banner/bannerADS2.jpg" class="d-block w-100 banner-img" alt="Banner 4" /></div>
+            <div class="carousel-item"><img src="~/Banner/tu-chien-tren-khong-2048_1757996321581 (1).jpg" class="d-block w-100 banner-img" alt="Banner 5" /></div>
         </div>
 
-        <!-- Nút prev/next -->
         <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span>
         </button>
@@ -60,7 +48,7 @@
                     <div class="movie-img">
                         <img src="@movie.MoviePoster" alt="@movie.MovieName">
                         <div class="movie-overlay">
-                            <button class="btn-detail">Xem chi tiết</button>
+                            <a asp-action="Details" asp-controller="UserMovie" asp-route-id="@movie.MovieSlug" class="btn btn-detail text-white">Xem chi tiết</a>
                             <button class="btn-ticket">Mua vé</button>
                         </div>
                         <span class="badge badge-4k">4K</span>
@@ -84,7 +72,7 @@
                     <div class="film-poster">
                         <img src="@movie.MoviePoster" alt="Poster" class="img-fluid" />
                         <div class="film-overlay">
-                            <button class="btn-detail">Xem chi tiết</button>
+                            <a asp-action="Details" asp-controller="UserMovie" asp-route-id="@movie.MovieSlug" class="btn btn-detail text-white">Xem chi tiết</a>
                             <button class="btn-ticket">Mua vé</button>
                         </div>
                     </div>
@@ -199,301 +187,3 @@
     });
 
 </script>
-
-<!-- Styles -->
-<style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: #141414;
-        min-height: 100vh;
-        margin: 0;
-        color: #fff;
-    }
-
-    /* Navbar */
-    .simple-navbar {
-        width: 100%;
-        background: rgba(20, 20, 20, 0.97);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        margin-bottom: 16px;
-        min-height: 56px;
-        padding: 0 16px;
-    }
-
-    .simple-navbar li a {
-        color: #fff;
-        font-size: 16px;
-        text-decoration: none;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        padding: 8px 18px;
-        border-radius: 4px;
-        transition: background 0.2s;
-    }
-
-    .simple-navbar li a:hover {
-        background: #e50914;
-        color: #fff;
-    }
-
-    .navbar-search button {
-        background: none;
-        border: none;
-        color: #fff;
-        font-size: 20px;
-        cursor: pointer;
-    }
-
-    /* Banner */
-    .banner-img {
-        width: 100%;
-        max-width: 1600px;
-        aspect-ratio: 1600 / 735;
-        object-fit: cover;
-        border-radius: 12px;
-        display: block;
-        margin: 0 auto;
-        transition: transform 0.3s ease;
-    }
-
-    .banner-img:hover {
-        transform: scale(1.02);
-    }
-
-    /* Movie Wrapper */
-    .movie-wrapper {
-        position: relative;
-        max-width: 100%;
-        overflow: hidden;
-    }
-
-    .movie-container {
-        display: flex;
-        gap: 15px;
-        padding: 20px;
-        overflow-x: auto;
-        scroll-behavior: smooth;
-    }
-
-    .movie-container::-webkit-scrollbar {
-        display: none;
-    }
-
-    .movie-card {
-        width: 200px;
-        flex-shrink: 0;
-        background: #1c1c1c;
-        border-radius: 6px;
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 0.3s;
-    }
-
-    .movie-card:hover {
-        transform: scale(1.05);
-    }
-
-    .movie-img {
-        position: relative;
-    }
-
-    .movie-img img {
-        width: 100%;
-        height: 280px;
-        object-fit: cover;
-        display: block;
-    }
-
-    .movie-overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(0,0,0,0.7);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .movie-img:hover .movie-overlay {
-        opacity: 1;
-    }
-
-    .movie-overlay button {
-        padding: 8px 16px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 14px;
-        transition: transform 0.2s;
-    }
-
-    .btn-detail {
-        background-color: #e50914;
-        color: #fff;
-    }
-
-    .btn-ticket {
-        background-color: #b81d24;
-        color: #fff;
-    }
-
-    .movie-overlay button:hover {
-        transform: scale(1.1);
-    }
-
-    .badge {
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        padding: 3px 6px;
-        font-size: 12px;
-        font-weight: bold;
-        border-radius: 3px;
-        color: #fff;
-    }
-
-    .badge-4k {
-        background: #b81d24;
-    }
-
-    .badge-hd {
-        background: #e50914;
-    }
-
-    .movie-info {
-        padding: 10px;
-    }
-
-    .title-vi {
-        font-size: 14px;
-        margin: 0;
-        color: #fff;
-        font-weight: bold;
-    }
-
-    .title-en {
-        font-size: 12px;
-        margin: 4px 0 0;
-        color: #b3b3b3;
-    }
-
-    /* Scroll Arrows */
-    .arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0,0,0,0.6);
-        border: none;
-        color: #e50914;
-        font-size: 24px;
-        padding: 10px;
-        cursor: pointer;
-        z-index: 10;
-        border-radius: 50%;
-        transition: background 0.3s;
-    }
-
-    .arrow:hover {
-        background: rgba(255,255,255,0.2);
-    }
-
-    .arrow.left {
-        left: 0;
-    }
-
-    .arrow.right {
-        right: 0;
-    }
-
-    /* Film Cards */
-    .film-card {
-        width: 220px;
-        height: 370px;
-        border-radius: 1rem;
-        overflow: hidden;
-        background: #222;
-        transition: transform 0.3s, box-shadow 0.3s;
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        margin: 0 auto;
-    }
-
-
-
-    .film-card:hover {
-        transform: translateY(-6px) scale(1.03);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-        background: #2a2a2a;
-    }
-
-    .film-poster {
-        position: relative;
-        width: 100%;
-        height: 300px;
-        text-align: center;
-    }
-
-    .film-poster img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .film-overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(0,0,0,0.7);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .film-poster:hover .film-overlay {
-        opacity: 1;
-    }
-
-    .film-overlay button {
-        padding: 8px 16px;
-        border-radius: 6px;
-        font-weight: bold;
-        font-size: 14px;
-    }
-
-    .film-info {
-        width: 100%;
-        height: 70px;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .film-title {
-        margin: 0;
-        font-weight: bold;
-        text-align: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 90%;
-    }
-
-    .film-year {
-        margin: 0;
-        font-size: 0.95em;
-        color: #bbbbbb;
-    }
-</style>

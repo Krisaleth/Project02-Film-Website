@@ -1,0 +1,44 @@
+﻿/* ===== NAVBAR ===== */
+.simple-navbar {
+    background: rgba(20, 20, 20, 0.97);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.navbar-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: #e50914 !important;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(229, 9, 20, 0.6);
+}
+
+.nav-link:hover {
+    background: #e50914;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+/* Dropdown hover */
+.navbar-nav .dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.navbar-nav .dropdown-toggle {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.dropdown-menu {
+    background: #1c1c1c;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.dropdown-item {
+    transition: background 0.2s, color 0.2s;
+}
+
+    .dropdown-item:hover {
+        background: #e50914;
+        color: #fff;
+    }

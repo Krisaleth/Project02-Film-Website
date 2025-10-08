@@ -1,0 +1,126 @@
+﻿@model Project02.ViewModels.MovieDetailVm.MovieDetailVm;
+@{
+    ViewData["Title"] = Model.Movie.Movie_Name;
+}
+<style>
+    body {
+        background: #141414;
+        color: #fff;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+    }
+
+    .movie-detail {
+        background: #1c1c1c;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+        min-height: 800px;
+    }
+
+    .poster-wrapper img {
+        width: 320px;
+        height: 480px; 
+        object-fit: cover; 
+        border-radius: 18px;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.7);
+        background: #222;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    .poster-wrapper img:hover {
+        transform: scale(1.03);
+    }
+
+    .movie-title {
+        font-size: 2.3rem;
+        font-weight: 700;
+        color: #FFD580;
+        margin-bottom: 10px;
+    }
+
+    .movie-genres {
+        font-size: 1rem;
+        color: #b3b3b3;
+        margin-bottom: 15px;
+    }
+
+    .movie-meta span {
+        display: block;
+        margin-bottom: 4px;
+        color: #fff;
+    }
+
+    .movie-description {
+        margin-top: 15px;
+        line-height: 1.7;
+        color: #FFD580;
+    }
+
+    .btn {
+        border-radius: 30px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-danger {
+        background-color: #e50914;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-danger:hover {
+            background-color: #b81d24;
+            transform: scale(1.05);
+        }
+
+    .btn-outline-light {
+        border-color: #FFD580;
+        color: #FFD580;
+    }
+
+        .btn-outline-light:hover {
+            background-color: #FFD580;
+            color: #111;
+        }
+
+</style>
+
+<div class="movie-detail container py-5 mt-5">
+    
+
+    <!-- ===== Movie Detail Info ===== -->
+    <div class="row align-items-start g-4">
+        <div class="col-md-4">
+            <div class="poster-wrapper">
+                <img src="@Model.Movie.Movie_Poster" alt="@Model.Movie.Movie_Name" class="img-fluid rounded shadow" />
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h2 class="movie-title">@Model.Movie.Movie_Name</h2>
+            <p class="movie-genres text-muted">
+                @foreach (var genre in Model.Genres)
+                {
+                    <span class="badge bg-warning text-dark me-2">@genre.Genre_Name</span>
+                }
+            </p>
+
+            <div class="movie-meta mb-3">
+                <span><strong>Thời lượng:</strong> @Model.Movie.Movie_Duration phút</span>
+                <span><strong>Nhà sản xuất:</strong> @Model.Movie.Movie_Producer</span>
+                <span><strong>Năm sản xuất:</strong> @Model.Movie.Movie_Year</span>
+                
+            </div>
+
+            <p class="movie-description">@Model.Movie.Movie_Description</p>
+
+            <div class="mt-4">
+                <a href="/showtime/@Model.Movie.Movie_Slug" class="btn btn-danger px-4">
+                    <i class="fa fa-ticket-alt"></i> Đặt vé ngay
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

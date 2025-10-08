@@ -1,7 +1,7 @@
 ﻿@using Project02.ViewModels
 @model AdminLoginVm
 @{
-    Layout = null; // hoặc Layout = "~/Areas/Admin/Views/Shared/_LoginLayout.cshtml";
+    Layout = null;
     ViewData["Title"] = "Admin Login";
 }
 <!DOCTYPE html>
@@ -15,7 +15,7 @@
     <div class="card shadow p-4" style="width:360px">
         <h4 class="mb-3 text-center">Admin Login</h4>
 
-        <form asp-action="Login" asp-controller="Admin" method="post">
+        <form asp-controller="Admin" asp-action="Login" method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ReturnUrl" />
 

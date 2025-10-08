@@ -17,7 +17,8 @@ namespace Project02.Controllers
         public AdminController(AppDbContext db) => _db = db;
 
         [HttpGet("/admin")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
+
         public IActionResult Index()
         {
             return View();
@@ -32,8 +33,10 @@ namespace Project02.Controllers
             }
             return View(new AdminLoginVm { ReturnUrl = returnUrl });
         }
-        [ValidateAntiForgeryToken]
+
         [HttpPost("/admin/login")]
+        
+        [ValidateAntiForgeryToken]
         [AllowAnonymous]
         public async Task<IActionResult> Login(AdminLoginVm vm)
         {
@@ -70,7 +73,7 @@ namespace Project02.Controllers
                 new Claim(ClaimTypes.Role, user.Role),
             };
 
-            var identify = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var identify = new ClaimsIdentity(claims, "AdminScheme");
             var principal = new ClaimsPrincipal(identify);
 
             var authProps = new AuthenticationProperties
@@ -79,7 +82,7 @@ namespace Project02.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(vm.RememberMe ? 43200 : 60)
             };
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProps);
+            await HttpContext.SignInAsync("AdminScheme", principal, authProps);
 
             if (!string.IsNullOrEmpty(vm.ReturnUrl) && Url.IsLocalUrl(vm.ReturnUrl))
             {
@@ -90,11 +93,11 @@ namespace Project02.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            // Sign out cookie scheme -> xoá cookie -> mất claim
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync("AdminScheme");
             HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity()); // làm rỗng user hiện tại
             return Redirect("/admin/login");
         }
