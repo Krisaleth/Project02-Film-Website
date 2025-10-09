@@ -53,26 +53,25 @@
 
 <style>
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: #8E0E00;
-        background: -webkit-linear-gradient(to right, #1F1C18, #8E0E00);
-        background: linear-gradient(to right, #1F1C18, #8E0E00);
+        font-family: 'Inter', 'Poppins', sans-serif;
+        background: #141414;
+        color: #fff;
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 100vh;
         margin: 0;
-        color: #333;
     }
 
     .register-container {
         width: 100%;
         max-width: 400px;
-        background: #fff;
+        background: #1c1c1c;
         padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
         animation: fadeIn 0.5s ease-in-out;
+        color: #fff;
     }
 
     @@keyframes fadeIn {
@@ -90,13 +89,13 @@
     .register-container h2 {
         margin-bottom: 15px;
         font-size: 24px;
-        color: #333;
+        color: #e50914;
         text-align: center;
     }
 
     .register-container p.sub-text {
         font-size: 14px;
-        color: #666;
+        color: #ccc;
         margin-bottom: 25px;
         text-align: center;
     }
@@ -108,41 +107,49 @@
         .form-group input {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            border: 1px solid #333;
+            border-radius: 8px;
             font-size: 14px;
-            transition: border-color 0.3s;
+            background: #141414;
+            color: #fff;
+            transition: border-color 0.3s, background 0.3s;
         }
 
+            .form-group input::placeholder {
+                color: #aaa;
+            }
+
             .form-group input:focus {
-                border-color: #6a11cb;
+                border-color: #e50914;
                 outline: none;
+                background: #1c1c1c;
             }
 
     .btn {
         width: 100%;
         padding: 12px;
-        background: #6a11cb;
+        background: #e50914;
         color: #fff;
         border: none;
-        border-radius: 5px;
+        border-radius: 8px;
         font-size: 16px;
         cursor: pointer;
         transition: background 0.3s;
     }
 
         .btn:hover {
-            background: #8E0E00;
+            background: #b81d24;
         }
 
     .login-link {
         text-align: center;
         margin-top: 20px;
         font-size: 14px;
+        color: #ccc;
     }
 
         .login-link a {
-            color: #6a11cb;
+            color: #e50914;
             text-decoration: none;
             font-weight: bold;
         }
@@ -152,7 +159,7 @@
             }
 
     .text-danger {
-        color: #e74c3c;
+        color: #ff4c4c;
         font-size: 12px;
     }
 </style>
