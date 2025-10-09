@@ -2,12 +2,11 @@
 @{
     ViewData["Title"] = "Trang chủ";
 }
-<link rel="stylesheet" href="~/css/MovieIndex.css"/>
+<link rel="stylesheet" href="~/css/MovieIndex.css" />
 <div class="container py-5">
+    <h1 class="mt-4 fw-bold text-left" style="color: #fff;">🎬 Khám Phá Phim</h1>
 
-    <h1 class="mb-4 fw-bold text-white text-left">🎬 Khám Phá Phim</h1>
-
-    <!-- ===== BANNER CAROUSEL ===== -->
+    <!-- Banner Carousel với chấm tròn -->
     <div id="bannerCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="3500">
         <div class="carousel-indicators">
             @for (int i = 0; i < 6; i++)
@@ -36,22 +35,11 @@
         </button>
     </div>
 
-    <!-- ===== PHIM ĐỀ CỬ ===== -->
+    <!-- Phim đề cử -->
     <h3 class="movie-label">Phim đề cử</h3>
-
     <div class="movie-wrapper">
-        <button class="arrow left">&#10094;</button>
-
+        <button class="arrow left" onclick="scrollLeftFn()">&#10094;</button>
         <div class="movie-container">
-            @for (int i = 1; i <= 10; i++)
-            {
-                <div class="movie-card">
-                    <div class="movie-img">
-                        <img src="~/Poster/poster@(i).jpg" alt="Phim @(i)" />
-                        <div class="movie-overlay">
-                            <button class="btn-detail">🎬 Xem chi tiết</button>
-                            <button class="btn-ticket">🎟 Mua vé</button>
-                        </div>
 
             @foreach (var movie in Model.RandomMovies)
             {
@@ -79,8 +67,7 @@
                 </div>
             }
         </div>
-
-        <button class="arrow right">&#10095;</button>
+        <button class="arrow right" onclick="scrollRightFn()">&#10095;</button>
     </div>
 
     <h3 class="movie-label mt-5 ">Tất cả phim</h3>
@@ -114,36 +101,37 @@
     </div>
 </div>
 
-<!-- ===== FOOTER ===== -->
-<footer class="footer mt-5 py-5" style="background: #0f0f0f; border-top: 2px solid #e50914;">
-    <div class="container">
-        <div class="row gy-4">
-            <div class="col-md-4">
-                <h5 class="fw-bold text-danger mb-3">🎬 TKT Cinema</h5>
-                <p class="text-muted small">
-                    TKT Cinema là nền tảng đặt vé xem phim hiện đại — nơi mang đến trải nghiệm điện ảnh chân thực,
-                    tiện lợi và đẳng cấp. Xem phim dễ dàng, tận hưởng từng khoảnh khắc!
-                </p>
-            </div>
+<!-- Scripts -->
+<script>
+    function scrollLeftFn() {
+        const container = document.querySelector('.movie-container');
+        container.scrollBy({ left: -300, behavior: 'smooth' });
+    }
 
-            <div class="col-md-2">
-                <h6 class="fw-bold text-white mb-3">Khám phá</h6>
-                <ul class="list-unstyled text-muted small">
-                    <li><a href="#" class="footer-link">Phim Hot</a></li>
-                    <li><a href="#" class="footer-link">Phim Sắp Chiếu</a></li>
-                    <li><a href="#" class="footer-link">Khuyến Mãi</a></li>
-                </ul>
-            </div>
+    function scrollRightFn() {
+        const container = document.querySelector('.movie-container');
+        container.scrollBy({ left: 300, behavior: 'smooth' });
+    }
 
-            <div class="col-md-2">
-                <h6 class="fw-bold text-white mb-3">Hỗ trợ</h6>
-                <ul class="list-unstyled text-muted small">
-                    <li><a href="#" class="footer-link">Trung tâm trợ giúp</a></li>
-                    <li><a href="#" class="footer-link">Điều khoản</a></li>
-                    <li><a href="#" class="footer-link">Chính sách bảo mật</a></li>
-                </ul>
-            </div>
-        </div>
+    // Loop vô tận cho "Phim đề cử"
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.querySelector('.movie-container');
+        const leftBtn = document.querySelector('.arrow.left');
+        const rightBtn = document.querySelector('.arrow.right');
+
+        const firstCard = container.querySelector('.movie-card');
+        const style = getComputedStyle(container);
+        const gap = parseInt(style.gap) || 15;
+        const cardWidth = firstCard.offsetWidth;
+        const scrollAmount = cardWidth + gap;
+
+        rightBtn.addEventListener('click', () => {
+            if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
+                container.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        });
 
         leftBtn.addEventListener('click', () => {
             if (container.scrollLeft <= 0) {
