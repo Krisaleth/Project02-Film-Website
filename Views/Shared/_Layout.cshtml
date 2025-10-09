@@ -37,8 +37,8 @@
                         </li>
 
                         <li class="nav-item mx-2"><a asp-action="Index" asp-controller="UserMovie" class="nav-link">Tất cả phim</a></li>
-                        <li class="nav-item mx-2"><a href="#" class="nav-link">Điều khoản</a></li>
-                        <li class="nav-item mx-2"><a href="#" class="nav-link">Về chúng tôi</a></li>
+                        <li class="nav-item mx-2"><a href="/privacy" class="nav-link">Điều khoản</a></li>
+                        <li class="nav-item mx-2"><a href="/about" class="nav-link">Về chúng tôi</a></li>
                         @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("User"))
                         {
                             <li class="nav-item dropdown mx-2">
@@ -46,7 +46,7 @@
                                     Xin chào, @User.Identity.Name
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item text-decoration-none text-secondary" href="#">Trang cá nhân</a></li>
+                                    <li><a class="dropdown-item text-decoration-none text-secondary" href="/profile">Trang cá nhân</a></li>
                                     <li>
                                         <form method="post" asp-action="Logout" asp-controller="User" style="display:inline;">
                                             @Html.AntiForgeryToken()

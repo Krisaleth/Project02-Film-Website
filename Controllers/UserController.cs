@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Project02.Data;
+using Project02.Helpers;
 using Project02.Models;
 using Project02.Security;
 using Project02.ViewModels;
@@ -131,8 +132,8 @@ namespace Project02.Controllers
                 return View(vm);
             }
 
-            
-            var(hash, salt) = PasswordHasher.HashPassword(vm.Password);
+
+            var (hash, salt) = PasswordHasher.HashPassword(vm.Password);
 
             var acc = new Account
             {
@@ -170,5 +171,155 @@ namespace Project02.Controllers
             HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity()); // làm rỗng user hiện tại
             return Redirect("/");
         }
+        [HttpGet("/profile")]
+        public async Task<IActionResult> Profile()
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!long.TryParse(userIdStr, out long userId)) return Unauthorized();
+
+            var user = await _ctx.Users.FirstOrDefaultAsync(u => u.User_ID == userId);
+            if (user == null) return NotFound();
+
+            var orders = await _ctx.Orders.Include(o => o.Showtime).ThenInclude(s => s.Movie)
+                .Where(o => o.User_ID == userId)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+
+            var seats = await _ctx.OrderSeats
+                .Include(os => os.Seat)
+                .Include(os => os.Order)
+                .Where(os => os.Order.User_ID == userId)
+                .ToListAsync();
+
+            var vm = new UserProfileVm
+            {
+                User = user,
+                Orders = orders,
+                Seat = seats
+            };
+
+            return View(vm);
+        }
+
+        [HttpGet("/profile/edit")]
+        public async Task<IActionResult> ProfileEdit()
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!long.TryParse(userIdStr, out long userId))
+                return Unauthorized();
+
+            var user = await _ctx.Users.AsNoTracking().FirstOrDefaultAsync(u => u.User_ID == userId);
+            if (user == null)
+                return NotFound();
+
+            // Map từ User entity sang ViewModel
+            var model = new UserEditVm
+            {
+                User_ID = user.User_ID,
+                User_Name = user.User_Name,
+                User_Email = user.User_Email,
+                User_Phone = user.User_Phone,
+                RowsVersion = user.RowsVersion
+            };
+
+            return View(model);
+        }
+
+        [HttpPost("/profile/edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProfileEdit(UserEditVm model)
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!long.TryParse(userIdStr, out long userId))
+                return Unauthorized();
+
+            if (userId != model.User_ID)
+                return Forbid();
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _ctx.Users.FirstOrDefaultAsync(u => u.User_ID == userId);
+            if (user == null)
+                return NotFound();
+
+            // Cập nhật từ ViewModel sang entity
+            user.User_Name = model.User_Name;
+            user.User_Email = model.User_Email;
+            user.User_Phone = model.User_Phone;
+
+            // Thay đổi RowsVersion (để chết concurrency)
+            user.RowsVersion = model.RowsVersion;
+
+            try
+            {
+                await _ctx.SaveChangesAsync();
+                TempData["Success"] = "Cập nhật thành công!";
+                return RedirectToAction(nameof(Profile));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                ModelState.AddModelError("", "Dữ liệu đã bị thay đổi dữ liệu bởi người khác. Vui lòng tải lại và thử lại!");
+                return View(model);
+            }
+            
+        }
+
+        [HttpGet("profile/order/{id}")]
+        public async Task<IActionResult> OrderDetails(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
+            long orderId;
+            try
+            {
+                orderId = IdEncodingHelper.DecodeId(id);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
+            var cinemaHalls = await _ctx.Cinemas
+                    .Include(c => c.Halls)
+                    .ToListAsync();
+
+            var hallOrderDict = new Dictionary<long, int>();
+            foreach (var cinema in cinemaHalls)
+            {
+                // Sắp xếp phòng theo Hall_ID hoặc thuộc tính logic
+                var sortedHalls = cinema.Halls.OrderBy(h => h.Hall_ID).ToList();
+                for (int i = 0; i < sortedHalls.Count; i++)
+                {
+                    hallOrderDict[sortedHalls[i].Hall_ID] = i + 1; // Số thứ tự phòng trong rạp
+                }
+            }
+
+            var order = await _ctx.Orders
+                .Include(o => o.OrderSeats)
+                .ThenInclude(n => n.Seat)
+                .Include(o => o.Showtime)
+                    .ThenInclude(s => s.Hall)
+                    .ThenInclude(h => h.Cinema)
+                .Include(o => o.Showtime)
+                    .ThenInclude(s => s.Movie)
+                .FirstOrDefaultAsync(o => o.Order_ID == orderId);
+
+            if (order == null)
+                return NotFound();
+
+            // Ví dụ tạo trường định dạng trong ViewModel hoặc ViewBag
+            var hallNumber = hallOrderDict[order.Showtime.Hall_ID];
+            var hallDisplayName = $"{order.Showtime.Hall.Cinema.Cinema_Name} - phòng số {hallNumber}";
+
+            ViewBag.HallDisplayName = hallDisplayName;
+
+            
+
+            return View(order);
+        }
+
+
     }
 }

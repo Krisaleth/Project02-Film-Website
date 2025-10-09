@@ -147,6 +147,15 @@ namespace Project02.Controllers
                 };
                 _context.OrderSeats.Add(orderSeat);
 
+                var ticket = new Ticket
+                {
+                    OrderSeat_ID = orderSeat.OrderSeat_ID,
+                    Showtime_ID = showtimeId,
+                    Status = "Available",
+                    BookingTime = DateTime.UtcNow,
+                };
+                _context.Tickets.Add(ticket);
+
                 seat.SeatStatus = "Booked";
                 _context.Seats.Update(seat);
             }

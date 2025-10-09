@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using Project02.Data;
-using Project02.ViewModels;
 using Project02.Security;
+using Project02.ViewModels;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Project02.Controllers
@@ -25,10 +26,17 @@ namespace Project02.Controllers
         }
         [HttpGet("/admin/login")]
         [AllowAnonymous]
-        public IActionResult Login(string? returnUrl = null)
+        public async Task<IActionResult> Login(string? returnUrl = null)
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
+                // Kiểm tra User có role Admin không
+                var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+                if (!User.IsInRole("Admin"))
+                {
+                    await HttpContext.SignOutAsync("UserScheme");
+                    return View(new AdminLoginVm { ReturnUrl = returnUrl });
+                }
                 return Redirect("/admin");
             }
             return View(new AdminLoginVm { ReturnUrl = returnUrl });

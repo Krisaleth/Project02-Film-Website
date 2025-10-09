@@ -1,0 +1,113 @@
+﻿@model Project02.Models.Order
+
+@{
+    ViewData["Title"] = "Chi tiết vé";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+    body {
+        background: #141414;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .ticket-card {
+        background: #222;
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 1rem 0;
+        box-shadow: 0 4px 8px rgba(255, 165, 0, 0.3);
+    }
+
+    .ticket-header {
+        font-weight: bold;
+        font-size: 1.5rem;
+        color: #FFD580;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #FFD580;
+        padding-bottom: 0.5rem;
+    }
+
+    .ticket-info {
+        margin-bottom: 1rem;
+    }
+
+    .table {
+        color: #000 !important; /* chữ đen */
+        background-color: #fff !important; /* nền trắng */
+    }
+
+        .table th,
+        .table td {
+            border-color: #ccc !important; /* viền màu xám nhạt */
+            color: #000 !important; /* chữ đen */
+        }
+
+    .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #f9f9f9 !important; /* nền nhạt xen kẽ */
+    }
+
+    .table-striped > tbody > tr:nth-of-type(even) {
+        background-color: #fff !important; /* nền trắng */
+    }
+
+    .table th, .table td {
+        border-color: #444;
+        color: #fff;
+    }
+
+    .btn-back {
+        background-color: transparent;
+        border: 1px solid #FFD580;
+        color: #FFD580;
+        border-radius: 20px;
+        padding: 0.5rem 1.5rem;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 2rem;
+    }
+
+        .btn-back:hover {
+            background-color: #FFD580;
+            color: #222;
+        }
+</style>
+
+<div class="container py-4">
+    <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+
+    <div class="ticket-card">
+        <div class="ticket-header">Thông tin đơn hàng</div>
+
+        <div class="ticket-info"><strong>Phim:</strong> @Model.Showtime.Movie.Movie_Name</div>
+        <div class="ticket-info"><strong>Rạp:</strong> @Model.Showtime.Hall.Cinema.Cinema_Name</div>
+        <div class="ticket-info"><strong>Phòng:</strong> @ViewBag.HallDisplayName</div>
+        <div class="ticket-info"><strong>Ngày giờ chiếu:</strong> @Model.Showtime.Start_Time.ToString("dd/MM/yyyy HH:mm")</div>
+        <div class="ticket-info"><strong>Trạng thái đơn:</strong> @Model.Status</div>
+        <div class="ticket-info"><strong>Tổng tiền:</strong> @Model.TotalAmount.ToString("N0")₫</div>
+
+        <h5 class="mt-4">Danh sách vé</h5>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ghế</th>
+                    <th>Loại ghế</th>
+                    <th>Giá vé</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var orderSeat in Model.OrderSeats)
+                {
+                    <tr>
+                        <td>@orderSeat.Seat.RowNumber@orderSeat.Seat.SeatNumber</td>
+                        <td>@orderSeat.Seat.SeatType</td>
+                        <td>@orderSeat.Price.ToString("N0")₫</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <a href="/profile" class="btn-back">Quay lại</a>
+    </div>
+</div>

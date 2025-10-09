@@ -1,0 +1,83 @@
+﻿@model Project02.ViewModels.Customer.UserEditVm
+
+@{
+    ViewData["Title"] = "Cập nhật thông tin cá nhân";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+    body {
+        background: #141414;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .form-label {
+        color: #FFD580;
+    }
+
+    .form-control, .form-control:focus {
+        background: #232323;
+        color: #fff;
+        border: 1.5px solid #FFD580;
+        border-radius: 20px;
+    }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.1rem #FFD580;
+        }
+
+    .btn-outline-light {
+        border-color: #FFD580;
+        color: #FFD580;
+        border-radius: 30px;
+    }
+
+        .btn-outline-light:hover {
+            background-color: #FFD580;
+            color: #232323;
+        }
+
+    .card {
+        background: #181818;
+        border: none;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-xl-6">
+            <div class="card p-4">
+                <h3 class="mb-4 text-center text-warning">Cập nhật thông tin cá nhân</h3>
+                <form action="/profile/edit" method="post">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.User_ID)
+                    @Html.HiddenFor(m => m.RowsVersion)
+                    <div class="mb-3">
+                        <label asp-for="User_Name" class="form-label">Họ tên</label>
+                        <input asp-for="User_Name" class="form-control" required />
+                        <span asp-validation-for="User_Name" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="User_Email" class="form-label">Email</label>
+                        <input asp-for="User_Email" class="form-control" type="email" required />
+                        <span asp-validation-for="User_Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="User_Phone" class="form-label">Số điện thoại</label>
+                        <input asp-for="User_Phone" class="form-control" maxlength="15" required />
+                        <span asp-validation-for="User_Phone" class="text-danger"></span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="/profile" class="btn btn-secondary">Quay lại</a>
+                        <button type="submit" class="btn btn-outline-light">Lưu thay đổi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -115,7 +115,7 @@
 
                     <div class="mb-3">
                         <label for="ticketQuantity" class="form-label">Số lượng vé</label>
-                        <input type="number" id="ticketQuantity" min="1" class="form-control" value="@(Model.SelectedSeats?.Split(',').Length ?? 1)" />
+                        <input type="number" id="ticketQuantity" min="1" class="form-control" value="@(Model.SelectedSeats)" />
                     </div>
 
                     <input type="hidden" id="totalAmountHidden" name="TotalAmount" value="@Model.TotalAmount" />

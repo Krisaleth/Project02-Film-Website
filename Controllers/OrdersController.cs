@@ -405,6 +405,7 @@ namespace Project02.Controllers
                 Status = order.Status,
                 Showtime = order.Showtime,
                 SelectedSeatIds = selectedSeatIds,
+                SelectedSeats = selectedSeatIds.Count.ToString(),
             };
 
             var users = await _context.Users

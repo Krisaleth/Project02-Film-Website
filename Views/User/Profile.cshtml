@@ -1,0 +1,179 @@
+﻿@model Project02.ViewModels.Customer.UserProfileVm
+@using Project02.Helpers
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+}
+
+<div class="user-profile container py-5 mt-5">
+
+    <style>
+        body {
+            background: #141414;
+            color: #fff;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .btn-outline-light {
+            border-color: #FFD580;
+            color: #FFD580;
+            border-radius: 30px;
+        }
+
+            .btn-outline-light:hover {
+                background-color: #FFD580;
+                color: #111;
+            }
+
+        .nav-tabs .nav-link {
+            color: #FFD580;
+        }
+
+            .nav-tabs .nav-link.active {
+                background-color: #1c1c1c;
+                color: #fff;
+            }
+
+        .table {
+            color: #fff;
+            background: transparent;
+        }
+
+            .table th,
+            .table td {
+                border-color: #333;
+                color: #fff;
+            }
+
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .table-striped > tbody > tr:nth-of-type(even) {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+    </style>
+
+    <!-- Header -->
+    <div class="profile-header d-flex align-items-center gap-3 mb-3">
+        <div>
+            <h3>@Model.User.User_Name</h3>
+            <p>@Model.User.User_Email</p>
+        </div>
+        <form method="post" asp-action="Logout" asp-controller="User" style="display:inline;" class="ms-auto">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-light ms-auto">
+                <span class="ms-3">Đăng xuất</span>
+            </button>
+        </form>
+    </div>
+    
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" id="profileTab" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#personalInfo">Thông tin cá nhân</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#orderHistory">Lịch sử đơn hàng</button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-4">
+        <!-- Personal Info Tab -->
+        <div class="tab-pane fade show active" id="personalInfo" role="tabpanel">
+            <div class="w-75" style="min-width:300px;">
+                <table class="table table-borderless w-100 m-0">
+                    <tr>
+                        <th class="fw-bold text-light" style="min-width:120px;">Username:</th>
+                        <td class="text-light" style="width:80%;">@Model.User.User_Name</td>
+                    </tr>
+                    <tr>
+                        <th class="fw-bold text-light">Email:</th>
+                        <td class="text-light" style="width:80%;">@Model.User.User_Email</td>
+                    </tr>
+                    <tr>
+                        <th class="fw-bold text-light">Phone:</th>
+                        <td class="text-light" style="width:80%;">@Model.User.User_Phone</td>
+                    </tr>
+                </table>
+                <a href="/profile/edit" class="btn btn-outline-light mt-2">Cập nhật thông tin</a>
+            </div>
+        </div>
+
+        <!-- Order History -->
+        <div class="tab-pane fade" id="orderHistory" role="tabpanel">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Phim</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model.Orders)
+                    {
+                        <tr>
+                            <td>@order.Showtime.Movie.Movie_Name</td>
+                            <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@order.TotalAmount.ToString("N0")₫</td>
+                            <td>@order.Status</td>
+                            <td>
+                                @if (order.Status == "Completed")
+                                {
+                                    <a href="/profile/order/@IdEncodingHelper.EncodeId(order.Order_ID)" class="btn btn-outline-light">Xem vé</a>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-secondary" disabled>Xem vé</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+        <!-- Orders AJAX tab vẫn giữ nguyên nếu cần -->
+        <div class="tab-pane fade" id="orders" role="tabpanel">
+            <div id="orderContent">
+                <div class="text-center my-3">
+                    <div class="spinner-border text-warning" role="status" id="orderLoading">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var tabs = document.querySelectorAll('#profileTab button[data-bs-toggle="tab"]');
+        tabs.forEach(tab => {
+            tab.addEventListener('shown.bs.tab', function (e) {
+                if (e.target.getAttribute('data-bs-target') === '#orders') {
+                    var orderContent = document.getElementById('orderContent');
+                    var orderLoading = document.getElementById('orderLoading');
+                    if (orderContent.dataset.loaded !== 'true') {
+                        orderLoading.style.display = 'block';
+                        fetch('/profile/orders') 
+                            .then(response => response.text())
+                            .then(html => {
+                                orderLoading.style.display = 'none';
+                                orderContent.innerHTML = html;
+                                orderContent.dataset.loaded = 'true';
+                            })
+                            .catch(() => {
+                                orderLoading.style.display = 'none';
+                                orderContent.innerHTML = "<div class='alert alert-danger'>Không tải được danh sách đơn hàng.</div>";
+                            });
+                    }
+                }
+            });
+        });
+    </script>
+}
