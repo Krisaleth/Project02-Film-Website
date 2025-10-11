@@ -17,7 +17,7 @@
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="returnUrl" />
         <div class="form-group">
-            <input asp-for="UserName" type="text" placeholder="Email" required />
+            <input asp-for="UserName" type="text" placeholder="Username" required />
             <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
         <div class="form-group">
