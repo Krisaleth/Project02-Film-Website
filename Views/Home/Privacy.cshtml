@@ -10,17 +10,35 @@
 
     .card {
         background-color: #1f1f1f;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(255, 165, 0, 0.6);
+        border-radius: 16px;
+        box-shadow: 0 6px 32px rgba(255, 165, 0, 0.15);
+        border: none;
+        max-width: 650px;
+        margin: 40px auto;
+        padding: 36px 32px;
     }
 
     .card-title {
         color: #FFD580;
+        font-size: 2rem;
+        margin-bottom: 18px;
+        font-weight: 700;
+    }
+
+    .text-muted {
+        color: #d1d1d1 !important;
+        font-size: 1.08rem;
+    }
+
+    ul.text-muted li {
+        margin-bottom: 10px;
+        line-height: 1.7;
     }
 
     .btn-outline-warning {
         border-color: #FFD580;
         color: #FFD580;
+        transition: 0.2s;
     }
 
         .btn-outline-warning:hover {
@@ -29,16 +47,17 @@
         }
 </style>
 
+<div class="container py-5">
+    <div class="card">
+        <h1 class="card-title">📜 Điều khoản sử dụng</h1>
 
-<div class="container mt-5 pt-5">
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h1 class="card-title text-warning mb-4">@ViewData["Title"]</h1>
-            <p class="lead">Chào mừng đến với trang chính sách bảo mật của chúng tôi.</p>
-            <p>Chúng tôi tôn trọng quyền riêng tư của bạn và cam kết bảo vệ thông tin cá nhân của bạn khi bạn sử dụng dịch vụ.</p>
-            <p>Thông tin bạn cung cấp sẽ được giữ bảo mật và chỉ sử dụng cho các mục đích liên quan tới dịch vụ của chúng tôi.</p>
-            <p>Nếu có thắc mắc về cách chúng tôi xử lý dữ liệu, vui lòng liên hệ qua email hỗ trợ của chúng tôi.</p>
-            <a href="/" class="btn btn-outline-warning mt-3">Quay về Trang chủ</a>
-        </div>
+        <p class="text-muted mb-3">Chào mừng bạn đến với <strong>TKT Cinema 🎬</strong>! Trước khi sử dụng dịch vụ, vui lòng đọc kỹ các điều khoản sau:</p>
+
+        <ul class="text-muted ps-3">
+            <li><strong>Đặt vé và thanh toán:</strong> Người dùng cần cung cấp thông tin chính xác khi mua vé. Thanh toán phải được thực hiện qua các kênh thanh toán được xác nhận trên website.</li>
+            <li><strong>Chính sách hủy và hoàn vé:</strong> Vé đã đặt và thanh toán không thể hoàn hoặc đổi trong vòng 2 giờ trước giờ chiếu. Mọi yêu cầu hoàn vé sau thời hạn này sẽ không được chấp nhận.</li>
+            <li><strong>Trách nhiệm người dùng:</strong> Người dùng chịu trách nhiệm bảo mật tài khoản và thông tin cá nhân. Mọi hành vi gian lận sẽ bị xử lý theo quy định pháp luật.</li>
+            <li><strong>Quyền sở hữu nội dung:</strong> Tất cả hình ảnh, thông tin phim, banner và nội dung trên website thuộc quyền sở hữu của TKT Team 🎬. Không sao chép hay sử dụng cho mục đích thương mại mà không có sự cho phép.</li>
+        </ul>
     </div>
 </div>

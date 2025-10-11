@@ -11,17 +11,40 @@
 
     .card {
         background-color: #1f1f1f;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(255, 165, 0, 0.6);
+        border-radius: 16px;
+        box-shadow: 0 6px 32px rgba(255, 165, 0, 0.15);
+        border: none;
+        max-width: 650px;
+        margin: 40px auto;
+        padding: 36px 32px;
     }
 
     .card-title {
         color: #FFD580;
+        font-size: 2rem;
+        margin-bottom: 18px;
+        font-weight: 700;
+    }
+
+    .text-muted {
+        color: #d1d1d1 !important;
+        font-size: 1.08rem;
+    }
+
+    ul.text-muted li {
+        margin-bottom: 10px;
+        line-height: 1.7;
+    }
+
+    h5.text-white {
+        margin-top: 22px;
+        font-weight: 600;
     }
 
     .btn-outline-warning {
         border-color: #FFD580;
         color: #FFD580;
+        transition: 0.2s;
     }
 
         .btn-outline-warning:hover {
@@ -30,14 +53,33 @@
         }
 </style>
 
-<div class="container mt-5 pt-5">
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h1 class="card-title text-warning mb-4">@ViewData["Title"]</h1>
-            <p class="lead">Xin chào! Tôi là một nhà phát triển phần mềm đam mê xây dựng các ứng dụng web toàn diện, đặc biệt là lĩnh vực đặt vé rạp chiếu phim.</p>
-            <p>Tôi có kinh nghiệm với ASP.NET Core, Entity Framework cùng nhiều công nghệ hiện đại và luôn muốn nghiên cứu, học hỏi thêm để phát triển hệ thống tốt hơn.</p>
-            <p>Cám ơn bạn đã ghé thăm trang cá nhân của tôi!</p>
-            <a href="/" class="btn btn-outline-warning mt-3">Quay về Trang chủ</a>
-        </div>
+<div class="container py-5">
+    <div class="card">
+        <h1 class="card-title">🎬 Về TKT Team</h1>
+
+        <p class="text-muted">
+            TKT Cinema 🎬 là nền tảng đặt vé xem phim trực tuyến hiện đại, mang đến trải nghiệm điện ảnh trọn vẹn cho khán giả.
+        </p>
+
+        <h5 class="text-white">Sứ mệnh</h5>
+        <p class="text-muted">Giúp bạn dễ dàng tìm và đặt vé cho những bộ phim yêu thích mọi lúc, mọi nơi.</p>
+
+        <h5 class="text-white">Dịch vụ</h5>
+        <ul class="text-muted ps-3">
+            <li>Cập nhật lịch chiếu và phim mới liên tục.</li>
+            <li>Hỗ trợ mua vé trực tuyến nhanh chóng, tiện lợi.</li>
+            <li>Chương trình khuyến mãi hấp dẫn và ưu đãi đặc biệt cho người dùng thân thiết.</li>
+        </ul>
+
+        <h5 class="text-white">Cam kết</h5>
+        <p class="text-muted">Bảo mật thông tin người dùng và mang đến trải nghiệm đặt vé an toàn, tiện lợi.</p>
+
+        <h5 class="text-white">Đội ngũ phát triển </h5>
+        <ul class="text-muted ps-3">
+            <li><strong>Kim Ngọc Tâm</strong></li>
+            <li><strong>Nguyễn Văn Khải</strong></li>
+            <li><strong>Nguyễn Minh Tuấn</strong></li>
+        </ul>
+        <a href="/" class="btn btn-outline-warning mt-3">Quay về Trang chủ</a>
     </div>
 </div>
