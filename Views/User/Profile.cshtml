@@ -77,11 +77,21 @@
                     <tbody>
                         @foreach (var order in Model.Orders)
                         {
+                            var cinemaId = order.Showtime.Hall.Cinema.Cinema_ID;
+                            var hallId = order.Showtime.Hall.Hall_ID;
+                            int roomNumber = 0;
+                            if (ViewBag.hallsByCinema != null && ViewBag.hallsByCinema.ContainsKey(cinemaId) && ViewBag.hallsByCinema[cinemaId].ContainsKey(hallId))
+                            {
+                                roomNumber = ViewBag.hallsByCinema[cinemaId][hallId];
+                            }
+
                             <tr>
                                 <td>@order.Showtime.Movie.Movie_Name</td>
-                                <td>@order.Showtime.Room.Room_Name</td>
-                                <td>@order.SeatList</td>
-                                <td>@order.Showtime.ShowDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>Rạp @roomNumber - @order.Showtime.Hall.Cinema.Cinema_Name</td>
+                                <td>
+                                    @string.Join(", ", order.OrderSeats.Select(os => os.Seat.RowNumber + os.Seat.SeatNumber))
+                                </td>
+                                <td>@order.Showtime.Start_Time.ToString("dd/MM/yyyy HH:mm")</td>
                                 <td>@order.TotalAmount.ToString("N0") ₫</td>
                                 <td>@order.Status</td>
                                 <td>
@@ -102,38 +112,6 @@
             else
             {
                 <p class="text-light">Bạn chưa có vé nào được đặt.</p>
-            }
-        </div>
-
-        <!-- Lịch sử thanh toán -->
-        <div class="tab-pane fade" id="payments" role="tabpanel">
-            @if (Model.Payments != null && Model.Payments.Any())
-            {
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Số tiền</th>
-                            <th>Phương thức</th>
-                            <th>Trạng thái</th>
-                            <th>Thời gian</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var payment in Model.Payments)
-                        {
-                            <tr>
-                                <td>@payment.Amount.ToString("N0") ₫</td>
-                                <td>@payment.Method</td>
-                                <td>@payment.Status</td>
-                                <td>@payment.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p class="text-light">Chưa có giao dịch nào.</p>
             }
         </div>
 

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Project02.Data;
 using Project02.Security;
 using Project02.ViewModels;
+using Project02.ViewModels.Admin;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -20,10 +21,28 @@ namespace Project02.Controllers
         [HttpGet("/admin")]
         [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var userCount = await _db.Users.CountAsync();
+
+            var publishedMoviesCount = await _db.Movies.CountAsync(m => m.Movie_Status == "Published");
+            var ticketSoldCount = await _db.OrderSeats.Where(os => os.Order.Status == "Completed").CountAsync();
+
+            var totalRevenue = await _db.Orders
+                .Where(o => o.Status == "Completed")
+                .SumAsync(o => (decimal?)o.TotalAmount) ?? 0;
+
+            var model = new DashboardVm
+            {
+                UserCount = userCount,
+                PublishedMoviesCount = publishedMoviesCount,
+                TicketSoldCount = ticketSoldCount,
+                TotalRevenue = totalRevenue
+            };
+
+            return View(model);
         }
+
         [HttpGet("/admin/login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string? returnUrl = null)

@@ -102,7 +102,7 @@ namespace Project02.Controllers
         }
 
         [HttpGet("/register")]
-        public async Task<IActionResult> Register()
+        public IActionResult Register()
         {
             return View();
         }
@@ -181,6 +181,11 @@ namespace Project02.Controllers
             if (user == null) return NotFound();
 
             var orders = await _ctx.Orders.Include(o => o.Showtime).ThenInclude(s => s.Movie)
+                .Include(o => o.Showtime)
+                    .ThenInclude(s => s.Hall)
+                        .ThenInclude(h => h.Cinema)
+                .Include(o => o.OrderSeats)
+                    .ThenInclude(os => os.Seat)
                 .Where(o => o.User_ID == userId)
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
@@ -190,6 +195,19 @@ namespace Project02.Controllers
                 .Include(os => os.Order)
                 .Where(os => os.Order.User_ID == userId)
                 .ToListAsync();
+
+            var hallsByCinema = orders
+            .Select(o => o.Showtime.Hall)
+            .GroupBy(h => h.Cinema.Cinema_ID)
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderBy(h => h.Hall_ID)
+                      .Select((hall, index) => new { hall.Hall_ID, RoomNumber = index + 1 })
+                      .ToDictionary(x => x.Hall_ID, x => x.RoomNumber)
+            );
+
+            // Truyền hallsByCinema qua ViewBag hoặc ViewModel để sử dụng trong View
+            ViewBag.HallsByCinema = hallsByCinema;
 
             var vm = new UserProfileVm
             {

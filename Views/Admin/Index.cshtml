@@ -1,227 +1,55 @@
-﻿@{
+﻿@using Project02.ViewModels.Admin
+@model DashboardVm
+
+@{
     Layout = "_AdminLayout";
     ViewData["Title"] = "Dashboard";
-    ViewData["Username"] = ViewBag.Username;
 }
 
 <div class="container-fluid">
     <div class="row">
-        <!-- Info Boxes -->
+        <!-- Widget 1: Số người dùng -->
         <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
             <div class="info-box bg-info">
-                <span class="info-box-icon"><i class="fa-solid fa-bookmark"></i></span>
+                <span class="info-box-icon"><i class="fa-solid fa-users"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Bookmarks</span>
-                    <span class="info-box-number">41,410</span>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 70%"></div>
-                    </div>
-                    <span class="progress-description">70% Increase in 30 Days</span>
+                    <span class="info-box-text">Người dùng</span>
+                    <span class="info-box-number">@Model.UserCount</span>
                 </div>
             </div>
         </div>
 
+        <!-- Widget 2: Phim công chiếu -->
         <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
             <div class="info-box bg-success">
-                <span class="info-box-icon"><i class="fa-solid fa-thumbs-up"></i></span>
+                <span class="info-box-icon"><i class="fa-solid fa-film"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Likes</span>
-                    <span class="info-box-number">12,300</span>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 50%"></div>
-                    </div>
-                    <span class="progress-description">50% Increase in 7 Days</span>
+                    <span class="info-box-text">Phim công chiếu</span>
+                    <span class="info-box-number">@Model.PublishedMoviesCount</span>
                 </div>
             </div>
         </div>
 
+        <!-- Widget 3: Vé đã bán -->
         <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
             <div class="info-box bg-warning">
-                <span class="info-box-icon"><i class="fa-solid fa-calendar-days"></i></span>
+                <span class="info-box-icon"><i class="fa-solid fa-ticket"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Events</span>
-                    <span class="info-box-number">320</span>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 40%"></div>
-                    </div>
-                    <span class="progress-description">12 New This Month</span>
+                    <span class="info-box-text">Vé đã bán</span>
+                    <span class="info-box-number">@Model.TicketSoldCount</span>
                 </div>
             </div>
         </div>
 
+        <!-- Widget 4: Doanh thu -->
         <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
             <div class="info-box bg-danger">
-                <span class="info-box-icon"><i class="fa-solid fa-comments"></i></span>
+                <span class="info-box-icon"><i class="fa-solid fa-dollar-sign"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Comments</span>
-                    <span class="info-box-number">5,210</span>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 30%"></div>
-                    </div>
-                    <span class="progress-description">30% Increase in 1 Week</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- To Do List + Chart -->
-    <div class="row">
-        <!-- To Do List -->
-        <div class="col-lg-6 col-md-12 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fa-solid fa-clipboard-list"></i> To Do List</h3>
-                </div>
-                <div class="card-body" id="todo-list">
-                    <div class="todo-item d-flex align-items-center justify-content-start border-bottom py-2">
-                        <input type="checkbox" onchange="toggleDone(this)">
-                        <span class="todo-label ms-2">Design a nice theme</span>
-                        <button class="btn btn-sm btn-danger ms-2 ms-auto" onclick="deleteTask(this)">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-
-                    <div class="todo-item d-flex align-items-center justify-content-start border-bottom py-2">
-                        <input type="checkbox" checked onchange="toggleDone(this)">
-                        <span class="todo-label done ms-2">Make it responsive</span>
-                        <button class="btn btn-sm btn-danger ms-2 ms-auto" onclick="deleteTask(this)">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-
-                    <div class="todo-item d-flex align-items-center justify-content-start border-bottom py-2">
-                        <input type="checkbox" onchange="toggleDone(this)">
-                        <span class="todo-label ms-2">Polish UI</span>
-                        <button class="btn btn-sm btn-danger ms-2 ms-auto" onclick="deleteTask(this)">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="input-group">
-                        <input type="text" id="new-task" class="form-control" placeholder="New task...">
-                        <button class="btn btn-primary" onclick="addTask()">Add</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bar Chart -->
-        <div class="col-lg-6 col-md-12 mb-3">
-            <div class="card" style="height:450px; overflow:hidden;">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fa-solid fa-chart-column"></i> Biểu đồ</h3>
-                </div>
-                <div class="card-body p-0" style="height: calc(100% - 56px); /* header height approx */ display:flex; align-items:stretch;">
-                    <!-- canvas fills the remaining space -->
-                    <canvas id="barChart" style="width:100%; height:100%; border-radius:12px; display:block;"></canvas>
+                    <span class="info-box-text">Doanh thu (VND)</span>
+                    <span class="info-box-number">@Model.TotalRevenue.ToString("N0")</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        // To Do list functions (unchanged functionality)
-        function toggleDone(checkbox) {
-            const label = checkbox.parentElement.querySelector(".todo-label");
-            if (checkbox.checked) {
-                label.classList.add("text-decoration-line-through", "text-muted");
-            } else {
-                label.classList.remove("text-decoration-line-through", "text-muted");
-            }
-        }
-
-        function deleteTask(btn) {
-            btn.closest(".todo-item").remove();
-        }
-
-        function addTask() {
-            const input = document.getElementById("new-task");
-            const value = input.value.trim();
-            if (value === "") return;
-
-            const todoList = document.getElementById("todo-list");
-
-            const div = document.createElement("div");
-            div.className = "todo-item d-flex align-items-center justify-content-start border-bottom py-2";
-            div.innerHTML = `
-                <input type="checkbox" onchange="toggleDone(this)">
-                <span class="todo-label ms-2">${value}</span>
-                <button class="btn btn-sm btn-danger ms-2 ms-auto" onclick="deleteTask(this)">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-            `;
-            todoList.appendChild(div);
-            input.value = "";
-        }
-
-        // Chart.js: make it fit the card and leave space for legend + labels
-        (function renderChart() {
-            const ctx = document.getElementById('barChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                    datasets: [
-                        {
-                            label: 'Electronics',
-                            backgroundColor: 'rgba(210, 214, 222, 1)',
-                            borderRadius: 6, // rounded bar corners (Chart.js 3+)
-                            barPercentage: 0.6,
-                            data: [65, 59, 80, 81, 56, 55, 40]
-                        },
-                        {
-                            label: 'Digital Goods',
-                            backgroundColor: '#3b8bba',
-                            borderRadius: 6,
-                            barPercentage: 0.6,
-                            data: [28, 48, 40, 19, 86, 27, 90]
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            top: 30,    // space for legend/title
-                            bottom: 40, // space for x-axis labels
-                            left: 10,
-                            right: 10
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                padding: 12
-                            }
-                        },
-                        tooltip: {
-                            // make tooltip corners a bit rounded
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            padding: 8
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: {
-                                padding: 12
-                            },
-                            grid: { display: false }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            ticks: { precision: 0 }
-                        }
-                    }
-                }
-            });
-        })();
-    </script>
-}
