@@ -464,25 +464,260 @@ VALUES
  N'Diana, an Amazonian princess, discovers her powers and destiny.',
  141, N'Publish', N'/uploads/posters/wonder-woman-2017.jpg', N'DC Films', 2017);
 
--- Interstellar: Sci-Fi, Adventure, Drama
-INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
-(1, 1), (1, 8), (1, 5);
+-- 1 Interstellar
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 1, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi'
+UNION ALL SELECT 1, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure'
+UNION ALL SELECT 1, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
 
--- Inception: Sci-Fi, Action, Thriller
-INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
-(2, 1), (2, 2), (2, 6);
+-- 2 Inception
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 2, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi'
+UNION ALL SELECT 2, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 2, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Thriller';
 
--- Tenet: Sci-Fi, Action, Thriller
-INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
-(3, 1), (3, 2), (3, 6);
+-- 3 Tenet
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 3, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi'
+UNION ALL SELECT 3, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 3, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Thriller';
 
--- Avengers Endgame: Action, Adventure, Sci-Fi
-INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
-(4, 2), (4, 8), (4, 1);
+-- 4 Avengers Endgame
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 4, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 4, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure'
+UNION ALL SELECT 4, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi';
 
--- Joker: Drama, Crime, Thriller
-INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID) VALUES
-(5, 5), (5, 9), (5, 6);
+-- 5 Joker
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 5, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama'
+UNION ALL SELECT 5, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Crime'
+UNION ALL SELECT 5, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Thriller';
+
+-- 6 The Dark Knight
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 6, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 6, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Crime'
+UNION ALL SELECT 6, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 7 The Lord of the Rings: The Return of the King
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 7, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure'
+UNION ALL SELECT 7, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Fantasy'
+UNION ALL SELECT 7, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action';
+
+-- 8 The Lord of the Rings: The Fellowship of the Ring
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 8, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure'
+UNION ALL SELECT 8, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Fantasy'
+UNION ALL SELECT 8, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action';
+
+-- 9 The Lord of the Rings: The Two Towers
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 9, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure'
+UNION ALL SELECT 9, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Fantasy'
+UNION ALL SELECT 9, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action';
+
+-- 10 Harry Potter and the Sorcerer's Stone
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 10, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure'
+UNION ALL SELECT 10, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Fantasy'
+UNION ALL SELECT 10, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 11 Harry Potter and the Chamber of Secrets
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 11, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure'
+UNION ALL SELECT 11, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Fantasy'
+UNION ALL SELECT 11, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 12 Harry Potter and the Prisoner of Azkaban
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 12, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure'
+UNION ALL SELECT 12, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Fantasy'
+UNION ALL SELECT 12, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 13 Avatar
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 13, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi'
+UNION ALL SELECT 13, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure';
+
+-- 14 Star Wars: The Force Awakens
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 14, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi'
+UNION ALL SELECT 14, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure';
+
+-- 15 Mad Max: Fury Road
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 15, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 15, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure';
+
+-- 16 Black Panther
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 16, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 16, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure';
+
+-- 17 La La Land
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 17, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama'
+UNION ALL SELECT 17, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Romance';
+
+-- 18 Parasite
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 18, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama'
+UNION ALL SELECT 18, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Thriller';
+
+-- 19 1917
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 19, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama'
+UNION ALL SELECT 19, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Thriller';
+
+-- 20 Ford v Ferrari
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 20, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama'
+UNION ALL SELECT 20, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action';
+
+-- 21 Dune
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 21, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi'
+UNION ALL SELECT 21, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure';
+
+-- 22 No Time To Die
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 22, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 22, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Thriller';
+
+-- 23 Spider-Man: No Way Home
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 23, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 23, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure';
+
+-- 24 Spotlight
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 24, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 25 Whiplash
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 25, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 26 Inside Out
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 26, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Animation'
+UNION ALL SELECT 26, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 27 Coco
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 27, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Animation'
+UNION ALL SELECT 27, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 28 Frozen
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 28, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Animation'
+UNION ALL SELECT 28, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 29 The Social Network
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 29, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 30 The Shape of Water
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 30, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 31 Moonlight
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 31, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 32 Arrival
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 32, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi';
+
+-- 33 Knives Out
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 33, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Thriller'
+UNION ALL SELECT 33, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Crime';
+
+-- 34 Get Out
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 34, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Horror'
+UNION ALL SELECT 34, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Thriller';
+
+-- 35 Capernaum
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 35, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 36 Shoplifters
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 36, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 37 Soul
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 37, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Animation'
+UNION ALL SELECT 37, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 38 The Grand Budapest Hotel
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 38, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Comedy'
+UNION ALL SELECT 38, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 39 Her
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 39, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Romance'
+UNION ALL SELECT 39, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 40 Gravity
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 40, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi';
+
+-- 41 Up
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 41, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Animation'
+UNION ALL SELECT 41, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure';
+
+-- 42 The Avengers
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 42, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 42, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure'
+UNION ALL SELECT 42, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi';
+
+-- 43 Skyfall
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 43, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 43, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Thriller';
+
+-- 44 The Wolf of Wall Street
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 44, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 45 The Martian
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 45, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi'
+UNION ALL SELECT 45, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 46 The Revenant
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 46, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 47 Logan
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 47, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 47, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Drama';
+
+-- 48 Guardians of the Galaxy
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 48, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 48, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure'
+UNION ALL SELECT 48, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Sci-Fi';
+
+-- 49 Doctor Strange
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 49, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 49, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Fantasy';
+
+-- 50 Wonder Woman
+INSERT INTO dbo.MovieGenres (Movie_ID, Genre_ID)
+SELECT 50, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Action'
+UNION ALL SELECT 50, Genre_ID FROM dbo.Genres WHERE Genre_Name = 'Adventure';
+
+
 
 INSERT INTO dbo.Cinemas (Cinema_Name, [Location], Contact_Info) VALUES
 (N'Galaxy Cinema', N'123 Le Loi, District 1, HCM City', N'0909123456'),
