@@ -280,7 +280,7 @@ namespace Project02.Controllers
                 ModelState.AddModelError("", "Dữ liệu đã bị thay đổi dữ liệu bởi người khác. Vui lòng tải lại và thử lại!");
                 return View(model);
             }
-            
+
         }
 
         [HttpGet("profile/order/{id}")]
@@ -332,12 +332,50 @@ namespace Project02.Controllers
             var hallDisplayName = $"{order.Showtime.Hall.Cinema.Cinema_Name} - phòng số {hallNumber}";
 
             ViewBag.HallDisplayName = hallDisplayName;
-
-            
-
             return View(order);
         }
 
+        [HttpGet("/change-password")]
+        public IActionResult ChangePassword()
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!long.TryParse(userIdStr, out long userId)) return Unauthorized();
+            return View();
+        }
 
+        [HttpPost("/change-password")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordVm vm)
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!long.TryParse(userIdStr, out long userId)) return Unauthorized();
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+            var user = await _ctx.Users.Include(u => u.Account).FirstOrDefaultAsync(u => u.User_ID == userId);
+            if (user == null || user.Account == null)
+            {
+                return NotFound();
+            }
+            if (vm.NewPassword != vm.ConfirmNewPassword)
+            {
+                ModelState.AddModelError("ConfirmNewPassword", "Xác nhận mật khẩu không khớp.");
+                return View(vm);
+            }
+            if (!PasswordHasher.Verify(vm.CurrentPassword, user.Account.Password_Salt, user.Account.Password_Hash))
+            {
+                ModelState.AddModelError("CurrentPassword", "Mật khẩu hiện tại không đúng.");
+                return View(vm);
+            }
+            var (newHash, newSalt) = PasswordHasher.HashPassword(vm.NewPassword);
+            user.Account.Password_Hash = newHash;
+            user.Account.Password_Salt = newSalt;
+            user.Account.Password_Algo = "PBKDF2";
+            user.Account.Password_Iterations = 100000;
+            await _ctx.SaveChangesAsync();
+            TempData["Success"] = "Đổi mật khẩu thành công!";
+            return RedirectToAction("Profile");
+        }
     }
 }
