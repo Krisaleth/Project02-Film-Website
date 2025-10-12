@@ -9,29 +9,25 @@
 <div class="user-profile container py-5 mt-5">
 
     <!-- Header -->
-    <div class="profile-header d-flex align-items-center gap-3 mb-3">
+    <div class="profile-header d-flex align-items-center gap-3 mb-3 flex-wrap">
         <div>
-            <h3>@Model.User.User_Name</h3>
-            <p>@Model.User.User_Email</p>
+            <h2 class="mb-1" style="color: #FFD580;">@Model.User.User_Name</h2>
+            <p class="mb-0 text-secondary" style="font-size:17px;color:#bdbdbd!important;">@Model.User.User_Email</p>
         </div>
         <form method="post" asp-action="Logout" asp-controller="User" class="ms-auto">
             @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-outline-light">
+            <button type="submit" class="btn btn-outline-warning fw-semibold px-4 py-2" style="border-radius:2rem;">
                 <i class="fa-solid fa-right-from-bracket me-2"></i> Đăng xuất
             </button>
         </form>
     </div>
 
-    <!-- Tabs -->
-    <ul class="nav nav-tabs" id="profileTab" role="tablist">
+    <ul class="nav nav-tabs" id="profileTab" role="tablist" style="border-bottom:1.5px solid #333;">
         <li class="nav-item">
             <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#personalInfo">Thông tin cá nhân</button>
         </li>
         <li class="nav-item">
             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#ticketHistory">Lịch sử vé</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#payments">Thanh toán</button>
         </li>
     </ul>
 
@@ -39,22 +35,22 @@
 
         <!-- Thông tin cá nhân -->
         <div class="tab-pane fade show active" id="personalInfo" role="tabpanel">
-            <div class="w-75" style="min-width:300px;">
-                <table class="table table-borderless w-100 m-0">
-                    <tr>
-                        <th>Username:</th>
-                        <td>@Model.User.User_Name</td>
-                    </tr>
-                    <tr>
-                        <th>Email:</th>
-                        <td>@Model.User.User_Email</td>
-                    </tr>
-                    <tr>
-                        <th>Phone:</th>
-                        <td>@Model.User.User_Phone</td>
-                    </tr>
-                </table>
-                <a href="/profile/edit" class="btn btn-outline-light mt-3">Cập nhật thông tin</a>
+            <div class="profile-info-card p-4 mb-4 mx-auto" style="background:#181818;border-radius:14px;max-width:400px; min-width:260px;box-shadow:0 6px 24px 0 rgba(0,0,0,0.35); border:1.5px solid #292929;">
+                <div class="row mb-3 align-items-center">
+                    <div class="col-4 text-end fw-semibold" style="color:#FFD580;">Username:</div>
+                    <div class="col-8" style="color:#fff;">@Model.User.User_Name</div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-4 text-end fw-semibold" style="color:#FFD580;">Email:</div>
+                    <div class="col-8" style="color:#fff;">@Model.User.User_Email</div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-4 text-end fw-semibold" style="color:#FFD580;">Phone:</div>
+                    <div class="col-8" style="color:#fff;">@Model.User.User_Phone</div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="/profile/edit" class="btn btn-outline-warning fw-semibold px-4 py-2" style="border-radius:2rem;">Cập nhật thông tin</a>
+                </div>
             </div>
         </div>
 
@@ -62,59 +58,57 @@
         <div class="tab-pane fade" id="ticketHistory" role="tabpanel">
             @if (Model.Orders != null && Model.Orders.Any())
             {
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Phim</th>
-                            <th>Rạp / Phòng</th>
-                            <th>Ghế</th>
-                            <th>Ngày giờ chiếu</th>
-                            <th>Tổng tiền</th>
-                            <th>Trạng thái</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var order in Model.Orders)
-                        {
-                            var cinemaId = order.Showtime.Hall.Cinema.Cinema_ID;
-                            var hallId = order.Showtime.Hall.Hall_ID;
-                            int roomNumber = 0;
-                            if (ViewBag.hallsByCinema != null && ViewBag.hallsByCinema.ContainsKey(cinemaId) && ViewBag.hallsByCinema[cinemaId].ContainsKey(hallId))
-                            {
-                                roomNumber = ViewBag.hallsByCinema[cinemaId][hallId];
-                            }
-
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle ticket-history-table w-100">
+                        <thead>
                             <tr>
-                                <td>@order.Showtime.Movie.Movie_Name</td>
-                                <td>Rạp @roomNumber - @order.Showtime.Hall.Cinema.Cinema_Name</td>
-                                <td>
-                                    @string.Join(", ", order.OrderSeats.Select(os => os.Seat.RowNumber + os.Seat.SeatNumber))
-                                </td>
-                                <td>@order.Showtime.Start_Time.ToString("dd/MM/yyyy HH:mm")</td>
-                                <td>@order.TotalAmount.ToString("N0") ₫</td>
-                                <td>@order.Status</td>
-                                <td>
-                                    @if (order.Status == "Completed")
-                                    {
-                                        <a href="/profile/order/@IdEncodingHelper.EncodeId(order.Order_ID)" class="btn btn-outline-light btn-sm">Xem vé</a>
-                                    }
-                                    else
-                                    {
-                                        <button class="btn btn-outline-secondary btn-sm" disabled>Xem vé</button>
-                                    }
-                                </td>
+                                <th>Phim</th>
+                                <th>Rạp / Phòng</th>
+                                <th class="text-center">Ghế</th>
+                                <th class="text-center">Ngày giờ chiếu</th>
+                                <th class="text-center">Tổng tiền</th>
+                                <th class="text-center">Trạng thái</th>
+                                <th class="text-center"></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.Orders)
+                            {
+                                var cinemaId = order.Showtime.Hall.Cinema.Cinema_ID;
+                                var hallId = order.Showtime.Hall.Hall_ID;
+                                int roomNumber = 0;
+                                if (ViewBag.hallsByCinema != null && ViewBag.hallsByCinema.ContainsKey(cinemaId) && ViewBag.hallsByCinema[cinemaId].ContainsKey(hallId))
+                                {
+                                    roomNumber = ViewBag.hallsByCinema[cinemaId][hallId];
+                                }
+                                <tr>
+                                    <td>@order.Showtime.Movie.Movie_Name</td>
+                                    <td>Rạp @roomNumber - @order.Showtime.Hall.Cinema.Cinema_Name</td>
+                                    <td class="text-center">@string.Join(", ", order.OrderSeats.Select(os => os.Seat.RowNumber + os.Seat.SeatNumber))</td>
+                                    <td class="text-center">@order.Showtime.Start_Time.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="text-center">@order.TotalAmount.ToString("N0") ₫</td>
+                                    <td class="text-center">@order.Status</td>
+                                    <td class="text-center">
+                                        @if (order.Status == "Completed")
+                                        {
+                                            <a href="/profile/order/@IdEncodingHelper.EncodeId(order.Order_ID)" class="btn btn-outline-light btn-sm">Xem vé</a>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-outline-secondary btn-sm" disabled>Xem vé</button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             }
             else
             {
-                <p class="text-light">Bạn chưa có vé nào được đặt.</p>
+                <p class="text-light" style="margin-top:20px;">Bạn chưa có vé nào được đặt.</p>
             }
         </div>
-
     </div>
 </div>
 
@@ -126,40 +120,58 @@
             font-family: "Poppins", sans-serif;
         }
 
-        .btn-outline-light {
-            border-color: #FFD580;
-            color: #FFD580;
-            border-radius: 30px;
+        .btn-outline-warning {
+            border-color: #FFD580 !important;
+            color: #FFD580 !important;
+            background: transparent;
             transition: 0.3s;
         }
 
-            .btn-outline-light:hover {
-                background-color: #FFD580;
-                color: #111;
+            .btn-outline-warning:hover,
+            .btn-outline-warning:focus {
+                background-color: #FFD580 !important;
+                color: #181818 !important;
             }
 
         .nav-tabs .nav-link {
             color: #FFD580;
+            font-weight: 500;
         }
 
             .nav-tabs .nav-link.active {
-                background-color: #1c1c1c;
+                background-color: #232323;
                 color: #fff;
+                border-color: #FFD580 #FFD580 #232323 #FFD580;
             }
 
-        .table {
-            color: #f0f0f0;
+        .profile-header h2 {
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        /* Bảng lịch sử vé */
+        .ticket-history-table {
+            width: 100%;
+            font-size: 1.05rem;
             background: transparent;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-            .table thead th {
-                color: #FFD580;
-                border-color: #333;
+            .ticket-history-table thead th {
+                color: #FFD580 !important; /* Vàng cho tiêu đề bảng */
                 background: rgba(255, 255, 255, 0.08);
+                white-space: nowrap;
+                font-weight: 600;
+                font-size: 1.06em;
+                padding: 14px 18px;
+                border-color: #333;
             }
 
-            .table td, .table th {
+            .ticket-history-table td, .ticket-history-table th {
                 border-color: #333;
+                vertical-align: middle;
+                padding: 12px 18px;
+                color: #fff !important; /* Trắng cho nội dung bảng */
             }
 
         .table-striped > tbody > tr:nth-of-type(odd) {
@@ -176,7 +188,7 @@
         }
 
         .user-profile {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 60px auto;
             background: rgba(20, 20, 20, 0.95);
             border-radius: 12px;
@@ -187,11 +199,13 @@
         .profile-header {
             border-bottom: 1px solid #333;
             padding-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-            .profile-header h3 {
-                color: #FFD580;
-            }
+        .profile-info-card .fw-semibold {
+            font-size: 1.08em;
+            letter-spacing: 0.5px;
+        }
     </style>
 }
 
