@@ -146,7 +146,14 @@ namespace Project02.Controllers
                     Price = seat.SeatPrice
                 };
                 _context.OrderSeats.Add(orderSeat);
+            }
+            await _context.SaveChangesAsync(); // Save để orderSeat.OrderSeat_ID có giá trị
 
+            // Lấy lại danh sách OrderSeats vừa tạo
+            var orderSeats = await _context.OrderSeats.Where(os => os.Order_ID == newOrder.Order_ID).ToListAsync();
+
+            foreach (var orderSeat in orderSeats)
+            {
                 var ticket = new Ticket
                 {
                     OrderSeat_ID = orderSeat.OrderSeat_ID,
@@ -156,14 +163,17 @@ namespace Project02.Controllers
                 };
                 _context.Tickets.Add(ticket);
 
-                seat.SeatStatus = "Booked";
-                _context.Seats.Update(seat);
+                // Cập nhật SeatStatus
+                var seatToUpdate = seats.FirstOrDefault(s => s.Seat_ID == orderSeat.Seat_ID);
+                if (seatToUpdate != null)
+                {
+                    seatToUpdate.SeatStatus = "Booked";
+                    _context.Seats.Update(seatToUpdate);
+                }
             }
 
-            await _context.SaveChangesAsync();
-
             // Trả về view thông báo thành công
-            return View("OrderSuccess", newOrder.Order_ID);
+            return RedirectToAction("Profile", "User");
         }
 
     }
