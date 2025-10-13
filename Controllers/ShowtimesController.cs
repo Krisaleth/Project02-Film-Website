@@ -55,10 +55,7 @@ namespace Project02.Controllers
         [HttpGet("/admin/showtime")]
         public async Task<IActionResult> Index(string? search, string sortOrder, int page = 1, int pageSize = 10)
         {
-            if (page <= 0) page = 1;
-            if (pageSize <= 0) pageSize = 10;
-
-             IQueryable<Showtime> showtimesQuery = _context.Showtimes
+            IQueryable<Showtime> showtimesQuery = _context.Showtimes
                 .Include(s => s.Hall)
                 .Include(s => s.Movie)
                 .AsQueryable();
@@ -79,8 +76,12 @@ namespace Project02.Controllers
                 _ => showtimesQuery.OrderBy(s => s.Showtime_ID),
             };
 
+            if (page < 1) page = 1;
+
             var totalItems = await showtimesQuery.CountAsync();
             var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (page > totalPages) page = totalPages > 0 ? totalPages : 1;
             var showtimes = await showtimesQuery
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)

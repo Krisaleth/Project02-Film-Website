@@ -137,6 +137,8 @@ namespace Project02.Controllers
 
             var seats = await _context.Seats.Where(s => seatIds.Contains(s.Seat_ID)).ToListAsync();
 
+            var orderSeats = new List<OrderSeat>();
+
             foreach (var seat in seats)
             {
                 var orderSeat = new OrderSeat
@@ -146,11 +148,10 @@ namespace Project02.Controllers
                     Price = seat.SeatPrice
                 };
                 _context.OrderSeats.Add(orderSeat);
+                orderSeats.Add(orderSeat);  // Lưu tham chiếu để dùng ở bước sau
             }
-            await _context.SaveChangesAsync(); // Save để orderSeat.OrderSeat_ID có giá trị
 
-            // Lấy lại danh sách OrderSeats vừa tạo
-            var orderSeats = await _context.OrderSeats.Where(os => os.Order_ID == newOrder.Order_ID).ToListAsync();
+            await _context.SaveChangesAsync(); // Lưu để OrderSeat_ID có giá trị (duy nhất!)
 
             foreach (var orderSeat in orderSeats)
             {
@@ -163,7 +164,6 @@ namespace Project02.Controllers
                 };
                 _context.Tickets.Add(ticket);
 
-                // Cập nhật SeatStatus
                 var seatToUpdate = seats.FirstOrDefault(s => s.Seat_ID == orderSeat.Seat_ID);
                 if (seatToUpdate != null)
                 {
@@ -172,8 +172,11 @@ namespace Project02.Controllers
                 }
             }
 
-            // Trả về view thông báo thành công
+            await _context.SaveChangesAsync(); // Lưu Ticket và cập nhật trạng thái ghế
+
+            TempData["SuccessMessage"] = "Đặt vé thành công";
             return RedirectToAction("Profile", "User");
+
         }
 
     }

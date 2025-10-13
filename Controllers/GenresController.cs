@@ -87,7 +87,13 @@ namespace Project02.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GenreCreateVm vm)
         {
-            if (ModelState.IsValid) return View(vm);
+            if (!ModelState.IsValid) return View(vm);
+            bool genreExists = await _ctx.Genres.AnyAsync(g => g.Genre_Name == vm.Genre_Name);
+            if (genreExists)
+            {
+                ModelState.AddModelError(nameof(vm.Genre_Name), "Genre name already exists.");
+                return View(vm);
+            }
             var genre = new Genre
             {
                 Genre_Name = vm.Genre_Name,
@@ -152,11 +158,6 @@ namespace Project02.Controllers
             _ctx.Genres.Remove(genre);
             await _ctx.SaveChangesAsync();
             return Json(new { ok = true });
-        }
-
-        private bool GenreExists(string id)
-        {
-            return _ctx.Genres.Any(e => e.Genre_Slug == id);
         }
     }
 }

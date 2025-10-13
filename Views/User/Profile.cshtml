@@ -6,6 +6,29 @@
     Layout = "_Layout";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="myToast" class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:2000;">
+        <div class="toast align-items-center text-bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width:300px;">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @TempData["SuccessMessage"]
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tự động tắt sau 4 giây
+        setTimeout(function () {
+            var toast = document.getElementById("myToast");
+            if (toast) toast.style.display = "none";
+        }, 4000);
+    </script>
+}
+
+
 <div class="user-profile container py-5 mt-5">
 
     <!-- Header -->
@@ -206,9 +229,6 @@
     </style>
 }
 
-<<<<<<< HEAD
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 }
-=======
->>>>>>> user

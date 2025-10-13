@@ -56,13 +56,13 @@ namespace Project02.Controllers
 
             if (string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase))
             {
-                ModelState.AddModelError("", "Tài khoản này không được truy cập vào đây!");
+                TempData["ErrorMessage"] = "Tài khoản này không được truy cập vào đây!";
                 return View(vm);
             }
 
             if (user.Password_Salt == null || !PasswordHasher.Verify(vm.Password, user.Password_Salt, user.Password_Hash))
             {
-                ModelState.AddModelError("", "Tài khoản hoặc mật khẩu không đúng!");
+                TempData["ErrorMessage"] = "Tài khoản hoặc mật khẩu không đúng!";
                 return View(vm);
             }
 
@@ -70,7 +70,7 @@ namespace Project02.Controllers
 
             if (userProfile == null)
             {
-                ModelState.AddModelError("", "Dữ liệu người dùng không hợp lệ.");
+                TempData["ErrorMessage"] = "Dữ liệu người dùng không hợp lệ.";
                 return View(vm);
             }
 
@@ -98,6 +98,7 @@ namespace Project02.Controllers
                 return Redirect(vm.returnUrl);
             }
 
+            TempData["SuccessMessage"] = "Đăng nhập thành công!";
             return RedirectToAction("Index", "Home");
         }
 
@@ -111,6 +112,13 @@ namespace Project02.Controllers
         {
             if (!ModelState.IsValid)
                 return View(vm);
+
+            if (await _ctx.Users.AnyAsync(a => a.Account.UserName == vm.UserName) == false)
+            {
+                ModelState.AddModelError(nameof(vm.Email), "Tên đã được đăng ký.");
+                return View(vm);
+            }
+
 
             // Kiểm tra email đã tồn tại
             if (await _ctx.Users.AnyAsync(a => a.User_Email == vm.Email))
@@ -159,7 +167,7 @@ namespace Project02.Controllers
 
             _ctx.Users.Add(usr);
             await _ctx.SaveChangesAsync();
-
+            TempData["SuccessMessage"] = "Tạo tài khoản thành công!";
             return Redirect("/login");
         }
 
@@ -169,6 +177,7 @@ namespace Project02.Controllers
         {
             await HttpContext.SignOutAsync("UserScheme");
             HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity()); // làm rỗng user hiện tại
+            TempData["SuccessMessage"] = "Đăng xuất thành công!";
             return Redirect("/");
         }
         [HttpGet("/profile")]
@@ -197,14 +206,18 @@ namespace Project02.Controllers
                 .ToListAsync();
 
             var hallsByCinema = orders
-            .Select(o => o.Showtime.Hall)
-            .GroupBy(h => h.Cinema.Cinema_ID)
-            .ToDictionary(
-                g => g.Key,
-                g => g.OrderBy(h => h.Hall_ID)
-                      .Select((hall, index) => new { hall.Hall_ID, RoomNumber = index + 1 })
-                      .ToDictionary(x => x.Hall_ID, x => x.RoomNumber)
-            );
+                .Select(o => o.Showtime.Hall)
+                .GroupBy(h => h.Cinema.Cinema_ID)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g
+                        .GroupBy(h => h.Hall_ID)               
+                        .Select(hg => hg.First())              
+                        .OrderBy(h => h.Hall_ID)
+                        .Select((hall, index) => new { hall.Hall_ID, RoomNumber = index + 1 })
+                        .ToDictionary(x => x.Hall_ID, x => x.RoomNumber)
+                );
+
 
             // Truyền hallsByCinema qua ViewBag hoặc ViewModel để sử dụng trong View
             ViewBag.HallsByCinema = hallsByCinema;
@@ -239,7 +252,6 @@ namespace Project02.Controllers
                 User_Phone = user.User_Phone,
                 RowsVersion = user.RowsVersion
             };
-
             return View(model);
         }
 
@@ -272,7 +284,7 @@ namespace Project02.Controllers
             try
             {
                 await _ctx.SaveChangesAsync();
-                TempData["Success"] = "Cập nhật thành công!";
+                TempData["SuccessMessage"] = "Cập nhật thành công!";
                 return RedirectToAction(nameof(Profile));
             }
             catch (DbUpdateConcurrencyException)
@@ -374,7 +386,7 @@ namespace Project02.Controllers
             user.Account.Password_Algo = "PBKDF2";
             user.Account.Password_Iterations = 100000;
             await _ctx.SaveChangesAsync();
-            TempData["Success"] = "Đổi mật khẩu thành công!";
+            TempData["SuccessMessage"] = "Đổi mật khẩu thành công!";
             return RedirectToAction("Profile");
         }
     }

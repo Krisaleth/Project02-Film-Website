@@ -145,7 +145,6 @@ namespace Project02.Controllers
             {
                 Ticket_ID = ticket.Ticket_ID,
                 Status = ticket.Status,
-                // Có thể thêm các trường cần thiết khác để hiển thị
             };
 
             return View(vm);

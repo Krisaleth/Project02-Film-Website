@@ -120,7 +120,6 @@ namespace Project02.Controllers
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {

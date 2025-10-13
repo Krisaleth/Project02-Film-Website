@@ -189,6 +189,7 @@ namespace Project02.Controllers
 
             var vm = await _ctx.Users
                 .Where(a => a.User_ID == id)
+                .Include(a => a.Account)
                 .AsNoTracking()
                 .Select(m => new UserEditVm
                 {
@@ -209,12 +210,8 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-        // POST: User/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/edit/{id}")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit([FromRoute]long id, UserEditVm vm)
         {
             if (!ModelState.IsValid)
@@ -298,11 +295,6 @@ namespace Project02.Controllers
             }
             return Json(new { ok = true });
 
-        }
-
-        private bool UserExists(long id)
-        {
-            return _ctx.Users.Any(e => e.User_ID == id);
         }
     }
 }

@@ -7,6 +7,42 @@
     <title>Login</title>
 </head>
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+<link type="text/css" href="~/css/popup.css"/>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:2000;">
+        <div class="toast align-items-center bg-success border-0 show" style="min-width:300px;" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">@TempData["SuccessMessage"]</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+    <script>
+        setTimeout(() => document.querySelector('.toast')?.remove(), 4000);
+    </script>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:2000;">
+        <div class="toast align-items-center bg-danger border-0 show"
+             style="min-width:300px;" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">@TempData["ErrorMessage"]</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(() => document.querySelector('.toast.text-bg-danger')?.remove(), 4000);
+    </script>
+}
+
+
 <div class="login-container">
     <h2>Login</h2>
     <p class="sub-text">
