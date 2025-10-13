@@ -1,6 +1,6 @@
 ﻿@model Project02.ViewModels.Customer.UserProfileVm
 @using Project02.Helpers
-
+<link rel="stylesheet" href="~/css/userprofile.css"/>
 @{
     ViewData["Title"] = "Thông tin cá nhân - TKT Cinema";
     Layout = "_Layout";
@@ -109,106 +109,11 @@
     </div>
 </div>
 
-@section Styles {
-    <style>
-        body {
-            background: #141414;
-            color: #fff;
-            font-family: "Poppins", sans-serif;
-        }
 
-        .btn-outline-warning {
-            border-color: #FFD580 !important;
-            color: #FFD580 !important;
-            background: transparent;
-            transition: 0.3s;
-        }
 
-            .btn-outline-warning:hover,
-            .btn-outline-warning:focus {
-                background-color: #FFD580 !important;
-                color: #181818 !important;
-            }
 
-        .nav-tabs .nav-link {
-            color: #FFD580;
-            font-weight: 500;
-        }
-
-            .nav-tabs .nav-link.active {
-                background-color: #232323;
-                color: #fff;
-                border-color: #FFD580 #FFD580 #232323 #FFD580;
-            }
-
-        .profile-header h2 {
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-        /* Bảng lịch sử vé */
-        .ticket-history-table {
-            width: 100%;
-            font-size: 1.05rem;
-            background: transparent;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-            .ticket-history-table thead th {
-                color: #FFD580 !important; /* Vàng cho tiêu đề bảng */
-                background: rgba(255, 255, 255, 0.08);
-                white-space: nowrap;
-                font-weight: 600;
-                font-size: 1.06em;
-                padding: 14px 18px;
-                border-color: #333;
-            }
-
-            .ticket-history-table td, .ticket-history-table th {
-                border-color: #333;
-                vertical-align: middle;
-                padding: 12px 18px;
-                color: #fff !important; /* Trắng cho nội dung bảng */
-            }
-
-        .table-striped > tbody > tr:nth-of-type(odd) {
-            background-color: rgba(255, 255, 255, 0.06);
-        }
-
-        .table-striped > tbody > tr:nth-of-type(even) {
-            background-color: rgba(255, 255, 255, 0.03);
-        }
-
-        .table-striped > tbody > tr:hover {
-            background-color: rgba(255, 213, 128, 0.15);
-            transition: 0.2s;
-        }
-
-        .user-profile {
-            max-width: 1000px;
-            margin: 60px auto;
-            background: rgba(20, 20, 20, 0.95);
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-        }
-
-        .profile-header {
-            border-bottom: 1px solid #333;
-            padding-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .profile-info-card .fw-semibold {
-            font-size: 1.08em;
-            letter-spacing: 0.5px;
-        }
-    </style>
-}
-
-<<<<<<< HEAD
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 }
-=======
->>>>>>> user
+
+

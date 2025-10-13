@@ -17,11 +17,11 @@
     <link rel="stylesheet" href="~/css/navbar.css" />
     <link rel="stylesheet" href="~/css/footer.css" />
     <link rel="stylesheet" href="~/css/global.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+
 <body>
+    <!-- ===== NAVBAR ===== -->
     <header>
-        <!-- ===== NAVBAR ===== -->
         <nav class="simple-navbar navbar navbar-expand-lg navbar-dark fixed-top">
             <div class="container">
                 <a class="navbar-brand fw-bold" href="/">🎬 TKT Cinema</a>
@@ -44,10 +44,11 @@
                         <li class="nav-item mx-2"><a asp-action="Index" asp-controller="UserMovie" class="nav-link">Tất cả phim</a></li>
                         <li class="nav-item mx-2"><a href="/privacy" class="nav-link">Điều khoản</a></li>
                         <li class="nav-item mx-2"><a href="/about" class="nav-link">Về chúng tôi</a></li>
+
                         @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("User"))
                         {
                             <li class="nav-item dropdown mx-2">
-                                <a href="#" class="nav-link dropdown-toggle" id="genreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Xin chào, @User.Identity.Name
                                 </a>
                                 <ul class="dropdown-menu">
@@ -72,54 +73,34 @@
             </div>
         </nav>
     </header>
-    <div class="container mb-5" style="padding-bottom: 450px;">
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="container mb-5" style="padding-bottom: 350px;">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="footer py-5" style="background: #0f0f0f; border-top: 2px solid #e50914;">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5 class="fw-bold text-danger mb-3">🎬 TKT Cinema</h5>
-                    <p class="text-muted small" style="white-space: normal; word-wrap: break-word">
-                        TKT Cinema là nền tảng đặt vé xem phim hiện đại — nơi mang đến trải nghiệm điện ảnh chân thực,
-                        tiện lợi và đẳng cấp. Xem phim dễ dàng, tận hưởng từng khoảnh khắc!
-                    </p>
-                </div>
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer py-5">
+        <div class="container text-center">
+            <h5 class="fw-bold text-danger mb-3">🎬 TKT Cinema</h5>
+            <p class="footer-desc mx-auto">
+                TKT Cinema là nền tảng đặt vé xem phim hiện đại — nơi mang đến trải nghiệm điện ảnh chân thực,
+                tiện lợi và đẳng cấp. Xem phim dễ dàng, tận hưởng từng khoảnh khắc!
+            </p>
 
-                <div class="col-md-2">
-                    <h6 class="fw-bold text-white mb-3">Khám phá</h6>
-                    <ul class="list-unstyled text-muted small">
-                        <li><a href="#" class="footer-link text-decoration-none text-secondary">Phim Hot</a></li>
-                        <li><a href="#" class="footer-link text-decoration-none text-secondary">Phim Sắp Chiếu</a></li>
-                        <li><a href="#" class="footer-link text-decoration-none text-secondary">Khuyến Mãi</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-2">
-                    <h6 class="fw-bold text-white mb-3">Hỗ trợ</h6>
-                    <ul class="list-unstyled text-muted small">
-                        <li><a href="#" class="footer-link text-decoration-none text-secondary">Trung tâm trợ giúp</a></li>
-                        <li><a href="#" class="footer-link text-decoration-none text-secondary">Điều khoản</a></li>
-                        <li><a href="#" class="footer-link text-decoration-none text-secondary">Chính sách bảo mật</a></li>
-                    </ul>
-                </div>
+            <hr class="border-secondary my-4" />
+            <div class="text-muted small">
+                © 2025 - <span class="text-danger fw-bold">TKT Team</span> — All rights reserved.
             </div>
-        </div>
-
-        <hr class="border-secondary my-4" />
-        <div class="text-center text-muted small">
-            © 2025 - <span class="text-danger fw-bold">TKT Team</span> — All rights reserved.
         </div>
     </footer>
 
+    <!-- ===== JS ===== -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    @RenderSection("Styles", required: false)
-
 </body>
 </html>

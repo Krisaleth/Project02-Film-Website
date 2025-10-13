@@ -1,0 +1,136 @@
+﻿body {
+    background: #141414;
+    color: #fff;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Nút */
+.btn-outline-warning {
+    border-color: #FFD580 !important;
+    color: #FFD580 !important;
+    background: transparent;
+    transition: 0.3s;
+}
+
+    .btn-outline-warning:hover,
+    .btn-outline-warning:focus {
+        background-color: #FFD580 !important;
+        color: #181818 !important;
+    }
+
+/* Tabs */
+.nav-tabs .nav-link {
+    color: #FFD580;
+    font-weight: 500;
+}
+
+    .nav-tabs .nav-link.active {
+        background-color: #232323;
+        color: #fff;
+        border-color: #FFD580 #FFD580 #232323 #FFD580;
+    }
+
+/* Header */
+.profile-header h2 {
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+/* Bảng lịch sử vé */
+.ticket-history-table {
+    width: 100%;
+    font-size: 1.05rem;
+    background: transparent;
+    border-radius: 8px;
+    overflow-x: auto;
+    table-layout: fixed; /* giúp cột giãn đều */
+    word-wrap: break-word; /* tránh chữ tràn ô */
+}
+
+/* Mở rộng bảng hơn trong khung */
+.table-responsive {
+    overflow-x: auto;
+    padding: 0 8px;
+}
+
+/* Header bảng */
+.ticket-history-table thead th {
+    color: #FFD580 !important;
+    background: rgba(255, 255, 255, 0.08);
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 1.06em;
+    padding: 16px 22px;
+    border-color: #333;
+    text-align: center;
+}
+
+/* Nội dung bảng */
+.ticket-history-table td,
+.ticket-history-table th {
+    border-color: #333;
+    vertical-align: middle;
+    padding: 14px 20px;
+    color: #fff !important;
+    text-align: center;
+}
+
+    /* Cột phim cho rộng hơn để tránh gãy dòng */
+    .ticket-history-table td:first-child {
+        width: 22%;
+        text-align: left;
+    }
+
+    /* Cột Rạp/Phòng */
+    .ticket-history-table td:nth-child(2) {
+        width: 20%;
+    }
+
+    /* Cột Ghế + Ngày chiếu */
+    .ticket-history-table td:nth-child(3),
+    .ticket-history-table td:nth-child(4) {
+        width: 15%;
+    }
+
+    /* Cột Tổng tiền và Trạng thái */
+    .ticket-history-table td:nth-child(5),
+    .ticket-history-table td:nth-child(6) {
+        width: 12%;
+    }
+
+/* Hover và nền xen kẽ */
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.table-striped > tbody > tr:nth-of-type(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.table-striped > tbody > tr:hover {
+    background-color: rgba(255, 213, 128, 0.15);
+    transition: 0.2s;
+}
+
+/* Khung profile */
+.user-profile {
+    max-width: 1200px; /* mở rộng từ 1000 -> 1200px */
+    margin: 60px auto;
+    background: rgba(20, 20, 20, 0.95);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+}
+
+/* Header profile */
+.profile-header {
+    border-bottom: 1px solid #333;
+    padding-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+/* Card thông tin cá nhân */
+.profile-info-card .fw-semibold {
+    font-size: 1.08em;
+    letter-spacing: 0.5px;
+}

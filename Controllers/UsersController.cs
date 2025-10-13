@@ -214,7 +214,6 @@ namespace Project02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/edit/{id}")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit([FromRoute]long id, UserEditVm vm)
         {
             if (!ModelState.IsValid)

@@ -1,46 +1,59 @@
-﻿footer.footer {
-    position: relative; /* không fixed, để footer theo flow */
+﻿.footer {
+    background: #0f0f0f;
+    border-top: 2px solid #e50914;
+    position: relative;
     z-index: 10;
+    color: #aaa;
+    text-align: center;
 }
-/* ===== FOOTER ===== */
-@media(max-width: 768px){
+
+    .footer h5 {
+        font-family: 'Bebas Neue', sans-serif;
+        letter-spacing: 1px;
+    }
+
+.footer-desc {
+    color: #aaa;
+    font-size: 15px;
+    max-width: 500px;
+    line-height: 1.6;
+    margin-bottom: 0;
+    word-break: break-word;
+}
+
+.footer hr {
+    border-color: #333;
+    opacity: 0.6;
+    width: 60%;
+    margin: 1.5rem auto;
+}
+
+.footer .text-muted {
+    font-size: 14px;
+}
+
+.footer a {
+    color: #aaa;
+    text-decoration: none;
+}
+
+    .footer a:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
+
+@media (max-width: 768px) {
     .footer {
         padding-top: 30px;
         padding-bottom: 30px;
-        font-size: 14px;
     }
+
+    .footer-desc {
+        font-size: 14px;
+        max-width: 90%;
+    }
+
     .footer h5 {
-        font-size: 20px;
-    }
-    .footer h6 {
-        font-size: 16px;
-    }
-    .footer a.footer-link {
-        font-size: 14px;
+        font-size: 22px;
     }
 }
-
-        .footer a.footer-link:hover {
-            color: #fff;
-            text-decoration: underline;
-        }
-
-    .footer ul li {
-        margin-bottom: 8px;
-    }
-
-    .footer p {
-        color: #aaa;
-        font-size: 15px;
-    }
-
-    .footer hr {
-        border-color: #333;
-        opacity: 0.7;
-    }
-
-    .footer .text-center {
-        font-size: 15px;
-        color: #aaa;
-        margin-top: 10px;
-    }
