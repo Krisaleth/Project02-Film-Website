@@ -129,9 +129,6 @@ namespace Project02.Controllers
             return View();
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("admin/user/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserCreateVm vm)
@@ -177,7 +174,10 @@ namespace Project02.Controllers
             };
             _ctx.Users.Add(user);
             _ctx.SaveChanges();
-             return RedirectToAction("Index");
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Thêm mới thành công!";
+            return RedirectToAction("Index");
         }
 
         [HttpGet("/admin/edit/{id}")]
@@ -210,9 +210,6 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-        // POST: User/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromRoute]long id, UserEditVm vm)
@@ -238,6 +235,9 @@ namespace Project02.Controllers
             try
             {
                 await _ctx.SaveChangesAsync();
+                TempData["NotificationType"] = "success";
+                TempData["NotificationTitle"] = "Thành công";
+                TempData["NotificationMessage"] = "Chỉnh sửa thành công!";
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)

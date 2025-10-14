@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Text.Json
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -118,6 +119,57 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+            function showSuccessNotification(type, title, text, timer = 3000) {
+            Swal.fire({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: timer,
+                timerProgressBar: true,
+                icon: type,
+                title: title,
+                text: text,
+                background: '#fff',
+                customClass: {
+                    popup: 'shadow-sm rounded'
+                }
+            });
+        }
+
+        function showFailNotification(title, text, timer = 3000) {
+            Swal.fire({
+                toast: true,
+                position: 'top',
+                icon: 'error',
+                title: title,
+                html: text,
+                showConfirmButton: false,
+                timer: timer,
+                timerProgressBar: true,
+                background: '#fff',
+                customClass: {
+                    popup: 'shadow-sm rounded'
+                }
+            });
+        }
+
+
+        // Tự động hiện thông báo nếu có tempdata
+        document.addEventListener('DOMContentLoaded', () => {
+            var message = @Html.Raw(JsonSerializer.Serialize(TempData["NotificationMessage"]));
+            var type = @Html.Raw(JsonSerializer.Serialize(TempData["NotificationType"]));
+            var title = @Html.Raw(JsonSerializer.Serialize(TempData["NotificationTitle"]));
+
+            if (type == "success" && title && message) {
+                showSuccessNotification(type, title, message);
+            }
+            if (type == "error" && title && message) {
+                showFailNotification(type, title, message);
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
     @RenderSection("Styles", required: false)
 

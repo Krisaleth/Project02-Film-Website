@@ -13,6 +13,7 @@ using Project02.ViewModels.Customer;
 
 namespace Project02.Controllers
 {
+    [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
     public class UserShowtimesController : Controller
     {
         private readonly AppDbContext _context;

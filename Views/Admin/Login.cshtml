@@ -1,4 +1,5 @@
 ﻿@using Project02.ViewModels
+@using System.Text.Json
 @model AdminLoginVm
 @{
     Layout = null;
@@ -52,6 +53,37 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        function showTopNotification(type, title, text, timer = 3000) {
+            Swal.fire({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: timer,
+                timerProgressBar: true,
+                icon: type,
+                title: title,
+                text: text,
+                background: '#fff',
+                customClass: {
+                    popup: 'shadow-sm rounded'
+                }
+            });
+        }
+
+        // Tự động hiện thông báo nếu có tempdata
+        document.addEventListener('DOMContentLoaded', () => {
+            var message = @Html.Raw(JsonSerializer.Serialize(TempData["NotificationMessage"]));
+            var type = @Html.Raw(JsonSerializer.Serialize(TempData["NotificationType"]));
+            var title = @Html.Raw(JsonSerializer.Serialize(TempData["NotificationTitle"]));
+
+
+            if (type && title && message) {
+                showTopNotification(type, title, message);
+            }
+        });
+    </script>
 </body>
 </html>

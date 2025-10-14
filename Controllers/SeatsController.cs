@@ -137,8 +137,6 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-
-
         [HttpGet("/admin/seat/details/{id}")]
         public async Task<IActionResult> Details([FromRoute] long? id)
         {
@@ -169,7 +167,6 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-        // GET: Seats/Create
         [HttpGet("/admin/seat/create")]
         public IActionResult Create()
         {
@@ -191,9 +188,6 @@ namespace Project02.Controllers
             return View();
         }
 
-        // POST: Seats/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/seat/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SeatCreateVm vm)
@@ -281,10 +275,12 @@ namespace Project02.Controllers
 
             _context.Add(seat);
             await _context.SaveChangesAsync();
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Thêm mới thành công!";
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Seats/Edit/5
         [HttpGet("/admin/seat/edit/{id}")]
         public async Task<IActionResult> Edit([FromRoute] long? id)
         {
@@ -312,9 +308,6 @@ namespace Project02.Controllers
             return View(vm);                    
         }
 
-        // POST: Seats/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/seat/edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromRoute]long id, SeatEditVm vm)
@@ -360,6 +353,9 @@ namespace Project02.Controllers
             
             _context.Update(seat);
             await _context.SaveChangesAsync();
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Sửa thành công!";
             return RedirectToAction(nameof(Index));
         }
 

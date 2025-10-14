@@ -15,13 +15,13 @@ using System.Security.Claims;
 
 namespace Project02.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
 
         private readonly AppDbContext _ctx;
 
-        public HomeController(ILogger<HomeController> logger, AppDbContext ctx) : base(ctx)
+        public HomeController(ILogger<HomeController> logger, AppDbContext ctx)
         {
             _logger = logger;
             _ctx = ctx;

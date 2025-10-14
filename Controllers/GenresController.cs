@@ -100,6 +100,9 @@ namespace Project02.Controllers
             };
             _ctx.Add(genre);
             await _ctx.SaveChangesAsync();
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Thêm mới thành công!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -153,6 +156,9 @@ namespace Project02.Controllers
             {
                 _ctx.Update(genre);
                 await _ctx.SaveChangesAsync();
+                TempData["NotificationType"] = "success";
+                TempData["NotificationTitle"] = "Thành công";
+                TempData["NotificationMessage"] = "Sửa tag thành công!";
             }
             catch (DbUpdateConcurrencyException)
             {

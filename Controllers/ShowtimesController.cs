@@ -166,7 +166,6 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-        // GET: Showtimes/Create
         [HttpGet("/admin/showtime/create")]
         public async Task<IActionResult> Create()
         {
@@ -196,9 +195,6 @@ namespace Project02.Controllers
             return View(model);
         }
 
-        // POST: Showtimes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/showtime/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ShowtimeCreateVm vm)
@@ -247,10 +243,12 @@ namespace Project02.Controllers
 
             _context.Add(showtime);
             await _context.SaveChangesAsync();
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Thêm mới thành công!";
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Showtimes/Edit/5
         [HttpGet("/admin/showtime/edit/{id}")]
         public async Task<IActionResult> Edit([FromRoute]long? id)
         {
@@ -284,9 +282,6 @@ namespace Project02.Controllers
             return View(showtime);
         }
 
-        // POST: Showtimes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/showtime/edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromRoute]long id, ShowtimeEditVm vm)
@@ -329,6 +324,9 @@ namespace Project02.Controllers
             showtime.Format = vm.Format;
 
             await _context.SaveChangesAsync();
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Sửa thành công!";
             return RedirectToAction(nameof(Index));
 
         }

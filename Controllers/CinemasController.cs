@@ -142,6 +142,9 @@ namespace Project02.Controllers
             };
             _context.Add(cinema);
             await _context.SaveChangesAsync();
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Thêm rạp mới thành công!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -168,9 +171,6 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-        // POST: Cinemas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/cinema/edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromRoute]long id, CinemaEditVm vm)
@@ -197,6 +197,9 @@ namespace Project02.Controllers
 
             _context.Update(cinema);
             await _context.SaveChangesAsync();
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Sửa rạp thành công!";
             return RedirectToAction(nameof(Index));
 
         }
