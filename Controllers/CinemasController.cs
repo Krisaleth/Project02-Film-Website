@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
 using Project02.Models;
 using Project02.ViewModels.Cinema;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Project02.Controllers
 {
+    [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
     public class CinemasController : Controller
     {
         private readonly AppDbContext _context;
@@ -126,6 +128,12 @@ namespace Project02.Controllers
             {
                 return View(vm);
             }
+            var exists = await _context.Cinemas.AnyAsync(g => g.Cinema_Name == vm.Cinema_Name);
+            if (exists)
+            {
+                ModelState.AddModelError(nameof(vm.Cinema_Name), "Rạp đã tồn tại");
+                return View(vm);
+            }
             var cinema = new Cinema
             {
                 Cinema_Name = vm.Cinema_Name,
@@ -176,6 +184,12 @@ namespace Project02.Controllers
             {
                 return NotFound();
             }
+            var exists = await _context.Cinemas.AnyAsync(g => g.Cinema_Name == vm.Cinema_Name);
+            if (exists)
+            {
+                ModelState.AddModelError(nameof(vm.Cinema_Name), "Tên rạp đã tồn tại");
+                return View(vm);
+            }
 
             cinema.Cinema_Name = vm.Cinema_Name;
             cinema.Location = vm.Location;
@@ -199,11 +213,6 @@ namespace Project02.Controllers
 
             await _context.SaveChangesAsync();
             return Json(new { ok = true });
-        }
-
-        private bool CinemaExists(long id)
-        {
-            return _context.Cinemas.Any(e => e.Cinema_ID == id);
         }
     }
 }

@@ -18,7 +18,8 @@ public class AdminMiddleware
         // Kiểm tra nếu URL bắt đầu bằng /admin
         if (path != null && path.StartsWith("/admin", StringComparison.OrdinalIgnoreCase))
         {
-            // BỎ QUA login, static, v.v.
+            await context.SignOutAsync("UserScheme");
+            // BỎ QUA login
             if (path.StartsWith("/admin/login", StringComparison.OrdinalIgnoreCase))
             {
                 await _next(context);
@@ -28,7 +29,7 @@ public class AdminMiddleware
             var result = await context.AuthenticateAsync("AdminScheme");
             var user = result.Principal;
 
-            if (user == null || !user.Identity.IsAuthenticated)
+            if (user == null || !user.Identity?.IsAuthenticated == true)
             {
                 context.Response.Redirect("/admin/login");
                 return;
@@ -36,12 +37,12 @@ public class AdminMiddleware
 
             if (!user.IsInRole("Admin"))
             {
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                await context.Response.WriteAsync("Bạn không có quyền truy cập trang này.");
+                
+                await context.SignOutAsync("AdminScheme");
+                context.Response.Redirect("/admin/login?reason=forbidden");
                 return;
             }
         }
-
         // Cho qua middleware tiếp theo
         await _next(context);
     }

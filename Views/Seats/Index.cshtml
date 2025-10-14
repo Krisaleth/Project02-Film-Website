@@ -75,15 +75,15 @@
         </div>
         <div class="card-body">
             <span><strong>
-                    @if (Model.Items.Any())
-                    {
-                        var firstSeat = Model.Items.First();
-                        @($"{firstSeat.Cinema_Name} - Hall {firstSeat.Hall_ID}")
-                    }
-                    else
-                    {
-                        <text>No seats available</text>
-                    }
+                @if (Model.Items.Any())
+                {
+                    var firstSeat = Model.Items.First();
+                    @($"{firstSeat.Cinema_Name} - Hall {firstSeat.HallNumber}")
+                }
+                else
+                {
+                    <text>No seats available</text>
+                }
             </strong></span>
             @foreach (var rowGroup in Model.Items.GroupBy(s => s.RowNumber).OrderBy(g => g.Key))
             {

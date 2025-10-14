@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 
 namespace Project02.Controllers
 {
+    [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
     public class MoviesController : Controller
     {
         private readonly AppDbContext _ctx;
@@ -102,12 +103,12 @@ namespace Project02.Controllers
         }
 
         
-        [HttpGet("/admin/movie/{id}")]
-        public async Task<IActionResult> Details([FromRoute]string id)
+        [HttpGet("/admin/movie/{movieSlug}")]
+        public async Task<IActionResult> Details([FromRoute]string movieSlug)
         {
             var movie = await _ctx.Movies
                 .Include(m => m.Genres)
-                .FirstOrDefaultAsync(m => m.Movie_Slug == id);
+                .FirstOrDefaultAsync(m => m.Movie_Slug == movieSlug);
 
             if (movie == null) return NotFound();
 
@@ -173,7 +174,10 @@ namespace Project02.Controllers
 
             if (genre == null)
             {
-                genre = new Genre { Genre_Name = genreName };
+                genre = new Genre { 
+                    Genre_Name = genreName,
+                    Genre_Slug = SlugHelper.GenerateSlug(genreName)
+                };
                 _ctx.Genres.Add(genre);
                 await _ctx.SaveChangesAsync();
             }
@@ -184,10 +188,11 @@ namespace Project02.Controllers
                 await _ctx.SaveChangesAsync();
             }
 
-            return RedirectToAction("Details", new { id = movieSlug });
+            return RedirectToAction("Details", new { movieSlug = movieSlug });
         }
 
-        [HttpPost]
+        [HttpPost("/admin/removegenres")]
+        [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveGenre(string movieSlug, long genreId)
         {
@@ -207,7 +212,7 @@ namespace Project02.Controllers
                 await _ctx.SaveChangesAsync();
             }
 
-            return RedirectToAction("Details", new { movieSlug });
+            return RedirectToAction("Details", new { movieSlug = movieSlug });
         }
 
 
@@ -246,16 +251,16 @@ namespace Project02.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet("/admin/movie/edit/{id}")]
+        [HttpGet("/admin/movie/edit/{movieSlug}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit([FromRoute]string id)
+        public async Task<IActionResult> Edit([FromRoute]string movieSlug)
         {
-            if (id == null)
+            if (movieSlug == null)
             {
                 return NotFound();
             }
 
-            var vm = await _ctx.Movies.Where(m => m.Movie_Slug == id)
+            var vm = await _ctx.Movies.Where(m => m.Movie_Slug == movieSlug)
                 .AsNoTracking()
                 .Select(m => new MovieEditVm
                 {

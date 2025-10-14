@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Project02.Controllers
 {
+    [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly AppDbContext _ctx;
@@ -244,46 +245,23 @@ namespace Project02.Controllers
             }
         }
 
-        // GET: User/Delete/5
-
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _ctx.Users
-                .Include(u => u.Account)
-                .FirstOrDefaultAsync(m => m.User_ID == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-
-        // POST: User/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("/admin/users/delete/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id, string rowVersionBase64)
+        public async Task<IActionResult> DeleteConfirmed([FromRoute]long id, string rowVersionBase64)
         {
-            var user = await _ctx.Users.FirstOrDefaultAsync(m => m.User_ID == id);
+            var user = await _ctx.Users.Include(u => u.Account).FirstOrDefaultAsync(m => m.User_ID == id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            if(!string.IsNullOrEmpty(rowVersionBase64))
-            {
-
-                var rowVersion = Convert.FromBase64String(rowVersionBase64);
-                _ctx.Entry(user).Property("RowsVersion").OriginalValue = rowVersion;
-            }
             _ctx.Users.Remove(user);
-            _ctx.Accounts.Remove(user.Account);
+
+            if (user.Account != null)
+            {
+                _ctx.Accounts.Remove(user.Account);
+            }
 
             try
             {
@@ -293,7 +271,9 @@ namespace Project02.Controllers
             {
                 return Json(new { ok = false, message = "Bản ghi đã được thay đổi trước đó!" });
             }
+
             return Json(new { ok = true });
+
 
         }
     }

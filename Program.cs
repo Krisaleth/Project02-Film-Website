@@ -25,6 +25,8 @@ internal class Program
             options.DefaultAuthenticateScheme = "UserScheme";
         }).AddCookie("AdminScheme", options =>
         {
+            options.Cookie.Name = "AdminAuthCookie";
+            options.Cookie.Path = "/admin";
             options.LoginPath = "/admin/login";
             options.LogoutPath = "/admin/logout";
             options.AccessDeniedPath = "/admin/login";
@@ -33,6 +35,8 @@ internal class Program
         }).
         AddCookie("UserScheme", options =>
         {
+            options.Cookie.Name = "UserAuthCookie";
+            options.Cookie.Path = "/";
             options.LoginPath = "/login";
             options.LogoutPath = "/logout";
         });
@@ -80,8 +84,8 @@ internal class Program
         app.UseRouting();
 
         app.UseAuthentication();
-        app.UseMiddleware<AdminMiddleware>();
         app.UseAuthorization();
+        app.UseMiddleware<AdminMiddleware>();
 
         app.MapControllerRoute(
             name: "default",

@@ -87,8 +87,8 @@
                                         class="btn btn-sm btn-outline-info">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
-                                    <button class="btn btn-outline-danger btn-sm btn-delete" data-id="@item.User_ID" data-rv="@rv">
-                                            <i class="fa-solid fa-trash"></i>
+                                    <button type="submit" class="btn btn-outline-danger btn-sm btn-delete" data-id="@item.User_ID" data-rv="@rv">
+                                        <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -130,14 +130,14 @@
     document.addEventListener('click', async(e) => {
         const btn = e.target.closest('.btn-delete');
 
-        if !btn return;
+        if (!btn) return;
 
         const id = btn.dataset.id;
         const rv = btn.dataset.rv || '';
         
         const ok = await Swal.fire ({
             title: "Xác nhận xoá",
-            text: `Bạn có chắc muốn xoá "${name}"?`,
+            text: `Bạn có chắc muốn xoá người dùng này?`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Xoá',
@@ -150,7 +150,7 @@
 
         const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
 
-        const url = `/admin/user/delete/${encodeURIComponent(slug)}`;
+        const url = `/admin/users/delete/${encodeURIComponent(id)}`;
 
         const res = await fetch(url, {
             method: 'post',
@@ -183,7 +183,9 @@
             const row = document.getElementById(`row-${id}`);
             row?.remove();
             Swal.fire ({ icon:'success', title:'Đã xoá', timer: 1200, showConfirmButton:false });
-            location.reload();
+            setTimeout(() => {
+                location.reload();
+            }, 1200);
         } else {
             Swal.fire ({ icon:'error', title:'Lỗi', text: json.message || "Không xoá được" });
         }
