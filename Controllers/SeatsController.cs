@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Project02.Controllers
 {
+    [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
     public class SeatsController : Controller
     {
         private readonly AppDbContext _context;
@@ -71,26 +73,48 @@ namespace Project02.Controllers
             _context = context;
         }
 
-        // GET: Seats
         [HttpGet("/admin/seat")]
         public async Task<IActionResult> Index(long? hallId)
         {
-            long selectedHallId = hallId ?? 1;
+            var cinemasWithHalls = _context.Cinemas
+                .Select(cinema => new
+                {
+                    Cinema = cinema,
+                    Halls = _context.Halls
+                        .Where(h => h.Cinema_ID == cinema.Cinema_ID)
+                        .OrderBy(h => h.Hall_ID)
+                        .ToList()
+                })
+                .ToList();
 
-            IQueryable<Seat> seatsQuery = _context.Seats.Include(s => s.Hall).AsNoTracking();
+            var hallOptions = new List<SelectListItem>();
+            var hallNumberDict = new Dictionary<long, int>();
 
-            if (hallId.HasValue)
+            foreach (var item in cinemasWithHalls)
             {
-                seatsQuery = seatsQuery.Where(s => s.Hall_ID == hallId);
+                var halls = item.Halls;
+                for (int i = 0; i < halls.Count; i++)
+                {
+                    hallNumberDict[halls[i].Hall_ID] = i + 1;
+                    hallOptions.Add(new SelectListItem
+                    {
+                        Value = halls[i].Hall_ID.ToString(),
+                        Text = halls.Count == 1
+                            ? $"{item.Cinema.Cinema_Name} - Hall 1"
+                            : $"{item.Cinema.Cinema_Name} - Hall {i + 1}"
+                    });
+                }
             }
 
-            seatsQuery = (hallId ?? 1) switch
-            {
-                var id when id > 0 => seatsQuery.Where(s => s.Hall_ID == id),
-                _ => seatsQuery
-            };
+            long selectedHallId = hallId ?? (hallOptions.Any() ? long.Parse(hallOptions[0].Value) : 0);
 
-            var seats = await seatsQuery.Select(s => new SeatStatusVm
+            IQueryable<Seat> seatsQuery = _context.Seats.Include(s => s.Hall).ThenInclude(h => h.Cinema).AsNoTracking();
+
+            seatsQuery = seatsQuery.Where(s => s.Hall_ID == selectedHallId);
+
+            var seatsList = await seatsQuery.ToListAsync();
+
+            var seats = seatsList.Select(s => new SeatStatusVm
             {
                 Seat_ID = s.Seat_ID,
                 Hall_ID = s.Hall_ID,
@@ -100,53 +124,20 @@ namespace Project02.Controllers
                 Description = s.Description,
                 Cinema_Name = s.Hall.Cinema.Cinema_Name,
                 Status = s.SeatStatus,
-
-            }).ToListAsync();
-
-            var cinemasWithHalls = _context.Cinemas
-                .Select(cinema => new
-                {
-                    Cinema = cinema,
-                    Halls = _context.Halls.Where(h => h.Cinema_ID == cinema.Cinema_ID).ToList()
-                })
-                .ToList();
-
-            var hallOptions = new List<SelectListItem>();
-
-            foreach (var item in cinemasWithHalls)
-            {
-                var cinemaName = item.Cinema.Cinema_Name;
-                var halls = item.Halls;
-                if (halls.Count == 1)
-                {
-                    hallOptions.Add(new SelectListItem
-                    {
-                        Value = halls[0].Hall_ID.ToString(),
-                        Text = $"{cinemaName} - Hall"
-                    });
-                }
-                else
-                {
-                    for (int i = 0; i < halls.Count; i++)
-                    {
-                        hallOptions.Add(new SelectListItem
-                        {
-                            Value = halls[i].Hall_ID.ToString(),
-                            Text = $"{cinemaName} - Hall {i + 1}"
-                        });
-                    }
-                }
-            }
+                HallNumber = hallNumberDict.ContainsKey(s.Hall_ID) ? hallNumberDict[s.Hall_ID] : 0
+            }).ToList();
 
             var vm = new SeatIndexVm
             {
                 Items = seats,
-                selectedHallId = hallId,
+                selectedHallId = selectedHallId,
                 hallOptions = hallOptions,
             };
 
             return View(vm);
         }
+
+
 
         [HttpGet("/admin/seat/details/{id}")]
         public async Task<IActionResult> Details([FromRoute] long? id)

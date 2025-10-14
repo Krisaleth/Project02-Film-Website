@@ -31,10 +31,12 @@ namespace Project02.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string? returnUrl = null)
         {
+
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 return Redirect("/");
             }
+            await HttpContext.SignOutAsync("AdminScheme");
             return View(new LoginViewModel { returnUrl = returnUrl });
         }
         [HttpPost("/login")]
@@ -91,7 +93,9 @@ namespace Project02.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(vm.RememberMe ? 43200 : 60)
             };
 
+            await HttpContext.SignOutAsync("AdminScheme");
             await HttpContext.SignInAsync("UserScheme", principal, authProps);
+            
 
             if (!string.IsNullOrEmpty(vm.returnUrl) && Url.IsLocalUrl(vm.returnUrl))
             {

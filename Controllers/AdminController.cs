@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Project02.Controllers
 {
+    [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly AppDbContext _db;
@@ -109,6 +110,8 @@ namespace Project02.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(vm.RememberMe ? 43200 : 60)
             };
 
+            await HttpContext.SignOutAsync("UserScheme");
+            await HttpContext.SignOutAsync("AdminScheme");
             await HttpContext.SignInAsync("AdminScheme", principal, authProps);
 
             if (!string.IsNullOrEmpty(vm.ReturnUrl) && Url.IsLocalUrl(vm.ReturnUrl))
@@ -119,11 +122,11 @@ namespace Project02.Controllers
             return RedirectToAction("Index", "Admin");
         }
 
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
+        [HttpPost("/admin/logout")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
+
             await HttpContext.SignOutAsync("AdminScheme");
             HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity()); // làm rỗng user hiện tại
             return Redirect("/admin/login");

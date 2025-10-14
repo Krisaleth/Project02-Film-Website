@@ -12,6 +12,7 @@ namespace Project02.ViewModels.Seat
         public string SeatType { get; set; } = default!;
         public string? Description { get; set; } = default!;
         public string Status { get; set; } = default!;
+        public int HallNumber { get; set; } = default!;
     }
 
     public class SeatIndexVm

@@ -1,18 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
+using Project02.Helper;
 using Project02.Models;
 using Project02.ViewModels.Genre;
 using Project02.ViewModels.Movie;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Project02.Controllers
 {
+    [Authorize(AuthenticationSchemes = "AdminScheme", Roles = "Admin")]
     public class GenresController : Controller
     {
         private readonly AppDbContext _ctx;
@@ -80,18 +82,21 @@ namespace Project02.Controllers
             return View();
         }
 
-        // POST: Genres/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/genre/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GenreCreateVm vm)
         {
-            if (ModelState.IsValid) return View(vm);
+            if (!ModelState.IsValid) return View(vm);
+            var exists = await _ctx.Genres.AnyAsync(g => g.Genre_Name == vm.Genre_Name);
+            if (exists)
+            {
+                ModelState.AddModelError(nameof(vm.Genre_Name), "Tên thể loại đã tồn tại");
+                return View(vm);
+            }
             var genre = new Genre
             {
                 Genre_Name = vm.Genre_Name,
-                Genre_Slug = vm.Genre_Name.ToLower().Replace(" ", "-")
+                Genre_Slug = SlugHelper.GenerateSlug(vm.Genre_Name)
             };
             _ctx.Add(genre);
             await _ctx.SaveChangesAsync();
@@ -122,9 +127,6 @@ namespace Project02.Controllers
             return View(genre);
         }
 
-        // POST: Genres/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/genre/edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromRoute]string id, GenreEditVm vm)
@@ -138,8 +140,31 @@ namespace Project02.Controllers
             {
                 return NotFound();
             }
+            var exists = await _ctx.Genres.AnyAsync(g => g.Genre_Name == vm.Genre_Name);
+            if (exists)
+            {
+                ModelState.AddModelError(nameof(vm.Genre_Name), "Tên thể loại đã tồn tại");
+                return View(vm);
+            }
             genre.Genre_Name = vm.Genre_Name;
-            genre.Genre_Slug = vm.Genre_Name.ToLower().Replace(" ", "-");
+            genre.Genre_Slug = SlugHelper.GenerateSlug(vm.Genre_Name);
+
+            try
+            {
+                _ctx.Update(genre);
+                await _ctx.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!GenreExists(genre.Genre_Slug))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return RedirectToAction(nameof(Index));
         }
 

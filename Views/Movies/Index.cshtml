@@ -91,8 +91,8 @@
                                             }
                                         </td>
                                         <td>
-                                            <a asp-action="Edit" class="btn btn-sm btn-outline-primary" asp-route-id="@item.Movie_Slug"><i class="fa-solid fa-pen-to-square"></i></a>
-                                            <a asp-action="Details" class="btn btn-sm btn-outline-info" asp-route-id="@item.Movie_Slug"><i class="fas fa-info-circle"></i> </a>
+                                            <a asp-action="Edit" class="btn btn-sm btn-outline-primary" asp-route-movieSlug="@item.Movie_Slug"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            <a asp-action="Details" class="btn btn-sm btn-outline-info" asp-route-movieSlug="@item.Movie_Slug"><i class="fas fa-info-circle"></i> </a>
                                             <button type="button" class="btn btn-sm btn-outline-danger btn-delete" data-id="@item.Movie_Slug" data-rowid="@item.Movie_ID" data-name="@item.Movie_Name" data-rv="@rv"><i class="fa-solid fa-trash"></i></button>
                                         </td>
                                     </tr>
