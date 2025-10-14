@@ -1,4 +1,6 @@
 ﻿@using System.Security.Claims
+@using System.Text.Json
+
 @{
     ViewData["Font"] = "https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3/index.css";
     ViewData["PopperJS"] = "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js";
@@ -295,6 +297,35 @@
     <script src="~/js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
+        function showTopNotification(type, title, text, timer = 3000) {
+            Swal.fire({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: timer,
+                timerProgressBar: true,
+                icon: type,
+                title: title,
+                text: text,
+                background: '#fff',
+                customClass: {
+                    popup: 'shadow-sm rounded'
+                }
+            });
+        }
+
+        // Tự động hiện thông báo nếu có tempdata
+        document.addEventListener('DOMContentLoaded', () => {
+            var message = @Html.Raw(JsonSerializer.Serialize(TempData["NotificationMessage"]));
+            var type = @Html.Raw(JsonSerializer.Serialize(TempData["NotificationType"]));
+            var title = @Html.Raw(JsonSerializer.Serialize(TempData["NotificationTitle"]));
+
+
+            if (type && title && message) {
+                showTopNotification(type, title, message);
+            }
+        });
+
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
       const Default = {
         scrollbarTheme: 'os-theme-light',

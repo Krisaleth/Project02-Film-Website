@@ -1,4 +1,5 @@
 ﻿@model Project02.ViewModels.LoginViewModel
+@using System.Text.Json
 @{
     ViewData["Title"] = "Login";
     Layout = null;
@@ -66,12 +67,6 @@
         </div>
     </form>
 </div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
 
 <style>
     body {
@@ -186,3 +181,77 @@
         font-size: 12px;
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('form').submit(function(e) {
+            e.preventDefault(); // Ngăn reload trang
+
+            var form = $(this);
+            var url = form.attr('action');
+            var data = form.serialize();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                success: function(response) {
+                    if (response.ok) {
+                        showSuccessNotification('success', 'Thành công', 'Đăng nhập thành công!');
+
+                        if (response.redirectUrl) {
+                            setTimeout(function() {
+                                window.location.href = response.redirectUrl;
+                            }, 1500);
+                        }
+                    } else {
+                        showFailNotification('Lỗi', response.message || 'Có lỗi xảy ra!');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showFailNotification('Lỗi', 'Lỗi kết nối hoặc server.');
+                }
+            });
+        });
+    });
+
+    // Hàm hiện thông báo thành công
+    function showSuccessNotification(type, title, text, timer = 3000) {
+        Swal.fire({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: timer,
+            timerProgressBar: true,
+            icon: type,
+            title: title,
+            html: text,
+            background: '#fff',
+            customClass: {
+                popup: 'shadow-sm rounded'
+            }
+        });
+    }
+
+    // Hàm hiện thông báo lỗi
+    function showFailNotification(title, text, timer = 3000) {
+        Swal.fire({
+            toast: true,
+            position: 'top',
+            icon: 'error',
+            title: title,
+            html: text,
+            showConfirmButton: false,
+            timer: timer,
+            timerProgressBar: true,
+            background: '#fff',
+            customClass: {
+                popup: 'shadow-sm rounded'
+            }
+        });
+    }
+
+</script>

@@ -1,8 +1,10 @@
 ﻿@model Project02.ViewModels.RegisterViewModel
+@using System.Text.Json
 @{
     ViewData["Title"] = "Register";
     Layout = null;
 }
+
 <head>
     <title>Register</title>
 </head>
@@ -13,7 +15,7 @@
         Create your account to get started.
     </p>
 
-    <form asp-action="Register" method="post">
+    <form asp-action="Register" id="registerForm" method="post">
         <div class="form-group">
             <input asp-for="FullName" type="text" placeholder="Name" required />
             <span asp-validation-for="FullName" class="text-danger"></span>
@@ -50,6 +52,77 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+        $(document).ready(function() {
+        $('form').submit(function(e) {
+            e.preventDefault(); // Ngăn reload trang
+
+            var form = $(this);
+            var url = form.attr('action');  // URL đăng ký form
+            var data = form.serialize();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                success: function(response) {
+                    if (response.ok) {
+                        showSuccessNotification('success', 'Thành công', response.message || 'Đăng ký thành công!');
+
+                        // Nếu server trả redirectUrl để chuyển tiếp
+                        if (response.redirectUrl) {
+                            setTimeout(function() {
+                                window.location.href = response.redirectUrl;
+                            }, 1500); // Chờ popup hiện rồi redirect
+                        }
+                    } else {
+                        showFailNotification('Lỗi', response.message || 'Có lỗi xảy ra!');
+                    }
+                },
+                error: function() {
+                    showFailNotification('Lỗi', 'Lỗi kết nối hoặc server.');
+                }
+            });
+        });
+    });
+
+    function showSuccessNotification(type, title, text, timer = 3000) {
+        Swal.fire({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: timer,
+            timerProgressBar: true,
+            icon: type,
+            title: title,
+            html: text,
+            background: '#fff',
+            customClass: {
+                popup: 'shadow-sm rounded'
+            }
+        });
+    }
+
+    function showFailNotification(title, text, timer = 3000) {
+        Swal.fire({
+            toast: true,
+            position: 'top',
+            icon: 'error',
+            title: title,
+            html: text,
+            showConfirmButton: false,
+            timer: timer,
+            timerProgressBar: true,
+            background: '#fff',
+            customClass: {
+                popup: 'shadow-sm rounded'
+            }
+        });
+    }
+</script>
 
 <style>
     body {

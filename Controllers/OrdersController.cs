@@ -16,7 +16,6 @@ namespace Project02.Controllers
     public class OrdersController : Controller
     {
         private readonly AppDbContext _context;
-
         public OrdersController(AppDbContext context)
         {
             _context = context;
@@ -91,7 +90,6 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-        // GET: Orders/Details/5
         [HttpGet("/admin/order/details/{id}")]
         public async Task<IActionResult> Details(long? id)
         {
@@ -186,7 +184,6 @@ namespace Project02.Controllers
             return Json(result);
         }
 
-        // GET: Orders/Create
         [HttpGet("/admin/order/create")]
         public async Task<IActionResult> Create()
         {
@@ -244,9 +241,6 @@ namespace Project02.Controllers
             return View();
         }
 
-        // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/order/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OrderCreateVm vm)
@@ -362,18 +356,19 @@ namespace Project02.Controllers
 
                 await transaction.CommitAsync();
 
+                TempData["NotificationType"] = "success";
+                TempData["NotificationTitle"] = "Thành công";
+                TempData["NotificationMessage"] = "Thêm mới thành công!";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 ModelState.AddModelError("", "Lỗi khi tạo order: " + ex.Message);
-                // Tải lại ViewBag nếu cần
                 return View(vm);
             }
         }
 
-        // GET: Orders/Edit/5
         [HttpGet("/admin/order/edit/{id}")]
         public async Task<IActionResult> Edit([FromRoute]long? id)
         {
@@ -466,9 +461,6 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-        // POST: Orders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/order/edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromRoute]long id, OrderEditVm model)
@@ -530,7 +522,6 @@ namespace Project02.Controllers
                 ViewBag.UsersData = users;
                 ViewBag.HallIdToOrder = hallIdToCount;
 
-                // Trả lại model hiện tại để view giữ nguyên dữ liệu người dùng đã nhập
                 return View(model);
             }
 
@@ -593,25 +584,10 @@ namespace Project02.Controllers
             _context.Update(order);
             await _context.SaveChangesAsync();
 
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Sửa đơn thành công!";
             return RedirectToAction(nameof(Index));
-        }
-
-        // GET: Orders/Delete/5
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Orders
-                .FirstOrDefaultAsync(m => m.Order_ID == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return View(order);
         }
 
         [HttpPost("/admin/order/delete/{id}")]

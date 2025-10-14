@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
 using Project02.Models;
@@ -6,6 +7,7 @@ using Project02.ViewModels.Customer;
 
 namespace Project02.Controllers
 {
+    [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
     public class BookingController : Controller
     {
         private readonly AppDbContext _context;
@@ -171,10 +173,11 @@ namespace Project02.Controllers
                     _context.Seats.Update(seatToUpdate);
                 }
             }
-
-            await _context.SaveChangesAsync(); // Lưu Ticket và cập nhật trạng thái ghế
-
-            TempData["SuccessMessage"] = "Đặt vé thành công";
+            await _context.SaveChangesAsync();
+            // Trả về view thông báo thành công
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Đặt hàng thành công!";
             return RedirectToAction("Profile", "User");
 
         }

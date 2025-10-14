@@ -29,7 +29,6 @@ namespace Project02.Controllers
             _files = files;
         }
 
-        // GET: Movies
         [HttpGet("/admin/movie")]
         public async Task<IActionResult> Index(string? q, string? sortOrder, int page = 1, int pageSize = 10)
         {
@@ -51,7 +50,7 @@ namespace Project02.Controllers
                 "name_desc" => query.OrderByDescending(m => m.Movie_Name),
                 "status_asc" => query.OrderBy(m => m.Movie_Status),
                 "status_desc" => query.OrderByDescending(m => m.Movie_Status),
-                "year_asc" => query.OrderBy(m => m.Movie_Year),          // nếu có cột năm
+                "year_asc" => query.OrderBy(m => m.Movie_Year),          
                 "year_desc" => query.OrderByDescending(m => m.Movie_Year),
                 _ => query.OrderBy(m => m.Movie_ID)
             };
@@ -101,7 +100,6 @@ namespace Project02.Controllers
             return View(vm);
             
         }
-
         
         [HttpGet("/admin/movie/{movieSlug}")]
         public async Task<IActionResult> Details([FromRoute]string movieSlug)
@@ -188,6 +186,9 @@ namespace Project02.Controllers
                 await _ctx.SaveChangesAsync();
             }
 
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Thêm mới thành công!";
             return RedirectToAction("Details", new { movieSlug = movieSlug });
         }
 
@@ -210,6 +211,9 @@ namespace Project02.Controllers
             {
                 movie.Genres.Remove(genre);
                 await _ctx.SaveChangesAsync();
+                TempData["NotificationType"] = "success";
+                TempData["NotificationTitle"] = "Thành công";
+                TempData["NotificationMessage"] = "Xoá tag thành công!";
             }
 
             return RedirectToAction("Details", new { movieSlug = movieSlug });
@@ -223,8 +227,6 @@ namespace Project02.Controllers
             return View();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/movie/create")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -247,12 +249,13 @@ namespace Project02.Controllers
 
             _ctx.Movies.Add(movie);
             await _ctx.SaveChangesAsync();
-
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Thêm mới thành công!";
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet("/admin/movie/edit/{movieSlug}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit([FromRoute]string movieSlug)
         {
             if (movieSlug == null)
@@ -282,11 +285,8 @@ namespace Project02.Controllers
             return View(vm);
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("/admin/movie/edit/{id}")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit([FromRoute]string id, MovieEditVm vm)
         {
             if (!ModelState.IsValid)
@@ -314,6 +314,9 @@ namespace Project02.Controllers
             try
             {
                 await _ctx.SaveChangesAsync();
+                TempData["NotificationType"] = "success";
+                TempData["NotificationTitle"] = "Thành công";
+                TempData["NotificationMessage"] = "Sửa phim thành công!";
                 return RedirectToAction(nameof(Index));
             }
             catch(DbUpdateConcurrencyException)
@@ -351,9 +354,5 @@ namespace Project02.Controllers
             return Json(new { ok = true });
         }
 
-        private bool MovieExists(string id)
-        {
-            return _ctx.Movies.Any(e => e.Movie_Slug == id);
-        }
     }
 }

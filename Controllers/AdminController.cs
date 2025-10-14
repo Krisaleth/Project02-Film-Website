@@ -93,6 +93,11 @@ namespace Project02.Controllers
                 ModelState.AddModelError("", "Tài khoản và mật khẩu không đúng!");
                 return View(vm);
             }
+
+            await HttpContext.SignOutAsync("UserScheme");
+            await HttpContext.SignOutAsync("AdminScheme");
+            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
+
             // Tạo claim và đăng nhập
             var claims = new List<Claim>()
             {
@@ -110,14 +115,17 @@ namespace Project02.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(vm.RememberMe ? 43200 : 60)
             };
 
-            await HttpContext.SignOutAsync("UserScheme");
-            await HttpContext.SignOutAsync("AdminScheme");
+            
             await HttpContext.SignInAsync("AdminScheme", principal, authProps);
 
             if (!string.IsNullOrEmpty(vm.ReturnUrl) && Url.IsLocalUrl(vm.ReturnUrl))
             {
                 return Redirect(vm.ReturnUrl);
             }
+
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Đăng nhập thành công!";
 
             return RedirectToAction("Index", "Admin");
         }
@@ -126,9 +134,12 @@ namespace Project02.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-
             await HttpContext.SignOutAsync("AdminScheme");
-            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity()); // làm rỗng user hiện tại
+            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
+
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Đăng xuất thành công!";
             return Redirect("/admin/login");
         }
 

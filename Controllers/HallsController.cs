@@ -127,6 +127,9 @@ namespace Project02.Controllers
             };
             _context.Add(hall);
             await _context.SaveChangesAsync();
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Thêm mới thành công!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -181,6 +184,9 @@ namespace Project02.Controllers
             try {                
                 _context.Update(hall);
                 await _context.SaveChangesAsync();
+                TempData["NotificationType"] = "success";
+                TempData["NotificationTitle"] = "Thành công";
+                TempData["NotificationMessage"] = "Sửa thành công!";
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
@@ -209,7 +215,7 @@ namespace Project02.Controllers
                 
             }
             await _context.SaveChangesAsync();
-            return Json(new { ok = true, message = "Deleted successfully" });
+            return Json(new { ok = true, message = "Đã xoá" });
         }
 
         private bool HallExists(long id)

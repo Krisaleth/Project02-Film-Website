@@ -37,8 +37,10 @@ namespace Project02.Controllers
                 return Redirect("/");
             }
             await HttpContext.SignOutAsync("AdminScheme");
+            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
             return View(new LoginViewModel { returnUrl = returnUrl });
         }
+
         [HttpPost("/login")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -46,37 +48,35 @@ namespace Project02.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(vm);
+                return Json(new { ok = false, message = "Dữ liệu không hợp lệ" });
             }
-            var user = await _ctx.Accounts.AsNoTracking().FirstOrDefaultAsync(a => a.UserName == vm.UserName);
 
+            var user = await _ctx.Accounts.AsNoTracking().FirstOrDefaultAsync(a => a.UserName == vm.UserName);
             if (user == null || user.Status != "Active")
             {
-                ModelState.AddModelError(" ", "Tài khoản hoặc mật khẩu không đúng!");
-                return View(vm);
+                return Json(new { ok = false, message = "Tài khoản hoặc mật khẩu không đúng" });
             }
 
             if (string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase))
             {
-                TempData["ErrorMessage"] = "Tài khoản này không được truy cập vào đây!";
-                return View(vm);
+                return Json(new { ok = false, message = "Tài khoản hoặc mật khẩu không đúng" });
             }
 
             if (user.Password_Salt == null || !PasswordHasher.Verify(vm.Password, user.Password_Salt, user.Password_Hash))
             {
-                TempData["ErrorMessage"] = "Tài khoản hoặc mật khẩu không đúng!";
-                return View(vm);
+                return Json(new { ok = false, message = "Tài khoản hoặc mật khẩu không đúng" });
             }
 
-            var userProfile = _ctx.Users.Where(a => a.Account_ID == user.Account_ID).FirstOrDefault();
-
+            var userProfile = _ctx.Users.FirstOrDefault(a => a.Account_ID == user.Account_ID);
             if (userProfile == null)
             {
-                TempData["ErrorMessage"] = "Dữ liệu người dùng không hợp lệ.";
-                return View(vm);
+                return Json(new { ok = false, message = "Tài khoản hoặc mật khẩu không đúng" });
             }
 
-            // Tạo claim và đăng nhập
+            await HttpContext.SignOutAsync("UserScheme");
+            await HttpContext.SignOutAsync("AdminScheme");
+            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
+
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, userProfile.User_ID.ToString()),
@@ -93,18 +93,17 @@ namespace Project02.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(vm.RememberMe ? 43200 : 60)
             };
 
-            await HttpContext.SignOutAsync("AdminScheme");
             await HttpContext.SignInAsync("UserScheme", principal, authProps);
-            
 
+            // Nếu có ReturnUrl hợp lệ, trả về url qua json
             if (!string.IsNullOrEmpty(vm.returnUrl) && Url.IsLocalUrl(vm.returnUrl))
             {
-                return Redirect(vm.returnUrl);
+                return Json(new { ok = true, redirectUrl = vm.returnUrl });
             }
 
-            TempData["SuccessMessage"] = "Đăng nhập thành công!";
-            return RedirectToAction("Index", "Home");
+            return Json(new { ok = true, redirectUrl = Url.Action("Index", "Home") });
         }
+
 
         [HttpGet("/register")]
         public IActionResult Register()
@@ -115,35 +114,19 @@ namespace Project02.Controllers
         public async Task<IActionResult> Register(RegisterViewModel vm)
         {
             if (!ModelState.IsValid)
-                return View(vm);
+                return Json(new { ok = false, message = "Dữ liệu không hợp lệ" });
 
-            if (await _ctx.Users.AnyAsync(a => a.Account.UserName == vm.UserName) == false)
-            {
-                ModelState.AddModelError(nameof(vm.Email), "Tên đã được đăng ký.");
-                return View(vm);
-            }
+            if (await _ctx.Accounts.AnyAsync(a => a.UserName == vm.UserName))
+                return Json(new { ok = false, message = "Tên đăng nhập đã tồn tại!" });
 
-
-            // Kiểm tra email đã tồn tại
             if (await _ctx.Users.AnyAsync(a => a.User_Email == vm.Email))
-            {
-                ModelState.AddModelError("Email", "Email đã được đăng ký.");
-                return View(vm);
-            }
+                return Json(new { ok = false, message = "Email đã tồn tại!" });
 
-            // Kiểm tra trùng số điện thoại
             if (await _ctx.Users.AnyAsync(a => a.User_Phone == vm.PhoneNumber))
-            {
-                ModelState.AddModelError("PhoneNumber", "Số điện thoại đã được đăng ký.");
-                return View(vm);
-            }
+                return Json(new { ok = false, message = "SĐT đã tồn tại!" });
 
             if (vm.Password != vm.ConfirmPassword)
-            {
-                ModelState.AddModelError("ConfirmPassword", "Xác nhận mật khẩu không khớp.");
-                return View(vm);
-            }
-
+                return Json(new { ok = false, message = "Mật khẩu không khớp!" });
 
             var (hash, salt) = PasswordHasher.HashPassword(vm.Password);
 
@@ -171,19 +154,26 @@ namespace Project02.Controllers
 
             _ctx.Users.Add(usr);
             await _ctx.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Tạo tài khoản thành công!";
-            return Redirect("/login");
+
+            // Trả success json, bạn có thể trả url khác để redirect nếu cần
+            return Json(new { ok = true, message = "Đăng ký thành công!", redirectUrl = Url.Action("Login", "User") });
         }
 
+
         [HttpPost]
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync("UserScheme");
             HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity()); // làm rỗng user hiện tại
-            TempData["SuccessMessage"] = "Đăng xuất thành công!";
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Đăng xuất thành công!";
             return Redirect("/");
         }
+
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpGet("/profile")]
         public async Task<IActionResult> Profile()
         {
@@ -236,6 +226,7 @@ namespace Project02.Controllers
             return View(vm);
         }
 
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpGet("/profile/edit")]
         public async Task<IActionResult> ProfileEdit()
         {
@@ -259,6 +250,7 @@ namespace Project02.Controllers
             return View(model);
         }
 
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpPost("/profile/edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ProfileEdit(UserEditVm model)
@@ -288,17 +280,22 @@ namespace Project02.Controllers
             try
             {
                 await _ctx.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Cập nhật thành công!";
+                TempData["NotificationType"] = "success";
+                TempData["NotificationTitle"] = "Thành công";
+                TempData["NotificationMessage"] = "Cập nhật thành công!";
                 return RedirectToAction(nameof(Profile));
             }
             catch (DbUpdateConcurrencyException)
             {
-                ModelState.AddModelError("", "Dữ liệu đã bị thay đổi dữ liệu bởi người khác. Vui lòng tải lại và thử lại!");
+                TempData["NotificationType"] = "error";
+                TempData["NotificationTitle"] = "Thất bại";
+                TempData["NotificationMessage"] = "Thông tin đã bị thay đổi trước đó, vui lòng thử lại!";
                 return View(model);
             }
 
         }
 
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpGet("profile/order/{id}")]
         public async Task<IActionResult> OrderDetails(string id)
         {
@@ -343,7 +340,6 @@ namespace Project02.Controllers
             if (order == null)
                 return NotFound();
 
-            // Ví dụ tạo trường định dạng trong ViewModel hoặc ViewBag
             var hallNumber = hallOrderDict[order.Showtime.Hall_ID];
             var hallDisplayName = $"{order.Showtime.Hall.Cinema.Cinema_Name} - phòng số {hallNumber}";
 
@@ -351,6 +347,7 @@ namespace Project02.Controllers
             return View(order);
         }
 
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpGet("/change-password")]
         public IActionResult ChangePassword()
         {
@@ -359,6 +356,7 @@ namespace Project02.Controllers
             return View();
         }
 
+        [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
         [HttpPost("/change-password")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordVm vm)
@@ -376,12 +374,16 @@ namespace Project02.Controllers
             }
             if (vm.NewPassword != vm.ConfirmNewPassword)
             {
-                ModelState.AddModelError("ConfirmNewPassword", "Xác nhận mật khẩu không khớp.");
+                TempData["NotificationType"] = "error";
+                TempData["NotificationTitle"] = "Thất bại";
+                TempData["NotificationMessage"] = "Mật khẩu không khớp";
                 return View(vm);
             }
             if (!PasswordHasher.Verify(vm.CurrentPassword, user.Account.Password_Salt, user.Account.Password_Hash))
             {
-                ModelState.AddModelError("CurrentPassword", "Mật khẩu hiện tại không đúng.");
+                TempData["NotificationType"] = "error";
+                TempData["NotificationTitle"] = "Thất bại";
+                TempData["NotificationMessage"] = "Mật khẩu cũ không đúng!";
                 return View(vm);
             }
             var (newHash, newSalt) = PasswordHasher.HashPassword(vm.NewPassword);
@@ -390,7 +392,9 @@ namespace Project02.Controllers
             user.Account.Password_Algo = "PBKDF2";
             user.Account.Password_Iterations = 100000;
             await _ctx.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Đổi mật khẩu thành công!";
+            TempData["NotificationType"] = "success";
+            TempData["NotificationTitle"] = "Thành công";
+            TempData["NotificationMessage"] = "Đổi mật khẩu thành công!";
             return RedirectToAction("Profile");
         }
     }

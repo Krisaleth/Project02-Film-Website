@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project02.Data;
@@ -14,11 +15,12 @@ using System.Threading.Tasks;
 
 namespace Project02.Controllers
 {
-    public class UserMovieController : BaseController
+    [Authorize(AuthenticationSchemes = "UserScheme", Roles = "User")]
+    public class UserMovieController : Controller
     {
         private readonly AppDbContext _context;
 
-        public UserMovieController(AppDbContext context) : base(context)
+        public UserMovieController(AppDbContext context)
         {
             _context = context;
         }
@@ -70,7 +72,7 @@ namespace Project02.Controllers
                 SearchKeyword = search ?? "",
                 Genres = await _context.Genres.OrderBy(g => g.Genre_Name).ToListAsync(),
                 SelectedGenreSlug = genreSlug,
-                ShowtimeMovies = showtimeMovies // mới thêm
+                ShowtimeMovies = showtimeMovies
             };
 
             ViewBag.Genres = new SelectList(_context.Genres.OrderBy(g => g.Genre_Name), "Genre_Slug", "Genre_Name", movieListVm.SelectedGenreSlug);
